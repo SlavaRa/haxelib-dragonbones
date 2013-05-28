@@ -1,7 +1,6 @@
 package;
 
-import nme.display.FPS;
-import nme.display.Sprite;
+import dragonbones.display.Sprite;
 import nme.display.StageAlign;
 import nme.display.StageScaleMode;
 import nme.events.Event;
@@ -12,9 +11,7 @@ import nme.Lib;
  */
 class Main extends Sprite {
 	
-	public static function main() {
-		Lib.current.addChild(new Main());
-	}
+	public static function main() Lib.current.addChild(new Main());
 	
 	public function new() {
 		super();
@@ -37,9 +34,6 @@ class Main extends Sprite {
 		stage.scaleMode = StageScaleMode.NO_SCALE;
 	}
 	
-	function initialize() {
-		//addChild(new FPS());
-		cast(addChild(new NMETestView()), NMETestView).start();
-	}
+	function initialize() cast(addChild(new NMETestView()), NMETestView).start();
 	
 }

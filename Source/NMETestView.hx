@@ -2,11 +2,9 @@ package ;
 
 import dragonbones.animation.WorldClock;
 import dragonbones.Armature;
+import dragonbones.display.Sprite;
 import dragonbones.factorys.BaseFactory;
-import haxe.Log;
-import nme.display.Sprite;
 import nme.events.Event;
-import nme.events.SecurityErrorEvent;
 import nme.Lib;
 import nme.net.URLLoader;
 import nme.net.URLLoaderDataFormat;
@@ -30,27 +28,21 @@ class NMETestView extends Sprite {
 		#end
 		var urlRequest:URLRequest = new URLRequest(url);
 		var urlLoader:URLLoader = new URLLoader();
-		urlLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onUrlLoaderSecurityError);
 		urlLoader.addEventListener(Event.COMPLETE, onUrlLoaderComplete);
 		urlLoader.dataFormat = URLLoaderDataFormat.BINARY;
 		urlLoader.load(urlRequest);
 	}
 	
-	private function onUrlLoaderSecurityError(event:SecurityErrorEvent) {
-		throw event.text;
-	}
+	var factory:BaseFactory;
 	
-	private function onUrlLoaderComplete(event:Event) {
+	function onUrlLoaderComplete(event:Event) {
 		var urlLoader:URLLoader = cast(event.target, URLLoader);
-		urlLoader.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, onUrlLoaderSecurityError);
 		urlLoader.removeEventListener(Event.COMPLETE, onUrlLoaderComplete);
 		
 		factory = new BaseFactory();
 		factory.onDataParsed.addOnce(onFactoryDataParsed);
 		factory.parseData(cast(urlLoader.data, ByteArray));
 	}
-	
-	var factory:BaseFactory;
 	
 	function onFactoryDataParsed() {
 		var x:Float = 100;
