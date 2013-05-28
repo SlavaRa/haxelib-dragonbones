@@ -3,8 +3,6 @@ package ;
 import dragonbones.animation.WorldClock;
 import dragonbones.Armature;
 import dragonbones.factorys.BaseFactory;
-import haxe.Log;
-import nme.Assets;
 import nme.display.Sprite;
 import nme.events.Event;
 import nme.events.SecurityErrorEvent;
@@ -26,11 +24,8 @@ class NMETestView extends Sprite {
 	}
 	
 	public function start() {
-		factory = new BaseFactory();
-		factory.onDataParsed.addOnce(onFactoryDataParsed);
-		
-		//var urlRequest:URLRequest = new URLRequest("http://192.168.4.112:8080/slavara/test/HaXe2HTML5/dragonbones-assets/character");
-		var urlRequest:URLRequest = new URLRequest("http://77.108.220.238:8080/HaXe/dragonboneshx3/Resources/dragonbones_png/character.png");
+		var url:String = "../../../Resources/dragonbones_png/character.png";
+		var urlRequest:URLRequest = new URLRequest(url);
 		var urlLoader:URLLoader = new URLLoader();
 		urlLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onUrlLoaderSecurityError);
 		urlLoader.addEventListener(Event.COMPLETE, onUrlLoaderComplete);
@@ -47,6 +42,8 @@ class NMETestView extends Sprite {
 		urlLoader.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, onUrlLoaderSecurityError);
 		urlLoader.removeEventListener(Event.COMPLETE, onUrlLoaderComplete);
 		
+		factory = new BaseFactory();
+		factory.onDataParsed.addOnce(onFactoryDataParsed);
 		factory.parseData(cast(urlLoader.data, ByteArray));
 	}
 	
