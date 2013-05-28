@@ -65,7 +65,5 @@ class NMETestView extends Sprite {
 		addEventListener(Event.ENTER_FRAME, onEnterFrame);
 	}
 	
-	function onEnterFrame(_) {
-		WorldClock.instance.advanceTime( -1);
-	}
+	function onEnterFrame(_) WorldClock.instance.advanceTime( -1);
 }
