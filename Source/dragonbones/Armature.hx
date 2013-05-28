@@ -44,17 +44,15 @@ class Armature extends EventDispatcher implements IAnimatable implements IDispos
 	
 	var _rootBones:Array<Bone>;
 	
-	//TODO: refactor this
 	public function dispose() {
-		for (i in _rootBones) {
-			DisposeUtils.dispose(i);
-		}
+		for (i in _rootBones) DisposeUtils.dispose(i);
 		DisposeUtils.dispose(animation);
 		
-		colorTransform = null;
+		displayContainer = null;
+		animation = null;
 		bones = null;
 		_rootBones = null;
-		animation = null;
+		colorTransform = null;
 	}
 	
 	public function addBone(bone:Bone, ?parentName:String) {
@@ -116,7 +114,6 @@ class Armature extends EventDispatcher implements IAnimatable implements IDispos
 		if (name == null) {
 			return;
 		}
-		
 		removeBone(getBone(name));
 	}
 	
@@ -138,22 +135,24 @@ class Armature extends EventDispatcher implements IAnimatable implements IDispos
 	}
 	
 	public function getBone(name:String):Bone {
-		if(name != null) {
-			for(bone in bones) {
-				if(bone.name == name) {
-					return bone;
-				}
+		if(name == null) {
+			return null;
+		}
+		for(bone in bones) {
+			if(bone.name == name) {
+				return bone;
 			}
 		}
 		return null;
 	}
 	
 	public function getBoneByDisplay(display:DisplayObject):Bone {
-		if(display != null) {
-			for (bone in bones) {
-				if(bone.display == display) {
-					return bone;
-				}
+		if(display == null) {
+			return null;
+		}
+		for (bone in bones) {
+			if(bone.display == display) {
+				return bone;
 			}
 		}
 		return null;
