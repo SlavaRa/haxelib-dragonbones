@@ -1,6 +1,7 @@
 package dragonbones.objects;
 import dragonbones.animation.Tween;
 import dragonbones.objects.Node;
+import dragonbones.utils.ByteArrayUtils;
 import dragonbones.utils.BytesType;
 import dragonbones.utils.ConstValues;
 import dragonbones.utils.MathUtils;
@@ -17,75 +18,45 @@ class XMLDataParser{
 	static var _curSkeletonData:SkeletonData;
 	static var _helpNode:HelpNode = Node.create();
 	static var _helpFrameData:FrameData = new FrameData();
+	static var _buffer:ByteArray = new ByteArray();
+	
+	public static function decompressData(compressedBytes:ByteArray):DecompressedData {
+		switch(BytesType.getType(compressedBytes)) {
+			case BytesType.SWF, BytesType.PNG, BytesType.JPG:
+				var skeletonXml:Xml = getXml(compressedBytes, _buffer);
+				var texAtlasXml:Xml = getXml(compressedBytes, _buffer);
+				return new DecompressedData(skeletonXml, texAtlasXml, compressedBytes);
+			case BytesType.ZIP: throw "Can not decompress zip!";
+			case _: throw "Unknow format";
+		}
+		return null;
+	}
 	
 	static inline function checkSkeletonXMLVersion(skeletonXML:Xml) {
 		switch (skeletonXML.firstElement().get(ConstValues.A_VERSION)) {
 			case ConstValues.VERSION_14, ConstValues.VERSION, ConstValues.VERSION_21:
 				return;
-			default: throw "Nonsupport data version!";
+			case _: throw "Nonsupport data version!";
 		}
 	}
 	
-	public static function decompressData(compressedBytes:ByteArray):DecompressedData {
-		switch(BytesType.getType(compressedBytes)) {
-			case BytesType.SWF, BytesType.PNG, BytesType.JPG:
-				var skeletonXml:Xml = null;
-				var texAtlasXml:Xml = null;
-				var strSize:Int = 0;
-				var position:Int = 0;
-				
-				compressedBytes.position = compressedBytes.length - 4;
-				strSize = compressedBytes.readInt();
-				position = compressedBytes.length - 4 - strSize;
-				
-				var xmlBytes:ByteArray = new ByteArray();
-				xmlBytes.writeBytes(compressedBytes, position, strSize);
-				xmlBytes.uncompress();
-				xmlBytes.position = 0;
-				
-				#if flash
-				compressedBytes.length = position;
-				#elseif js
-				compressedBytes.position = position;
-				compressedBytes.length = position;
-				#elseif (cpp || neko)
-				compressedBytes.setLength(position);
-				#end
-				
-				skeletonXml = Xml.parse(xmlBytes.readUTFBytes(xmlBytes.length));
-				
-				compressedBytes.position = compressedBytes.length - 4;
-				strSize = compressedBytes.readInt();
-				position = compressedBytes.length - 4 - strSize;
-				
-				#if (flash)
-				xmlBytes.clear();
-				#elseif js
-				xmlBytes.position = 0;
-				xmlBytes.length = 0;
-				#elseif (cpp || neko)
-				xmlBytes.setLength(0);
-				#end
-				
-				xmlBytes.writeBytes(compressedBytes, position, strSize);
-				xmlBytes.uncompress();
-				xmlBytes.position = 0;
-				
-				#if flash
-				compressedBytes.length = position;
-				#elseif js
-				compressedBytes.position = position;
-				compressedBytes.length = position;
-				#elseif (cpp || neko)
-				compressedBytes.setLength(position);
-				#end
-				
-				texAtlasXml = Xml.parse(xmlBytes.readUTFBytes(xmlBytes.length));
-				return new DecompressedData(skeletonXml, texAtlasXml, compressedBytes);
-			case BytesType.ZIP: throw "Can not decompress zip!";
-			default: throw "Unknow format";
-		}
-		return null;
+	static function getXml(compressedBytes:ByteArray, buffer:ByteArray):Xml {
+		var strSize:Int = 0;
+		var position:Int = 0;
+		
+		ByteArrayUtils.setLenght(buffer, 0);
+		
+		compressedBytes.position = compressedBytes.length - 4;
+		strSize = compressedBytes.readInt();
+		position = compressedBytes.length - 4 - strSize;
+		
+		buffer.writeBytes(compressedBytes, position, strSize);
+		buffer.uncompress();
+		buffer.position = 0;
+		
+		ByteArrayUtils.setLenght(compressedBytes, position);
+		
+		return Xml.parse(buffer.readUTFBytes(buffer.length));
 	}
 	
 	public static function parseSkeletonData(skeletonXml:Xml):SkeletonData {
@@ -369,12 +340,13 @@ class XMLDataParser{
 	}
 	
 	static inline function parseNode(xml:Xml, node:HelpNode) {
+		var angle2radian:Float = MathUtils.ANGLE_TO_RADIAN();
 		Node.setValues(node,
 			Std.parseFloat(xml.get(ConstValues.A_X)),
 			Std.parseFloat(xml.get(ConstValues.A_Y)),
 			Std.parseFloat(xml.get(ConstValues.A_Z)),
-			Std.parseFloat(xml.get(ConstValues.A_SKEW_X)) * MathUtils.ANGLE_TO_RADIAN(),
-			Std.parseFloat(xml.get(ConstValues.A_SKEW_Y)) * MathUtils.ANGLE_TO_RADIAN(),
+			Std.parseFloat(xml.get(ConstValues.A_SKEW_X)) * angle2radian,
+			Std.parseFloat(xml.get(ConstValues.A_SKEW_Y)) * angle2radian,
 			Std.parseFloat(xml.get(ConstValues.A_SCALE_X)),
 			Std.parseFloat(xml.get(ConstValues.A_SCALE_Y)),
 			Std.parseFloat(xml.get(ConstValues.A_PIVOT_X)),
