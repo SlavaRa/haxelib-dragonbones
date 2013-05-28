@@ -21,3 +21,9 @@ DragonBonex/bin/windows/neko/haxe/nme/AssetData.hx
 DragonBonex/bin/windows/neko/haxe/release.hxml
 DragonBonex/bin/windows/neko/obj/ApplicationMain.n
 DragonBonex/nme-readme.txt
+bin/flash/haxe/release.hxml
+bin/flash/haxe/nme/AssetData.hx
+bin/flash/haxe/debug.hxml
+bin/flash/haxe/NMEPreloader.hx
+bin/flash/haxe/ApplicationMain.hx
+bin/flash/bin/dragonboneshx3.swf

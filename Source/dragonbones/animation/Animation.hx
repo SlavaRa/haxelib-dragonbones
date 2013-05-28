@@ -89,6 +89,11 @@ class Animation implements IDisposable{
 		_armature = null;
 	}
 	
+	public function gotoAndStop(movementID:String, tweenTime:Float = -1, duration:Float = -1, ?loop:Bool) {
+		gotoAndPlay(movementID, tweenTime, duration, loop);
+		stop();
+	}
+	
 	public function gotoAndPlay(movementID:String, tweenTime:Float = -1, duration:Float = -1, ?loop:Bool) {
 		if (animationData == null) {
 			return;

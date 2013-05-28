@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
 	
-	<meta title="dragonbones" package="dragonbones" version="1.0.0" company="SlavaRa" />
+	<meta title="dragonboneshx3" package="dragonboneshx3" version="1.0.0" company="SlavaRa" />
 	
-	<app main="Main" file="dragonbones" path="bin" />
+	<app main="Main" file="dragonboneshx3" path="bin" />
 	
 	<window background="#000000" fps="60" />
 	<window width="800" height="480" unless="mobile" />

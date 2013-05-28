@@ -65,7 +65,7 @@ class NMETestView extends Sprite {
 			var display:Sprite = armature.displayContainer;
 			display.x = (i % columnNum) * paddingWidth + paddingLeft + ((i / columnNum) % 2) * Dx;
 			display.y = ((i / columnNum)) * paddingHeight + paddingTop;
-			armature.animation.gotoAndPlay("Idle", -1, -1, true);
+			armature.animation.gotoAndStop("Idle", -1, -1, true);
 			addChild(display);
 			WorldClock.instance.add(armature);
 		}
