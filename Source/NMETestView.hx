@@ -8,6 +8,7 @@ import nme.Assets;
 import nme.display.Sprite;
 import nme.events.Event;
 import nme.events.SecurityErrorEvent;
+import nme.Lib;
 import nme.net.URLLoader;
 import nme.net.URLLoaderDataFormat;
 import nme.net.URLRequest;
@@ -18,6 +19,8 @@ import nme.utils.ByteArray;
  */
 class NMETestView extends Sprite {
 	
+	
+	
 	public function new() {
 		super();
 	}
@@ -26,7 +29,8 @@ class NMETestView extends Sprite {
 		factory = new BaseFactory();
 		factory.onDataParsed.addOnce(onFactoryDataParsed);
 		
-		var urlRequest:URLRequest = new URLRequest("http://192.168.4.112:8080/slavara/test/HaXe2HTML5/dragonbones-assets/character");
+		//var urlRequest:URLRequest = new URLRequest("http://192.168.4.112:8080/slavara/test/HaXe2HTML5/dragonbones-assets/character");
+		var urlRequest:URLRequest = new URLRequest("http://77.108.220.238:8080/HaXe/dragonboneshx3/Resources/dragonbones_png/character.png");
 		var urlLoader:URLLoader = new URLLoader();
 		urlLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onUrlLoaderSecurityError);
 		urlLoader.addEventListener(Event.COMPLETE, onUrlLoaderComplete);
@@ -49,12 +53,8 @@ class NMETestView extends Sprite {
 	var factory:BaseFactory;
 	
 	function onFactoryDataParsed() {
-		var columnNum:Int = 15;
-		var paddingWidth:Int = 50;
-		var paddingHeight:Int = 20;
-		var paddingLeft:Int = 25;
-		var paddingTop:Int = 150;
-		var Dx:Int = 25;
+		var x:Float = 100;
+		var y:Float = 150;
 		
 		#if debug
 		for (i in 0...1) {
@@ -63,8 +63,13 @@ class NMETestView extends Sprite {
 		#end
 			var armature:Armature = factory.buildArmature("CharacterAnimations");
 			var display:Sprite = armature.displayContainer;
-			display.x = (i % columnNum) * paddingWidth + paddingLeft + ((i / columnNum) % 2) * Dx;
-			display.y = ((i / columnNum)) * paddingHeight + paddingTop;
+			display.x = x;
+			display.y = y;
+			x += display.width + 10;
+			if((x + display.width) >= Lib.current.stage.stageWidth) {
+				x = 100;
+				y += display.height + 10;
+			}
 			armature.animation.gotoAndPlay("Idle", -1, -1, true);
 			addChild(display);
 			WorldClock.instance.add(armature);
