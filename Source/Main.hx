@@ -1,6 +1,5 @@
 package;
 
-import haxe.Log;
 import nme.display.FPS;
 import nme.display.Sprite;
 import nme.display.StageAlign;
@@ -13,20 +12,34 @@ import nme.Lib;
  */
 class Main extends Sprite {
 	
-	public function new() {
-		super();
-		Lib.current.stage.align = StageAlign.TOP_LEFT;
-		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
-		addEventListener(Event.ADDED_TO_STAGE, onStageAddedToStage);
+	public static function main() {
+		Lib.current.addChild(new Main());
 	}
 	
-	function onStageAddedToStage(_) {
+	public function new() {
+		super();
+		if(stage != null) {
+			onStageAddedToStage();
+		} else {
+			addEventListener(Event.ADDED_TO_STAGE, onStageAddedToStage);
+		}
+	}
+	
+	function onStageAddedToStage(?_) {
 		removeEventListener(Event.ADDED_TO_STAGE, onStageAddedToStage);
+		
+		configureStage();
 		initialize();
 	}
 	
+	function configureStage() {
+		stage.align = StageAlign.TOP_LEFT;
+		stage.scaleMode = StageScaleMode.NO_SCALE;
+	}
+	
 	function initialize() {
-		addChild(new FPS(10, 10, 0xffffff));
+		//addChild(new FPS());
 		cast(addChild(new NMETestView()), NMETestView).start();
 	}
+	
 }

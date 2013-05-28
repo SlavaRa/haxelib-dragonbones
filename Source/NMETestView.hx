@@ -3,6 +3,7 @@ package ;
 import dragonbones.animation.WorldClock;
 import dragonbones.Armature;
 import dragonbones.factorys.BaseFactory;
+import haxe.Log;
 import nme.display.Sprite;
 import nme.events.Event;
 import nme.events.SecurityErrorEvent;
@@ -17,14 +18,16 @@ import nme.utils.ByteArray;
  */
 class NMETestView extends Sprite {
 	
-	
-	
 	public function new() {
 		super();
 	}
 	
 	public function start() {
+		#if flash
 		var url:String = "../../../Resources/dragonbones_png/character.png";
+		#elseif (cpp || neko)
+		var url:String = "../../../../Resources/dragonbones_png/character.png";
+		#end
 		var urlRequest:URLRequest = new URLRequest(url);
 		var urlLoader:URLLoader = new URLLoader();
 		urlLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onUrlLoaderSecurityError);
@@ -53,11 +56,7 @@ class NMETestView extends Sprite {
 		var x:Float = 100;
 		var y:Float = 150;
 		
-		#if debug
-		for (i in 0...1) {
-		#else
 		for (i in 0...10) {
-		#end
 			var armature:Armature = factory.buildArmature("CharacterAnimations");
 			var display:Sprite = armature.displayContainer;
 			display.x = x;

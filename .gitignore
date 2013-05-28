@@ -445,3 +445,16 @@ bin/windows/cpp/obj/src/sys/io/FileSeek.cpp
 bin/windows/cpp/obj/src/sys/io/Process.cpp
 bin/windows/cpp/obj/src/sys/io/_Process/Stdin.cpp
 bin/windows/cpp/obj/src/sys/io/_Process/Stdout.cpp
+bin/windows/cpp/obj/ApplicationMain-debug.exp
+bin/windows/cpp/obj/include/dragonbones/utils/ByteArrayUtils.h
+bin/windows/cpp/obj/obj/mscv-debug-nc/Options.txt
+bin/windows/cpp/obj/obj/mscv-debug-nc/__pch/haxe/hxcpp.cpp
+bin/windows/cpp/obj/obj/mscv-debug-nc/__pch/runtime/hxcpp.cpp
+bin/windows/cpp/obj/src/dragonbones/utils/ByteArrayUtils.cpp
+bin/windows/neko/bin/nme.ndll
+bin/windows/neko/haxe/ApplicationMain.hx
+bin/windows/neko/haxe/NMEPreloader.hx
+bin/windows/neko/haxe/debug.hxml
+bin/windows/neko/haxe/nme/AssetData.hx
+bin/windows/neko/haxe/release.hxml
+bin/windows/neko/obj/ApplicationMain.n

@@ -44,7 +44,7 @@ class XMLDataParser{
 		var strSize:Int = 0;
 		var position:Int = 0;
 		
-		ByteArrayUtils.setLenght(buffer, 0);
+		ByteArrayUtils.clear(buffer);
 		
 		compressedBytes.position = compressedBytes.length - 4;
 		strSize = compressedBytes.readInt();
@@ -138,8 +138,12 @@ class XMLDataParser{
 	
 	static inline function parseDisplayData(displayXml:Xml, displayData:DisplayData) {
 		displayData.isArmature 	= displayXml.get(ConstValues.A_IS_ARMATURE) != null;
-		displayData.pivotX 		= Std.parseInt(displayXml.get(ConstValues.A_PIVOT_X));
-		displayData.pivotY 		= Std.parseInt(displayXml.get(ConstValues.A_PIVOT_Y));
+		
+		var pivotX:Null<Int> = Std.parseInt(displayXml.get(ConstValues.A_PIVOT_X));
+		var pivotY:Null<Int> = Std.parseInt(displayXml.get(ConstValues.A_PIVOT_Y));
+		
+		displayData.pivotX = pivotX != null ? pivotX : 0;
+		displayData.pivotY = pivotY != null ? pivotY : 0;
 	}
 	
 	static function parseAnimations(animationsXml:Xml) {
