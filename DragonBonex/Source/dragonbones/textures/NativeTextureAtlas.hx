@@ -1,5 +1,7 @@
 package dragonbones.textures;
 import dragonbones.utils.ConstValues;
+import dragonbones.utils.DisposeUtils;
+import haxe.Log;
 import nme.display.BitmapData;
 import nme.display.MovieClip;
 import nme.geom.Rectangle;
@@ -13,7 +15,7 @@ class NativeTextureAtlas implements ITextureAtlas {
 		this.scale = scale;
 		_isDifferentXML = isDifferentXML;
 		
-		_name2SubTexData = new Map<String, Rectangle>();
+		_name2SubTexData = new Map();
 		
 		if (Std.is(texture, BitmapData)) {
 			bitmapData = cast(texture, BitmapData);
@@ -37,14 +39,10 @@ class NativeTextureAtlas implements ITextureAtlas {
 	public var name(default, null):String;
 	
 	public function dispose() {
-		movieClip = null;
-		
-		if(bitmapData != null) {
-			bitmapData.dispose();
-			bitmapData = null;
-		}
-		
+		DisposeUtils.dispose(bitmapData);
 		_name2SubTexData = null;
+		movieClip = null;
+		bitmapData = null;
 	}
 	
 	public function getRegion(name:String):Rectangle {

@@ -6,6 +6,7 @@ import dragonbones.objects.Node;
 import dragonbones.utils.DisposeUtils;
 import dragonbones.utils.IDisposable;
 import dragonbones.utils.TransformUtils;
+import haxe.Log;
 import nme.display.DisplayObject;
 import nme.display.DisplayObjectContainer;
 import nme.geom.ColorTransform;
@@ -80,9 +81,7 @@ class Bone implements IDisposable {
 	
 	//TODO: refactor this
 	public function dispose() {
-		for (i in children) {
-			DisposeUtils.dispose(i);
-		}
+		for (i in children) DisposeUtils.dispose(i);
 		children = null;
 		armature = null;
 		parent = null;

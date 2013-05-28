@@ -5,6 +5,7 @@ import dragonbones.utils.BytesType;
 import dragonbones.utils.ConstValues;
 import dragonbones.utils.MathUtils;
 import dragonbones.utils.TransformUtils;
+import haxe.Log;
 import nme.geom.ColorTransform;
 import nme.utils.ByteArray;
 
@@ -18,8 +19,7 @@ class XMLDataParser{
 	static var _helpFrameData:FrameData = new FrameData();
 	
 	static inline function checkSkeletonXMLVersion(skeletonXML:Xml) {
-		var version:String = skeletonXML.firstElement().get(ConstValues.A_VERSION);
-		switch (version) {
+		switch (skeletonXML.firstElement().get(ConstValues.A_VERSION)) {
 			case ConstValues.VERSION_14, ConstValues.VERSION, ConstValues.VERSION_21:
 				return;
 			default: throw "Nonsupport data version!";
@@ -31,15 +31,22 @@ class XMLDataParser{
 			case BytesType.SWF, BytesType.PNG, BytesType.JPG:
 				var skeletonXml:Xml = null;
 				var texAtlasXml:Xml = null;
+				var strSize:Int = 0;
+				var position:Int = 0;
+				
 				compressedBytes.position = compressedBytes.length - 4;
-				var strSize:Int = compressedBytes.readInt();
-				var position:Int = compressedBytes.length - 4 - strSize;
+				strSize = compressedBytes.readInt();
+				position = compressedBytes.length - 4 - strSize;
 				
 				var xmlBytes:ByteArray = new ByteArray();
 				xmlBytes.writeBytes(compressedBytes, position, strSize);
 				xmlBytes.uncompress();
+				xmlBytes.position = 0;
 				
 				#if flash
+				compressedBytes.length = position;
+				#elseif js
+				compressedBytes.position = position;
 				compressedBytes.length = position;
 				#elseif (cpp || neko)
 				compressedBytes.setLength(position);
@@ -51,13 +58,23 @@ class XMLDataParser{
 				strSize = compressedBytes.readInt();
 				position = compressedBytes.length - 4 - strSize;
 				
-				#if !js
+				#if (flash)
 				xmlBytes.clear();
+				#elseif js
+				xmlBytes.position = 0;
+				xmlBytes.length = 0;
+				#elseif (cpp || neko)
+				xmlBytes.setLength(0);
 				#end
+				
 				xmlBytes.writeBytes(compressedBytes, position, strSize);
 				xmlBytes.uncompress();
+				xmlBytes.position = 0;
 				
 				#if flash
+				compressedBytes.length = position;
+				#elseif js
+				compressedBytes.position = position;
 				compressedBytes.length = position;
 				#elseif (cpp || neko)
 				compressedBytes.setLength(position);

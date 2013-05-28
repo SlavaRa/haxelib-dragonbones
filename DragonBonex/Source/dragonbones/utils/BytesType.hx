@@ -12,12 +12,20 @@ class BytesType{
 	public static inline var ATF:String = "atf";
 	public static inline var ZIP:String = "zip";
 	
-	public static inline function getType(bytes:ByteArray):String {
+	public static function getType(bytes:ByteArray):String {
 		var type:String = null;
+		#if js
+		var b1:Int = bytes.readByte();
+		var b2:Int = bytes.readByte();
+		var b3:Int = bytes.readByte();
+		var b4:Int = bytes.readByte();
+		bytes.position = 0;
+		#else
 		var b1:Int = bytes[0];
 		var b2:Int = bytes[1];
 		var b3:Int = bytes[2];
 		var b4:Int = bytes[3];
+		#end
 		
 		if(((b1 == 0x46) || (b1 == 0x43) || (b1 == 0x5A)) && (b2 == 0x57) && (b3 == 0x53)){
 			//CWS FWS ZWS

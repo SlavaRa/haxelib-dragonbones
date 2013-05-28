@@ -13,6 +13,7 @@
 	<source path="Libs" />
 	<haxelib name="nme" />
 	<haxelib name="actuate" />
+	<haxelib name="format" />
 	<!--<haxelib name="hsl-pico-1" />-->
 	
 	<assets path="Assets" rename="assets" include="*" exclude="nme.svg" />

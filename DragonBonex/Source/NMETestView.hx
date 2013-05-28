@@ -7,6 +7,11 @@ import haxe.Log;
 import nme.Assets;
 import nme.display.Sprite;
 import nme.events.Event;
+import nme.events.SecurityErrorEvent;
+import nme.net.URLLoader;
+import nme.net.URLLoaderDataFormat;
+import nme.net.URLRequest;
+import nme.utils.ByteArray;
 
 /**
  * @author SlavaRa
@@ -20,7 +25,25 @@ class NMETestView extends Sprite {
 	public function start() {
 		factory = new BaseFactory();
 		factory.onDataParsed.addOnce(onFactoryDataParsed);
-		factory.parseData(Assets.getBytes("assets/character"));
+		
+		var urlRequest:URLRequest = new URLRequest("http://192.168.4.112:8080/slavara/test/HaXe2HTML5/dragonbones-assets/character");
+		var urlLoader:URLLoader = new URLLoader();
+		urlLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onUrlLoaderSecurityError);
+		urlLoader.addEventListener(Event.COMPLETE, onUrlLoaderComplete);
+		urlLoader.dataFormat = URLLoaderDataFormat.BINARY;
+		urlLoader.load(urlRequest);
+	}
+	
+	private function onUrlLoaderSecurityError(event:SecurityErrorEvent) {
+		throw event.text;
+	}
+	
+	private function onUrlLoaderComplete(event:Event) {
+		var urlLoader:URLLoader = cast(event.target, URLLoader);
+		urlLoader.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, onUrlLoaderSecurityError);
+		urlLoader.removeEventListener(Event.COMPLETE, onUrlLoaderComplete);
+		
+		factory.parseData(cast(urlLoader.data, ByteArray));
 	}
 	
 	var factory:BaseFactory;

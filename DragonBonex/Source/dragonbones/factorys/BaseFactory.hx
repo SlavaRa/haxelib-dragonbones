@@ -13,6 +13,9 @@ import dragonbones.objects.XMLDataParser;
 import dragonbones.textures.ITextureAtlas;
 import dragonbones.textures.NativeTextureAtlas;
 import dragonbones.textures.SubTextureData;
+import dragonbones.utils.DisposeUtils;
+import flash.display.BitmapData;
+import haxe.Log;
 import msignal.Signal;
 import nme.display.Bitmap;
 import nme.display.DisplayObject;
@@ -55,8 +58,8 @@ class BaseFactory {
 		onDataParsed = null;
 		
 		if (disposeData) {
-			for (i in _name2SkeletonData) i.dispose();
-			for (i in _name2TexAtlas) i.dispose();
+			for (i in _name2SkeletonData) DisposeUtils.dispose(i);
+			for (i in _name2TexAtlas) DisposeUtils.dispose(i);
 		}
 		
 		_name2SkeletonData = null;
@@ -263,8 +266,8 @@ class BaseFactory {
 		return throw "non supported type";
 	}
 	
-	function createTextureAtlas(content:Dynamic, textureAtlasXML:Dynamic):ITextureAtlas {
-		return new NativeTextureAtlas(content, cast(textureAtlasXML, Xml));
+	function createTextureAtlas(content:Dynamic, texAtlasXML:Xml):ITextureAtlas {
+		return new NativeTextureAtlas(content, texAtlasXML);
 	}
 	
 	function createArmature():Armature {
@@ -292,7 +295,6 @@ class BaseFactory {
 				var rect:Rectangle = nativeTexAtlas.getRegion(fullName);
 				if(Std.is(rect, SubTextureData)){
 					var subTexData:SubTextureData = cast(rect, SubTextureData);
-					var shape:Shape = new Shape();
 					
 					//1.4
 					if (pivotX == 0) {
@@ -307,11 +309,17 @@ class BaseFactory {
 					helpMatrix.tx = -subTexData.x - pivotX;
 					helpMatrix.ty = -subTexData.y - pivotY;
 					
-					shape.graphics.clear();
+					#if !js
+					var shape:Shape = new Shape();
 					shape.graphics.beginBitmapFill(nativeTexAtlas.bitmapData, helpMatrix, false, true);
 					shape.graphics.drawRect( -pivotX, -pivotY, subTexData.width, subTexData.height);
 					shape.graphics.endFill();
 					return shape;
+					#else
+					var bitmapData:BitmapData = new BitmapData(cast(subTexData.width, Int), cast(subTexData.height, Int), true, 0x000000);
+					bitmapData.draw(nativeTexAtlas.bitmapData, helpMatrix);
+					return new Bitmap(bitmapData);
+					#end
 				}
 			}
 		}

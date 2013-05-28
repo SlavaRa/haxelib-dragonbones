@@ -22,4 +22,13 @@ class DecompressedData implements IDisposable{
 		texAtlasXml = null;
 		texBytes = null;
 	}
+	
+	public function toString():String {
+		var s = "";
+		s += "\n[DecompressedData";
+		s += "\n, skeletonXml = " + skeletonXml.toString(); 
+		s += "\n, texAtlasXml = " + texAtlasXml.toString();
+		s += "\n, texBytes.length = " + Std.string(texBytes.length);
+		return s;
+	}
 }

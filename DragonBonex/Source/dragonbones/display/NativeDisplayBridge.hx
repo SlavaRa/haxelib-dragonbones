@@ -1,5 +1,6 @@
 package dragonbones.display;
 import dragonbones.objects.Node;
+import haxe.Log;
 import nme.display.DisplayObject;
 import nme.display.DisplayObjectContainer;
 import nme.geom.ColorTransform;
