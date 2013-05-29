@@ -1,7 +1,6 @@
 package;
 
-import examples.nme.NMEView;
-import examples.starling.StarlingView;
+import examples.ExampleView;
 import nme.display.Sprite;
 import nme.Lib;
 
@@ -17,13 +16,5 @@ class Main extends Sprite {
 		initialize();
 	}
 	
-	#if (flash11 && starling)
-	function initialize() addChild(new StarlingView());
-	#if gm2d
-	
-	#if genome2d
-	
-	#else
-	function initialize() addChild(new NMEView());
-	#end
+	function initialize() addChild(new ExampleView());
 }

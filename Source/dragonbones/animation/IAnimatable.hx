@@ -6,7 +6,7 @@ package dragonbones.animation;
 #if (flash11 && starling)
 typedef IAnimatable = starling.animation.IAnimatable;
 #else
-typedef IAnimatable = {
+interface IAnimatable {
 	function advanceTime(passedTime:Float):Void;
 }
 #end

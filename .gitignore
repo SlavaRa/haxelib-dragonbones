@@ -458,3 +458,4 @@ bin/windows/neko/haxe/debug.hxml
 bin/windows/neko/haxe/nme/AssetData.hx
 bin/windows/neko/haxe/release.hxml
 bin/windows/neko/obj/ApplicationMain.n
+bin/flash/bin/MyApplication.swf

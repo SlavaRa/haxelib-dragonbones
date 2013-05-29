@@ -1,7 +1,9 @@
 package dragonbones.display;
 
-#if starling
+#if (flash11 && starling)
 typedef DisplayObjectContainer = starling.display.DisplayObjectContainer;
+#elseif gm2d
+typedef DisplayObjectContainer = gm2d.display.DisplayObjectContainer;
 #else
 typedef DisplayObjectContainer = nme.display.DisplayObjectContainer;
 #end

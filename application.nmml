@@ -3,8 +3,8 @@
 	
 	<meta title="dragonboneshx3" package="dragonboneshx3" version="1.0.0" company="SlavaRa" />
 	
-	<!--<app main="Main" file="dragonboneshx3" path="bin"/>-->
-	<app main="Main" file="dragonboneshx3" path="bin" swf-version="11.3"/>
+	<app main="Main" file="dragonboneshx3" path="bin"/>
+	<!--<app main="Main" file="dragonboneshx3" path="bin" swf-version="11.3"/>-->
 	
 	<window background="#000000" fps="60" />
 	<window width="800" height="480" unless="mobile" />
@@ -15,7 +15,8 @@
 	<haxelib name="nme" />
 	<haxelib name="format" />
 	<haxelib name="msignal" />
-	<haxelib name="starling" />
+	<!--<haxelib name="starling" />-->
+	<haxelib name="gm2d" />
 	
 	<assets path="Assets" rename="assets" include="*" exclude="nme.svg" />
 	<icon path="assets/nme.svg" />
