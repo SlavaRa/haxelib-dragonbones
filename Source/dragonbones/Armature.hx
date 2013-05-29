@@ -4,25 +4,32 @@ import dragonbones.animation.Animation;
 import dragonbones.animation.IAnimatable;
 import dragonbones.display.DisplayObject;
 import dragonbones.display.Sprite;
-import dragonbones.events.ArmatureEvent;
 import dragonbones.objects.Node;
 import dragonbones.utils.DisposeUtils;
 import dragonbones.utils.IDisposable;
-import nme.events.EventDispatcher;
 import nme.geom.ColorTransform;
+import msignal.Signal;
+
+typedef BoneFrameData = { bone:Bone, movementID:String, frameLabel:String };
 
 /**
  * @author SlavaRa
  */
-class Armature extends EventDispatcher implements IAnimatable implements IDisposable{
+class Armature implements IAnimatable implements IDisposable{
 
 	public function new(display:Sprite) {
-		super();
-		this.displayContainer = display;
+		displayContainer = display;
 		bones = [];
 		_rootBones = [];
 		animation = new Animation(this);
 		bonesIndexChanged = false;
+		onZOrderUpdate = new Signal0();
+		onBoneFrame = new Signal1<BoneFrameData>();
+		onMovementChange = new Signal2<String, String>();
+		onMovementFrame = new Signal1<BoneFrameData>();
+		onAnimationStart = new Signal1<String>();
+		onAnimationComplete = new Signal1<String>();
+		onAnimationLoopComplete = new Signal1<String>();
 	}
 	
 	public var name:String;
@@ -32,6 +39,13 @@ class Armature extends EventDispatcher implements IAnimatable implements IDispos
 	public var bonesIndexChanged:Bool;
 	public var colorTransform(default, set_colorTransform):ColorTransform;
 	public var colorTransformChange:Bool;
+	public var onZOrderUpdate(default, null):Signal0;
+	public var onBoneFrame(default, null):Signal1<BoneFrameData>;
+	public var onMovementChange(default, null):Signal2<String, String>/*of <exMovementID, movementID>*/;
+	public var onMovementFrame(default, null):Signal1<BoneFrameData>;
+	public var onAnimationStart(default, null):Signal1<String>/*of <movementID>*/;
+	public var onAnimationComplete(default, null):Signal1<String>/*of <movementID>*/;
+	public var onAnimationLoopComplete(default, null):Signal1<String>/*of <movementID>*/;
 	
 	function set_colorTransform(value:ColorTransform):ColorTransform {
 		if (value == colorTransform) {
@@ -45,13 +59,28 @@ class Armature extends EventDispatcher implements IAnimatable implements IDispos
 	var _rootBones:Array<Bone>;
 	
 	public function dispose() {
-		for (i in _rootBones) DisposeUtils.dispose(i);
+		DisposeUtils.dispose(onZOrderUpdate);
+		DisposeUtils.dispose(onBoneFrame);
+		DisposeUtils.dispose(onMovementChange);
+		DisposeUtils.dispose(onMovementFrame);
+		DisposeUtils.dispose(onAnimationStart);
+		DisposeUtils.dispose(onAnimationComplete);
+		DisposeUtils.dispose(onAnimationLoopComplete);
 		DisposeUtils.dispose(animation);
 		
+		for (i in _rootBones) DisposeUtils.dispose(i);
+		
+		_rootBones = null;
+		onZOrderUpdate = null;
+		onBoneFrame = null;
+		onMovementChange = null;
+		onMovementFrame = null;
+		onAnimationStart = null;
+		onAnimationComplete = null;
+		onAnimationLoopComplete = null;
 		displayContainer = null;
 		animation = null;
 		bones = null;
-		_rootBones = null;
 		colorTransform = null;
 	}
 	
@@ -164,8 +193,7 @@ class Armature extends EventDispatcher implements IAnimatable implements IDispos
 	}
 	
 	public function update() {
-		var length:Int = _rootBones.length;
-		for (i in 0...length) {
+		for (i in 0..._rootBones.length) {
 			_rootBones[i].update();
 		}
 		
@@ -183,20 +211,21 @@ class Armature extends EventDispatcher implements IAnimatable implements IDispos
 		}
 		bonesIndexChanged = false;
 		
-		if(hasEventListener(ArmatureEvent.Z_ORDER_UPDATED)) {
-			dispatchEvent(new ArmatureEvent(ArmatureEvent.Z_ORDER_UPDATED));
+		
+		if(onZOrderUpdate.numListeners > 0) {
+			onZOrderUpdate.dispatch();
 		}
 	}
 	
-	function compareZ(a:Bone, b:Bone):Int {
+	inline function compareZ(a:Bone, b:Bone):Int {
 		return Std.int(a.global[Node.z] - b.global[Node.z]);
 	}
 	
-	private inline function has(bone:Bone):Bool {
+	inline function has(bone:Bone):Bool {
 		return bone.armature == this;
 	}
 	
-	private inline function hasNot(bone:Bone):Bool {
+	inline function hasNot(bone:Bone):Bool {
 		return (bone.armature == null) || (bone.armature != this);
 	}
 	

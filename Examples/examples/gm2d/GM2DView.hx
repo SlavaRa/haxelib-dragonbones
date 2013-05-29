@@ -89,5 +89,4 @@ class GM2DView extends Screen{
 			WorldClock.instance.add(armature);
 		}
 	}
-	
 }

@@ -1,5 +1,6 @@
 package dragonbones.utils;
 import nme.display.BitmapData;
+import msignal.Signal;
 
 /**
  * @author SlavaRa
@@ -12,6 +13,8 @@ class DisposeUtils {
 			d.dispose();
 		} else if (Std.is(target, BitmapData)) {
 			cast(target, BitmapData).dispose();
+		} else if (Std.is(target, AnySignal)) {
+			cast(target, AnySignal).removeAll();
 		}
 	}
 	

@@ -1,8 +1,6 @@
 package dragonbones.animation;
 import dragonbones.Armature;
 import dragonbones.Bone;
-import dragonbones.events.AnimationEvent;
-import dragonbones.events.FrameEvent;
 import dragonbones.events.SoundEvent;
 import dragonbones.events.SoundEventManager;
 import dragonbones.objects.AnimationData;
@@ -10,6 +8,7 @@ import dragonbones.objects.MovementBoneData;
 import dragonbones.objects.MovementData;
 import dragonbones.objects.MovementFrameData;
 import dragonbones.utils.IDisposable;
+import msignal.Signal;
 
 /**
  * @author SlavaRa
@@ -153,11 +152,8 @@ class Animation implements IDisposable{
 			}
 		}
 		
-		if(_armature.hasEventListener(AnimationEvent.MOVEMENT_CHANGE)) {
-			var event:AnimationEvent = new AnimationEvent(AnimationEvent.MOVEMENT_CHANGE);
-			event.exMovementID = exMovementID;
-			event.movementID = this.movementID;
-			_armature.dispatchEvent(event);
+		if(_armature.onMovementChange.numListeners > 0) {
+			_armature.onMovementChange.dispatch(exMovementID, this.movementID);
 		}
 	}
 	
@@ -194,7 +190,6 @@ class Animation implements IDisposable{
 		
 		if ((_loop > 0) || (_curTime < _totalTime) || (_totalTime == 0)) {
 			
-			var event:AnimationEvent = null;
 			var progress:Float;
 			
 			if(_totalTime > 0) {
@@ -206,37 +201,39 @@ class Animation implements IDisposable{
 				progress = 1;
 			}
 			
+			var signal:Signal1<String> = null;
+			
 			if (_playType == LOOP) {
 				var loop:Int = Std.int(progress);
 				if(loop != _loop) {
 					_loop = loop;
 					_nextFrameDataTimeEdge = 0;
-					if(_armature.hasEventListener(AnimationEvent.LOOP_COMPLETE)) {
-						event = new AnimationEvent(AnimationEvent.LOOP_COMPLETE);
+					if(_armature.onAnimationLoopComplete.numListeners > 0) {
+						signal = _armature.onAnimationLoopComplete;
 					}
 				}
 			} else if (progress >= 1) {
 				switch(_playType) {
 					case SINGLE, LIST:
 						progress = 1;
-						if(_armature.hasEventListener(AnimationEvent.COMPLETE)) {
-							event = new AnimationEvent(AnimationEvent.COMPLETE);
+						if(_armature.onAnimationComplete.numListeners > 0) {
+							signal = _armature.onAnimationComplete;
 						}
 					case LIST_START:
 						progress = 0;
 						_playType = LIST;
 						_curTime = 0;
 						_totalTime = _duration;
-						if(_armature.hasEventListener(AnimationEvent.START)) {
-							event = new AnimationEvent(AnimationEvent.START);
+						if(_armature.onAnimationStart.numListeners > 0) {
+							signal = _armature.onAnimationStart;
 						}
 					case LOOP_START:
 						progress = 0;
 						_playType = LOOP;
 						_curTime = 0;
 						_totalTime = _duration;
-						if(_armature.hasEventListener(AnimationEvent.START)) {
-							event = new AnimationEvent(AnimationEvent.START);
+						if(_armature.onAnimationStart.numListeners > 0) {
+							signal = _armature.onAnimationStart;
 						}
 				}
 			}
@@ -258,9 +255,8 @@ class Animation implements IDisposable{
 				updateFrameData(progress);
 			}
 			
-			if (event != null) {
-				event.movementID = movementID;
-				_armature.dispatchEvent(event);
+			if(signal != null) {
+				signal.dispatch(movementID);
 			}
 		} else {
 			bones = _armature.bones;
@@ -296,11 +292,8 @@ class Animation implements IDisposable{
 	}
 	
 	function arriveFrameData(movementFrameData:MovementFrameData) {
-		if((movementFrameData.event != null) && _armature.hasEventListener(FrameEvent.MOVEMENT_FRAME_EVENT)) {
-			var frameEvent:FrameEvent = new FrameEvent(FrameEvent.MOVEMENT_FRAME_EVENT);
-			frameEvent.movementID = movementID;
-			frameEvent.frameLabel = movementFrameData.event;
-			_armature.dispatchEvent(frameEvent);
+		if((movementFrameData.event != null) && (_armature.onMovementFrame.numListeners > 0)) {
+			_armature.onMovementFrame.dispatch( { bone:null, movementID: this.movementID, frameLabel:movementFrameData.event } );
 		}
 		
 		if((movementFrameData.sound != null) && _soundManager.hasEventListener(SoundEvent.SOUND)) {

@@ -1,6 +1,6 @@
 package dragonbones.animation;
+import dragonbones.Armature;
 import dragonbones.Bone;
-import dragonbones.events.FrameEvent;
 import dragonbones.events.SoundEvent;
 import dragonbones.events.SoundEventManager;
 import dragonbones.objects.FrameData;
@@ -231,11 +231,8 @@ class Tween{
 		updateBoneDisplayIndex(frameData);
 		_bone.visible = frameData.visible;
 		
-		if((frameData.event != null) && _bone.armature.hasEventListener(FrameEvent.BONE_FRAME_EVENT)) {
-			var frameEvent:FrameEvent = new FrameEvent(FrameEvent.BONE_FRAME_EVENT, false, _bone);
-			frameEvent.movementID = _bone.armature.animation.movementID;
-			frameEvent.frameLabel = frameData.event;
-			_bone.armature.dispatchEvent(frameEvent);
+		if((frameData.event != null) && (_bone.armature.onBoneFrame.numListeners > 0)) {
+			_bone.armature.onBoneFrame.dispatch({ bone: _bone, movementID: _bone.armature.animation.movementID, frameLabel: frameData.event });
 		}
 		
 		if((frameData.sound != null) && _soundManager.hasEventListener(SoundEvent.SOUND)) {
