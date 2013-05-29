@@ -4,8 +4,6 @@ import haxe.Timer;
 
 /**
  * @author SlavaRa
- * проверки вида a != a, используются вместо Math.isNaN(а),
- * т.к. Math.isNaN вызывает утечки памяти для flash платформы
  */
 class WorldClock implements IAnimatable {
 	
@@ -66,7 +64,7 @@ class WorldClock implements IAnimatable {
 		passedTime *= timeScale;
 		
 		var length:Int = _animatableList.length;
-		for (i in 0 ... length) {
+		for (i in 0...length) {
 			_animatableList[i].advanceTime(passedTime);
 		}
 	}

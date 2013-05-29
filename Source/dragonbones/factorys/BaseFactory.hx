@@ -1,7 +1,8 @@
 package dragonbones.factorys;
 import dragonbones.Armature;
 import dragonbones.Bone;
-import dragonbones.display.NativeDisplayBridge;
+import dragonbones.display.DisplayBridge;
+import dragonbones.display.Sprite;
 import dragonbones.objects.AnimationData;
 import dragonbones.objects.ArmatureData;
 import dragonbones.objects.BoneData;
@@ -15,8 +16,6 @@ import dragonbones.textures.NativeTextureAtlas;
 import dragonbones.textures.SubTextureData;
 import dragonbones.utils.DisposeUtils;
 import flash.display.BitmapData;
-import haxe.Log;
-import msignal.Signal;
 import nme.display.Bitmap;
 import nme.display.DisplayObject;
 import nme.display.DisplayObjectContainer;
@@ -24,11 +23,11 @@ import nme.display.Loader;
 import nme.display.LoaderInfo;
 import nme.display.MovieClip;
 import nme.display.Shape;
-import nme.display.Sprite;
 import nme.events.Event;
 import nme.geom.Matrix;
 import nme.geom.Rectangle;
 import nme.utils.ByteArray;
+import msignal.Signal;
 
 /**
  * @author SlavaRa
@@ -275,7 +274,7 @@ class BaseFactory {
 	}
 	
 	function createBone():Bone {
-		return new Bone(new NativeDisplayBridge());
+		return new Bone(new DisplayBridge());
 	}
 	
 	function createTextureDisplay(texAtlas:ITextureAtlas, fullName:String, pivotX:Int = 0, pivotY:Int = 0):Dynamic {

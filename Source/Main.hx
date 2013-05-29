@@ -1,9 +1,8 @@
 package;
 
-import dragonbones.display.Sprite;
-import nme.display.StageAlign;
-import nme.display.StageScaleMode;
-import nme.events.Event;
+import examples.nme.NMEView;
+import examples.starling.StarlingView;
+import nme.display.Sprite;
 import nme.Lib;
 
 /**
@@ -15,25 +14,16 @@ class Main extends Sprite {
 	
 	public function new() {
 		super();
-		if(stage != null) {
-			onStageAddedToStage();
-		} else {
-			addEventListener(Event.ADDED_TO_STAGE, onStageAddedToStage);
-		}
-	}
-	
-	function onStageAddedToStage(?_) {
-		removeEventListener(Event.ADDED_TO_STAGE, onStageAddedToStage);
-		
-		configureStage();
 		initialize();
 	}
 	
-	function configureStage() {
-		stage.align = StageAlign.TOP_LEFT;
-		stage.scaleMode = StageScaleMode.NO_SCALE;
-	}
+	#if (flash11 && starling)
+	function initialize() addChild(new StarlingView());
+	#if gm2d
 	
-	function initialize() cast(addChild(new NMETestView()), NMETestView).start();
+	#if genome2d
 	
+	#else
+	function initialize() addChild(new NMEView());
+	#end
 }

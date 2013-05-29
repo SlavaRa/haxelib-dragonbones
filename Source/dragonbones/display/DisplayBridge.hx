@@ -3,4 +3,8 @@ package dragonbones.display;
 /**
  * @author SlavaRa
  */
-typedef DisplayBridge = dragonbones.display.NativeDisplayBridge;
+#if (flash11 && starling)
+typedef DisplayBridge = StarlingDisplayBridge;
+#else
+typedef DisplayBridge = NativeDisplayBridge;
+#end

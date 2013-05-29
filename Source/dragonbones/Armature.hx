@@ -2,12 +2,12 @@ package dragonbones;
 
 import dragonbones.animation.Animation;
 import dragonbones.animation.IAnimatable;
+import dragonbones.display.DisplayObject;
+import dragonbones.display.Sprite;
 import dragonbones.events.ArmatureEvent;
 import dragonbones.objects.Node;
 import dragonbones.utils.DisposeUtils;
 import dragonbones.utils.IDisposable;
-import nme.display.DisplayObject;
-import nme.display.Sprite;
 import nme.events.EventDispatcher;
 import nme.geom.ColorTransform;
 

@@ -8,7 +8,6 @@ import dragonbones.objects.MovementBoneData;
 import dragonbones.objects.Node;
 import dragonbones.utils.MathUtils;
 import dragonbones.utils.TransformUtils;
-import haxe.Log;
 import nme.geom.ColorTransform;
 
 /**

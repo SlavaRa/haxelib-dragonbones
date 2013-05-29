@@ -10,7 +10,6 @@ import dragonbones.objects.MovementBoneData;
 import dragonbones.objects.MovementData;
 import dragonbones.objects.MovementFrameData;
 import dragonbones.utils.IDisposable;
-import haxe.Log;
 
 /**
  * @author SlavaRa

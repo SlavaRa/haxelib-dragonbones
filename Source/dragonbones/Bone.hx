@@ -2,13 +2,12 @@ package dragonbones;
 
 import dragonbones.animation.Tween;
 import dragonbones.display.DisplayBridge;
+import dragonbones.display.DisplayObject;
+import dragonbones.display.DisplayObjectContainer;
 import dragonbones.objects.Node;
 import dragonbones.utils.DisposeUtils;
 import dragonbones.utils.IDisposable;
 import dragonbones.utils.TransformUtils;
-import haxe.Log;
-import nme.display.DisplayObject;
-import nme.display.DisplayObjectContainer;
 import nme.geom.ColorTransform;
 import nme.geom.Matrix;
 import nme.geom.Point;
