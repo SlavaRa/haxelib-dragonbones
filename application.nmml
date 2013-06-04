@@ -16,7 +16,7 @@
 	<haxelib name="format" />
 	<haxelib name="msignal" />
 	<!--<haxelib name="starling" />-->
-	<haxelib name="gm2d" />
+	<!--<haxelib name="gm2d" />-->
 	
 	<assets path="Assets" rename="assets" include="*" exclude="nme.svg" />
 	<icon path="assets/nme.svg" />
