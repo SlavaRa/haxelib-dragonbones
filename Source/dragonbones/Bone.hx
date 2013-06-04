@@ -8,9 +8,9 @@ import dragonbones.objects.Node;
 import dragonbones.utils.DisposeUtils;
 import dragonbones.utils.IDisposable;
 import dragonbones.utils.TransformUtils;
-import nme.geom.ColorTransform;
-import nme.geom.Matrix;
-import nme.geom.Point;
+import flash.geom.ColorTransform;
+import flash.geom.Matrix;
+import flash.geom.Point;
 
 /**
  * @author SlavaRa

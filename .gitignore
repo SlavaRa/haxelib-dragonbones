@@ -1249,3 +1249,10 @@ bin/windows/cpp/obj/src/native/filters/BitmapFilterType.cpp
 bin/windows/cpp/obj/src/native/filters/DropShadowFilter.cpp
 bin/windows/cpp/obj/src/native/filters/GlowFilter.cpp
 bin/windows/cpp/obj/src/native/ui/Mouse.cpp
+bin/html5/bin/index.html
+bin/html5/bin/webgl-debug.js
+bin/html5/haxe/ApplicationMain.hx
+bin/html5/haxe/NMEPreloader.hx
+bin/html5/haxe/debug.hxml
+bin/html5/haxe/nme/AssetData.hx
+bin/html5/haxe/release.hxml

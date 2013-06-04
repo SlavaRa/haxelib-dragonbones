@@ -2,9 +2,9 @@ package dragonbones.textures;
 import dragonbones.utils.ConstValues;
 import dragonbones.utils.DisposeUtils;
 import haxe.Log;
-import nme.display.BitmapData;
-import nme.display.MovieClip;
-import nme.geom.Rectangle;
+import flash.display.BitmapData;
+import flash.display.MovieClip;
+import flash.geom.Rectangle;
 
 /**
  * @author SlavaRa

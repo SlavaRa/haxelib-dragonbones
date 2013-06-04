@@ -5,5 +5,5 @@ typedef Sprite = starling.display.Sprite;
 #elseif gm2d
 typedef Sprite = gm2d.display.Sprite;
 #else
-typedef Sprite = nme.display.Sprite;
+typedef Sprite = flash.display.Sprite;
 #end

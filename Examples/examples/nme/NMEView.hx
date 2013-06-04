@@ -3,16 +3,16 @@ package examples.nme;
 import dragonbones.animation.WorldClock;
 import dragonbones.Armature;
 import dragonbones.factorys.ArmatureFactory;
-import nme.display.DisplayObject;
-import nme.display.Sprite;
-import nme.display.StageAlign;
-import nme.display.StageScaleMode;
-import nme.events.Event;
-import nme.Lib;
-import nme.net.URLLoader;
-import nme.net.URLLoaderDataFormat;
-import nme.net.URLRequest;
-import nme.utils.ByteArray;
+import flash.display.DisplayObject;
+import flash.display.Sprite;
+import flash.display.StageAlign;
+import flash.display.StageScaleMode;
+import flash.events.Event;
+import flash.Lib;
+import flash.net.URLLoader;
+import flash.net.URLLoaderDataFormat;
+import flash.net.URLRequest;
+import flash.utils.ByteArray;
 
 /**
  * @author SlavaRa
@@ -75,7 +75,7 @@ class NMEView extends Sprite{
 			display.x = x;
 			display.y = y;
 			x += display.width + 10;
-			if((x + display.width) >= Lib.current.stage.stageWidth) {
+			if((x + display.width) >= stage.stageWidth) {
 				x = 100;
 				y += display.height + 10;
 			}

@@ -1,8 +1,8 @@
-package;
+package dragonbones;
 
 import examples.ExampleView;
-import nme.display.Sprite;
-import nme.Lib;
+import flash.display.Sprite;
+import flash.Lib;
 
 /**
  * @author SlavaRa

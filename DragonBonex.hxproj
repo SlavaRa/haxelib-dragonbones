@@ -11,30 +11,29 @@
     <movie version="3" />
     <movie minorVersion="0" />
     <movie platform="NME" />
-    <movie background="0" />
+    <movie background="#000000" />
     <movie preferredSDK="Haxe 3.0.0;3.0.0;" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="Source" />
     <class path="Examples" />
-    <class path="C:\HaxeToolkit\haxe/lib\nme/3,5,6/" />
-    <class path="bin/flash/haxe" />
+    <class path="bin/windows/neko/haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="nme&#xA;nme_ver=3.5.6&#xA;nme_install_tool=1&#xA;nme3=1&#xA;web" />
+    <option directives="nme_ver=3.5.6&#xA;nme_install_tool=1&#xA;nme3=1&#xA;windows&#xA;desktop" />
     <option flashStrict="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="True" />
-    <option additional="-dce no&#xA;-swf-version 11" />
+    <option additional="-dce no&#xA;--remap flash:nme&#xA;--remap browser:native" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>
-    <library name="nme" />
+    <library name="openfl" />
+    <library name="openfl-compatibility" />
     <library name="format" />
     <library name="msignal" />
-    <library name="gm2d" />
   </haxelib>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>

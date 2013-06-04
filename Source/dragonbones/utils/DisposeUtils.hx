@@ -1,5 +1,5 @@
 package dragonbones.utils;
-import nme.display.BitmapData;
+import flash.display.BitmapData;
 import msignal.Signal;
 
 /**

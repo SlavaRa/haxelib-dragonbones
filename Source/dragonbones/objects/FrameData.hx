@@ -1,7 +1,7 @@
 package dragonbones.objects;
-import dragonbones.utils.IDisposable;
-import nme.geom.ColorTransform;
 import dragonbones.objects.Node;
+import dragonbones.utils.IDisposable;
+import flash.geom.ColorTransform;
 
 /**
  * @author SlavaRa

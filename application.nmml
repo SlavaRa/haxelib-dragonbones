@@ -3,7 +3,7 @@
 	
 	<meta title="dragonboneshx3" package="dragonboneshx3" version="1.0.0" company="SlavaRa" />
 	
-	<app main="Main" file="dragonboneshx3" path="bin"/>
+	<app main="dragonbones.Main" file="dragonboneshx3" path="bin"/>
 	<!--<app main="Main" file="dragonboneshx3" path="bin" swf-version="11.3"/>-->
 	
 	<window background="#000000" fps="60" />
@@ -12,7 +12,9 @@
 	
 	<source path="Source" />
 	<source path="Examples" />
-	<haxelib name="nme" />
+	<!--<haxelib name="nme" />-->
+	<haxelib name="openfl" />
+	<haxelib name="openfl-compatibility" />
 	<haxelib name="format" />
 	<haxelib name="msignal" />
 	<!--<haxelib name="starling" />-->

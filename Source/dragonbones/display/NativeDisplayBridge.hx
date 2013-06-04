@@ -2,8 +2,8 @@ package dragonbones.display;
 import dragonbones.display.DisplayObject;
 import dragonbones.display.DisplayObjectContainer;
 import dragonbones.objects.Node;
-import nme.geom.ColorTransform;
-import nme.geom.Matrix;
+import flash.geom.ColorTransform;
+import flash.geom.Matrix;
 
 /**
  * @author SlavaRa
@@ -40,9 +40,9 @@ class NativeDisplayBridge{
 		matrix.ty -= matrix.b * pivotX + matrix.d * pivotY;
 		
 		//TODO: refactor this
-		cast(display, nme.display.DisplayObject).transform.matrix = matrix;
+		cast(display, flash.display.DisplayObject).transform.matrix = matrix;
 		if(colorTransform != null) {
-			cast(display, nme.display.DisplayObject).transform.colorTransform = colorTransform;
+			cast(display, flash.display.DisplayObject).transform.colorTransform = colorTransform;
 		}
 		display.visible = visible;
 	}

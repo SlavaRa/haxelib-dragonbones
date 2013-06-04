@@ -1,6 +1,6 @@
 package dragonbones.events;
-import nme.events.EventDispatcher;
-import nme.events.IEventDispatcher;
+import flash.events.EventDispatcher;
+import flash.events.IEventDispatcher;
 
 /**
  * @author SlavaRa

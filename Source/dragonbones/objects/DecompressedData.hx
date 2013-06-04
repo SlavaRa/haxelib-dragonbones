@@ -1,6 +1,6 @@
 package dragonbones.objects;
 import dragonbones.utils.IDisposable;
-import nme.utils.ByteArray;
+import flash.utils.ByteArray;
 
 /**
  * @author SlavaRa
