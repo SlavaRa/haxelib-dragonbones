@@ -34,7 +34,6 @@ class WorldClock implements IAnimatable {
 	}
 	
 	var _animatableList:Array<IAnimatable>;
-	var _time:Float;
 	
 	public function has(animatable:IAnimatable):Bool {
 		return Lambda.has(_animatableList, animatable);
@@ -63,8 +62,7 @@ class WorldClock implements IAnimatable {
 		
 		passedTime *= timeScale;
 		
-		var length:Int = _animatableList.length;
-		for (i in 0...length) {
+		for (i in 0..._animatableList.length) {
 			_animatableList[i].advanceTime(passedTime);
 		}
 	}

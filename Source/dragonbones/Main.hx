@@ -1,4 +1,4 @@
-package;
+package dragonbones;
 
 import examples.ExampleView;
 import nme.display.Sprite;

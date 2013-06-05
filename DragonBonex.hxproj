@@ -34,6 +34,7 @@
     <library name="nme" />
     <library name="format" />
     <library name="msignal" />
+    <library name="singleton" />
     <library name="gm2d" />
   </haxelib>
   <!-- Class files to compile (other referenced classes will automatically be included) -->

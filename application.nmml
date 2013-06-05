@@ -3,7 +3,7 @@
 	
 	<meta title="dragonboneshx3" package="dragonboneshx3" version="1.0.0" company="SlavaRa" />
 	
-	<app main="Main" file="dragonboneshx3" path="bin"/>
+	<app main="dragonbones.Main" file="dragonboneshx3" path="bin"/>
 	<!--<app main="Main" file="dragonboneshx3" path="bin" swf-version="11.3"/>-->
 	
 	<window background="#000000" fps="60" />
