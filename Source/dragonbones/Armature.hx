@@ -7,7 +7,7 @@ import dragonbones.display.Sprite;
 import dragonbones.objects.Node;
 import dragonbones.utils.DisposeUtils;
 import dragonbones.utils.IDisposable;
-import nme.geom.ColorTransform;
+import flash.geom.ColorTransform;
 import msignal.Signal;
 
 typedef BoneFrameData = { bone:Bone, movementID:String, frameLabel:String };

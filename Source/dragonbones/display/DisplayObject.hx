@@ -5,5 +5,5 @@ typedef DisplayObject = starling.display.DisplayObject;
 #elseif gm2d
 typedef DisplayObject = gm2d.display.DisplayObject;
 #else
-typedef DisplayObject = nme.display.DisplayObject
+typedef DisplayObject = flash.display.DisplayObject
 #end

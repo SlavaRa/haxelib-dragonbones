@@ -1,6 +1,6 @@
 package dragonbones.textures;
 import dragonbones.utils.IDisposable;
-import nme.geom.Rectangle;
+import flash.geom.Rectangle;
 
 /**
  * @author SlavaRa

@@ -6,9 +6,8 @@ import dragonbones.utils.BytesType;
 import dragonbones.utils.ConstValues;
 import dragonbones.utils.MathUtils;
 import dragonbones.utils.TransformUtils;
-import haxe.Log;
-import nme.geom.ColorTransform;
-import nme.utils.ByteArray;
+import flash.geom.ColorTransform;
+import flash.utils.ByteArray;
 
 /**
  * @author SlavaRa

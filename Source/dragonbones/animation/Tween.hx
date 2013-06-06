@@ -8,7 +8,7 @@ import dragonbones.objects.MovementBoneData;
 import dragonbones.objects.Node;
 import dragonbones.utils.MathUtils;
 import dragonbones.utils.TransformUtils;
-import nme.geom.ColorTransform;
+import flash.geom.ColorTransform;
 
 /**
  * @author SlavaRa

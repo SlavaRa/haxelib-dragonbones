@@ -16,17 +16,17 @@ import dragonbones.textures.NativeTextureAtlas;
 import dragonbones.textures.SubTextureData;
 import dragonbones.utils.DisposeUtils;
 import flash.display.BitmapData;
-import nme.display.Bitmap;
-import nme.display.DisplayObject;
-import nme.display.DisplayObjectContainer;
-import nme.display.Loader;
-import nme.display.LoaderInfo;
-import nme.display.MovieClip;
-import nme.display.Shape;
-import nme.events.Event;
-import nme.geom.Matrix;
-import nme.geom.Rectangle;
-import nme.utils.ByteArray;
+import flash.display.Bitmap;
+import flash.display.DisplayObject;
+import flash.display.DisplayObjectContainer;
+import flash.display.Loader;
+import flash.display.LoaderInfo;
+import flash.display.MovieClip;
+import flash.display.Shape;
+import flash.events.Event;
+import flash.geom.Matrix;
+import flash.geom.Rectangle;
+import flash.utils.ByteArray;
 import msignal.Signal;
 
 /**

@@ -5,5 +5,5 @@ typedef DisplayObjectContainer = starling.display.DisplayObjectContainer;
 #elseif gm2d
 typedef DisplayObjectContainer = gm2d.display.DisplayObjectContainer;
 #else
-typedef DisplayObjectContainer = nme.display.DisplayObjectContainer;
+typedef DisplayObjectContainer = flash.display.DisplayObjectContainer;
 #end

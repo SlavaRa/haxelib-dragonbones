@@ -2,7 +2,7 @@ package dragonbones.events;
 
 import dragonbones.Armature;
 import dragonbones.Bone;
-import nme.events.Event;
+import flash.events.Event;
 
 /**
  * @author SlavaRa

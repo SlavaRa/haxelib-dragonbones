@@ -1,9 +1,9 @@
 package dragonbones.utils;
 
 import dragonbones.objects.Node;
-import nme.geom.ColorTransform;
-import nme.geom.Matrix;
-import nme.geom.Point;
+import flash.geom.ColorTransform;
+import flash.geom.Matrix;
+import flash.geom.Point;
 
 /**
  * @author SlavaRa

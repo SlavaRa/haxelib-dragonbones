@@ -12,11 +12,13 @@
 	
 	<source path="Source" />
 	<source path="Examples" />
-	<haxelib name="nme" />
+	<!--<haxelib name="nme" />-->
+	<haxelib name="openfl" />
+	<haxelib name="openfl-compatibility" />
 	<haxelib name="format" />
 	<haxelib name="msignal" />
 	<!--<haxelib name="starling" />-->
-	<haxelib name="gm2d" />
+	<!--<haxelib name="gm2d" />-->
 	
 	<assets path="Assets" rename="assets" include="*" exclude="nme.svg" />
 	<icon path="assets/nme.svg" />
