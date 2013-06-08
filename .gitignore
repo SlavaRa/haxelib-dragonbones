@@ -27,7 +27,6 @@ bin/flash/haxe/debug.hxml
 bin/flash/haxe/NMEPreloader.hx
 bin/flash/haxe/ApplicationMain.hx
 bin/flash/bin/dragonboneshx3.swf
-Source/dragonbones/utils/ByteArrayUtils.hx
 bin/windows/cpp/bin/icon.ico
 bin/windows/cpp/bin/nme.ndll
 bin/windows/cpp/haxe/ApplicationMain.hx
