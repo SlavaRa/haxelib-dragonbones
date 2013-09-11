@@ -1,8 +1,8 @@
 package examples.starling;
 
-import nme.display.Sprite;
-import nme.events.Event;
-import nme.Lib;
+import flash.display.Sprite;
+import flash.events.Event;
+import flash.Lib;
 import starling.core.Starling;
 
 /**

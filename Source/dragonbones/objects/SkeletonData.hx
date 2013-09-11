@@ -20,32 +20,20 @@ class SkeletonData implements IDisposable{
 	public var displayDataList(default, null):DataList;
 	
 	public function dispose() {
-		DisposeUtils.dispose(armatureDataList);
-		DisposeUtils.dispose(animationDataList);
-		DisposeUtils.dispose(displayDataList);
-		armatureDataList = null;
-		animationDataList = null;
-		displayDataList = null;
+		armatureDataList = DisposeUtils.dispose(armatureDataList);
+		animationDataList = DisposeUtils.dispose(animationDataList);
+		displayDataList = DisposeUtils.dispose(displayDataList);
 	}
 	
 	public function getArmatureData(name:String):ArmatureData {
-		if (name == null) {
-			return null;
-		}
-		return cast armatureDataList.getDataByName(name);
+		return name != null ? cast armatureDataList.getDataByName(name) : null;
 	}
 	
 	public function getAnimationData(name:String):AnimationData {
-		if (name == null) {
-			return null;
-		}
-		return cast animationDataList.getDataByName(name);
+		return name != null ? cast animationDataList.getDataByName(name) : null;
 	}
 	
 	public function getDisplayData(name:String):DisplayData {
-		if (name == null) {
-			return null;
-		}
-		return cast displayDataList.getDataByName(name);
+		return name != null ? cast displayDataList.getDataByName(name) : null;
 	}
 }

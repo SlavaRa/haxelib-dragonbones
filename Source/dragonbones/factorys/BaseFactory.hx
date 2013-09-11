@@ -6,8 +6,6 @@ import dragonbones.display.Sprite;
 import dragonbones.objects.AnimationData;
 import dragonbones.objects.ArmatureData;
 import dragonbones.objects.BoneData;
-import dragonbones.objects.DecompressedData;
-import dragonbones.objects.DisplayData;
 import dragonbones.objects.Node;
 import dragonbones.objects.SkeletonData;
 import dragonbones.objects.XMLDataParser;
@@ -15,19 +13,16 @@ import dragonbones.textures.ITextureAtlas;
 import dragonbones.textures.NativeTextureAtlas;
 import dragonbones.textures.SubTextureData;
 import dragonbones.utils.DisposeUtils;
-import flash.display.BitmapData;
 import flash.display.Bitmap;
-import flash.display.DisplayObject;
+import flash.display.BitmapData;
 import flash.display.DisplayObjectContainer;
 import flash.display.Loader;
 import flash.display.LoaderInfo;
-import flash.display.MovieClip;
 import flash.display.Shape;
 import flash.events.Event;
 import flash.geom.Matrix;
-import flash.geom.Rectangle;
 import flash.utils.ByteArray;
-import msignal.Signal;
+import msignal.Signal.Signal0;
 
 /**
  * @author SlavaRa
@@ -54,7 +49,7 @@ class BaseFactory {
 	var _curTexAtlasName:String;
 	
 	public function dispose(disposeData:Bool = true) {
-		onDataParsed = null;
+		onDataParsed = DisposeUtils.dispose(onDataParsed);
 		
 		if (disposeData) {
 			for (i in _name2SkeletonData) DisposeUtils.dispose(i);
@@ -71,15 +66,15 @@ class BaseFactory {
 	}
 	
 	public function parseData(bytes:ByteArray, ?skeletonName:String):SkeletonData {
-		var decompressedData:DecompressedData = XMLDataParser.decompressData(bytes);
+		var decompressedData = XMLDataParser.decompressData(bytes);
 		
-		var skeletonData:SkeletonData = XMLDataParser.parseSkeletonData(decompressedData.skeletonXml);
+		var skeletonData = XMLDataParser.parseSkeletonData(decompressedData.skeletonXml);
 		if (skeletonName == null) {
 			skeletonName = skeletonData.name;
 		}
 		addSkeletonData(skeletonData, skeletonName);
 		
-		var loader:Loader = new Loader();
+		var loader = new Loader();
 		_loader2TexAtlasXML.set(loader, decompressedData.texAtlasXml);
 		loader.name = skeletonName;
 		loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loaderCompleteHandler);
@@ -108,9 +103,9 @@ class BaseFactory {
 		}
 		
 		if ((pivotX != pivotX) || (pivotY != pivotY)) {
-			var skeletonData:SkeletonData = _name2SkeletonData.get(texAtlasName);
+			var skeletonData = _name2SkeletonData.get(texAtlasName);
 			if(skeletonData != null) {
-				var displayData:DisplayData = skeletonData.getDisplayData(texName);
+				var displayData = skeletonData.getDisplayData(texName);
 				if(displayData != null) {
 					if (pivotX != pivotX) {
 						pivotX = displayData.pivotX;
@@ -179,15 +174,15 @@ class BaseFactory {
 	}
 	
 	function loaderCompleteHandler(event:Event) {
-		var loaderInfo:LoaderInfo = cast(event.target, LoaderInfo);
+		var loaderInfo = cast(event.target, LoaderInfo);
 		loaderInfo.removeEventListener(Event.COMPLETE, loaderCompleteHandler);
 		
-		var texAtlasXML:Xml = _loader2TexAtlasXML.get(loaderInfo.loader);
+		var texAtlasXML = _loader2TexAtlasXML.get(loaderInfo.loader);
 		_loader2TexAtlasXML.remove(loaderInfo.loader);
 		
 		if((loaderInfo.loader.name != null) && (texAtlasXML != null)) {
 			
-			var texAtlas:ITextureAtlas = createTextureAtlas(getContent(loaderInfo), texAtlasXML);
+			var texAtlas = createTextureAtlas(getContent(loaderInfo), texAtlasXML);
 			addTextureAtlas(texAtlas, loaderInfo.loader.name);
 			
 			if (Lambda.count(_loader2TexAtlasXML) == 0) {
@@ -202,23 +197,23 @@ class BaseFactory {
 		#end
 	}
 	
-	private inline function addSkeletonData(skeletonData:SkeletonData, name:String) {
-		if(name == null) {
-			throw "Unnamed data!";
-		}
+	inline function addSkeletonData(skeletonData:SkeletonData, name:String) {
+		#if debug
+		if(name == null) { throw "Unnamed data!"; }
+		#end
 		
 		_name2SkeletonData.set(name, skeletonData);
 	}
 	
-	private inline function addTextureAtlas(texAtlas:ITextureAtlas, name:String) {
-		if(name == null) {
-			throw "Unnamed data!";
-		}
+	inline function addTextureAtlas(texAtlas:ITextureAtlas, name:String) {
+		#if debug
+		if(name == null) { throw "Unnamed data!"; }
+		#end
 		
 		_name2TexAtlas.set(name, texAtlas);
 	}
 	
-	private inline function getAnimationData(name:String):AnimationData {
+	inline function getAnimationData(name:String):AnimationData {
 		var data:AnimationData = _curSkeletonData.getAnimationData(name);
 		if (data == null) {
 			for (i in _name2SkeletonData) {
@@ -232,16 +227,16 @@ class BaseFactory {
 	}
 	
 	function buildBone(boneData:BoneData):Bone {
-		var bone:Bone = createBone();
+		var bone = createBone();
 		Node.copy(boneData.node, bone.origin);
 		
-		var i:Int = boneData.displayNames.length;
+		var i = boneData.displayNames.length;
 		while (i --> 0) {
-			var name:String = boneData.displayNames[i];
-			var data:DisplayData = _curSkeletonData.getDisplayData(name);
+			var name = boneData.displayNames[i];
+			var data = _curSkeletonData.getDisplayData(name);
 			bone.changeDisplay(i);
 			if (data.isArmature) {
-				var armature:Armature = buildArmature(name, null, _curSkeletonName, _curTexAtlasName);
+				var armature = buildArmature(name, null, _curSkeletonName, _curTexAtlasName);
 				if(armature != null) {
 					armature.animation.play();
 					Reflect.callMethod(bone, Reflect.field(bone, Bone.SET_CHILD_ARMATURE), [armature]);
@@ -253,45 +248,41 @@ class BaseFactory {
 		return bone;
 	}
 	
-	function getContent(loaderInfo:LoaderInfo):Dynamic {
+	inline function getContent(loaderInfo:LoaderInfo):Dynamic {
 		if (Std.is(loaderInfo.content, Bitmap)) {
 			return cast(loaderInfo.content, Bitmap).bitmapData;
-		}
-		
-		if (Std.is(loaderInfo.content, DisplayObjectContainer)) {
+		} else if (Std.is(loaderInfo.content, DisplayObjectContainer)) {
 			return cast(loaderInfo.content, DisplayObjectContainer).getChildAt(0);
-		}
-		
-		return throw "non supported type";
+		} else return throw "non supported type";
 	}
 	
-	function createTextureAtlas(content:Dynamic, texAtlasXML:Xml):ITextureAtlas {
+	inline function createTextureAtlas(content:Dynamic, texAtlasXML:Xml):ITextureAtlas {
 		return new NativeTextureAtlas(content, texAtlasXML);
 	}
 	
-	function createArmature():Armature {
+	inline function createArmature():Armature {
 		return new Armature(new Sprite());
 	}
 	
-	function createBone():Bone {
+	inline function createBone():Bone {
 		return new Bone(new DisplayBridge());
 	}
 	
 	function createTextureDisplay(texAtlas:ITextureAtlas, fullName:String, pivotX:Int = 0, pivotY:Int = 0):Dynamic {
 		if (Std.is(texAtlas, NativeTextureAtlas)) {
-			var nativeTexAtlas:NativeTextureAtlas = cast(texAtlas, NativeTextureAtlas);
-			var clip:MovieClip = nativeTexAtlas.movieClip;
+			var nativeTexAtlas = cast(texAtlas, NativeTextureAtlas);
+			var clip = nativeTexAtlas.movieClip;
 			if ((clip != null) && (clip.totalFrames >= 3)) {
 				clip.gotoAndStop(clip.totalFrames);
 				clip.gotoAndStop(fullName);
 				if (clip.numChildren > 0) {
-					var child:DisplayObject = clip.getChildAt(0);
+					var child = clip.getChildAt(0);
 					child.x = 0;
 					child.y = 0;
 					return child;
 				}
 			} else if (nativeTexAtlas.bitmapData != null) {
-				var rect:Rectangle = nativeTexAtlas.getRegion(fullName);
+				var rect = nativeTexAtlas.getRegion(fullName);
 				if(Std.is(rect, SubTextureData)){
 					var subTexData:SubTextureData = cast(rect, SubTextureData);
 					
@@ -309,13 +300,13 @@ class BaseFactory {
 					helpMatrix.ty = -subTexData.y - pivotY;
 					
 					#if !js
-					var shape:Shape = new Shape();
+					var shape = new Shape();
 					shape.graphics.beginBitmapFill(nativeTexAtlas.bitmapData, helpMatrix, false, true);
 					shape.graphics.drawRect( -pivotX, -pivotY, subTexData.width, subTexData.height);
 					shape.graphics.endFill();
 					return shape;
 					#else
-					var bitmapData:BitmapData = new BitmapData(cast(subTexData.width, Int), cast(subTexData.height, Int), true, 0x000000);
+					var bitmapData = new BitmapData(cast(subTexData.width, Int), cast(subTexData.height, Int), true, 0x000000);
 					bitmapData.draw(nativeTexAtlas.bitmapData, helpMatrix);
 					return new Bitmap(bitmapData);
 					#end

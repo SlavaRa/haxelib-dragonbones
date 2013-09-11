@@ -1,7 +1,7 @@
 package dragonbones.display;
 import dragonbones.objects.Node;
-import nme.geom.ColorTransform;
-import nme.geom.Matrix;
+import flash.geom.ColorTransform;
+import flash.geom.Matrix;
 import starling.display.DisplayObject;
 import starling.display.DisplayObjectContainer;
 import starling.display.Quad;
@@ -62,16 +62,7 @@ class StarlingDisplayBridge {
 		matrix.tx -= matrix.a * pivotX + matrix.c * pivotY;
 		matrix.ty -= matrix.b * pivotX + matrix.d * pivotY;
 		
-		//6%
-		//transformationMatrix.copyFrom(matrix);
-		
-		//4%
-		transformationMatrix.a = matrix.a;
-		transformationMatrix.b = matrix.b;
-		transformationMatrix.c = matrix.c;
-		transformationMatrix.d = matrix.d;
-		transformationMatrix.tx = matrix.tx;
-		transformationMatrix.ty = matrix.ty;
+		transformationMatrix.setTo(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
 		
 		if ((colorTransform != null) && Std.is(display, Quad)) {
 			var quad:Quad = cast(display, Quad);
@@ -109,4 +100,5 @@ class StarlingDisplayBridge {
 			display.parent.removeChild(display);
 		}
 	}
+	
 }

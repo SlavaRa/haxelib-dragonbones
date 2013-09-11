@@ -57,9 +57,6 @@ class DataList implements IDisposable {
 	}
 	
 	public function getDataByName(name:String):Dynamic {
-		if (name == null) {
-			return null;
-		}
-		return _name2data.get(name);
+		return name != null ? _name2data.get(name) : null;
 	}
 }

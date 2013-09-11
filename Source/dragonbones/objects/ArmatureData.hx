@@ -14,15 +14,11 @@ class ArmatureData implements IDisposable{
 	public var boneDataList(default, null):DataList;
 	
 	public function dispose() {
-		DisposeUtils.dispose(boneDataList);
-		boneDataList = null;
+		boneDataList = DisposeUtils.dispose(boneDataList);
 	}
 	
 	public function getBoneData(name:String):BoneData {
-		if (name == null) {
-			return null;
-		}
-		return cast boneDataList.getDataByName(name);
+		return name != null ? cast boneDataList.getDataByName(name) : null;
 	}
 	
 	public function updateBoneList() {
@@ -30,8 +26,8 @@ class ArmatureData implements IDisposable{
 		for (name in boneDataList.names) {
 			var boneData:BoneData = cast boneDataList.getDataByName(name);
 			if (boneData != null) {
-				var levelValue:Float = boneData.node[Node.z];
-				var level:Float = 0;
+				var levelValue = boneData.node[Node.z];
+				var level = 0;
 				while(boneData != null) {
 					level++;
 					levelValue += 1000 * level;
@@ -52,7 +48,7 @@ class ArmatureData implements IDisposable{
 		}
 	}
 	
-	function compareLevel(a,b):Int {
+	inline function compareLevel(a,b):Int {
 		return Reflect.compare(a.level, b.level);
 	}
 	

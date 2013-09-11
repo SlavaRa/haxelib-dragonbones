@@ -97,7 +97,7 @@ class Animation implements IDisposable{
 			return;
 		}
 		
-		var movementData:MovementData = animationData.getMovementData(movementID);
+		var movementData = animationData.getMovementData(movementID);
 		if (movementData == null) {
 			return;
 		}
@@ -107,7 +107,7 @@ class Animation implements IDisposable{
 		_curTime = 0;
 		_breakFrameWhile = true;
 		
-		var exMovementID:String = this.movementID;
+		var exMovementID = this.movementID;
 		this.movementID = movementID;
 		
 		if(tweenTime >= 0) {
@@ -141,7 +141,7 @@ class Animation implements IDisposable{
 		}
 		
 		for (bone in _armature.bones) {
-			var movementBoneData:MovementBoneData = _movementData.getMovementBoneData(bone.name);
+			var movementBoneData = _movementData.getMovementBoneData(bone.name);
 			if (movementBoneData != null) {
 				bone.tween.gotoAndPlay(movementBoneData, _rawDuration, loop, _movementData.tweenEasing);
 				if (bone.childArmature != null) {
@@ -186,7 +186,6 @@ class Animation implements IDisposable{
 		}
 		
 		var bones:Array<Bone> = null;
-		var length:Int;
 		
 		if ((_loop > 0) || (_curTime < _totalTime) || (_totalTime == 0)) {
 			
@@ -238,10 +237,7 @@ class Animation implements IDisposable{
 				}
 			}
 			
-			bones = _armature.bones;
-			length = bones.length;
-			for (i in 0...length) {
-				var bone:Bone = bones[i];
+			for (bone in _armature.bones) {
 				bone.tween.advanceTime(progress, _playType);
 				if (bone.childArmature != null) {
 					bone.childArmature.animation.advanceTime(passedTime);
@@ -259,10 +255,7 @@ class Animation implements IDisposable{
 				signal.dispatch(movementID);
 			}
 		} else {
-			bones = _armature.bones;
-			length = bones.length;
-			for (i in 0...length) {
-				var bone:Bone = bones[i];
+			for (bone in _armature.bones) {
 				if(bone.childArmature != null) {
 					bone.childArmature.animation.advanceTime(passedTime);
 				}
@@ -271,15 +264,15 @@ class Animation implements IDisposable{
 	}
 	
 	function updateFrameData(progress:Float) {
-		var playedTime:Float = _rawDuration * progress;
+		var playedTime = _rawDuration * progress;
 		if (playedTime < _nextFrameDataTimeEdge) {
 			return;
 		}
 		
 		_breakFrameWhile = false;
-		var length:Int = _movementData.movementFrameList.length;
+		var length = _movementData.movementFrameList.length;
 		do  {
-			var currentFrameData:MovementFrameData = _movementData.movementFrameList[_nextFrameDataID];
+			var currentFrameData = _movementData.movementFrameList[_nextFrameDataID];
 			_nextFrameDataTimeEdge += currentFrameData.duration;
 			if (++_nextFrameDataID >= length) {
 				_nextFrameDataID = 0;

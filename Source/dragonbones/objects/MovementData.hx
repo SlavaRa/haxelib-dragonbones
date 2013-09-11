@@ -24,15 +24,11 @@ class MovementData implements IDisposable{
 	public var movementFrameList(default, null):Array<MovementFrameData>;
 	
 	public function dispose() {
-		DisposeUtils.dispose(movementBoneDataList);
-		movementBoneDataList = null;
+		movementBoneDataList = DisposeUtils.dispose(movementBoneDataList);
 		movementFrameList = null;
 	}
 	
 	public function getMovementBoneData(name:String):MovementBoneData {
-		if (name == null) {
-			return null;
-		}
-		return cast movementBoneDataList.getDataByName(name);
+		return name != null ? cast movementBoneDataList.getDataByName(name) : null;
 	}
 }

@@ -113,10 +113,7 @@ class Bone implements IDisposable {
 			while ((ancestor != bone) && (ancestor != null)) {
 				ancestor = ancestor.parent;
 			}
-			if (ancestor == bone) {
-				return true;
-			}
-			return false;
+			return ancestor == bone;
 		}
 		return bone.parent == this;
 	}
@@ -176,7 +173,7 @@ class Bone implements IDisposable {
 		_displayBridge.update(globalTransformMatrix, global, getColorTransform(), visible);
 	}
 	
-	private inline function updateGlobalNode() {
+	inline function updateGlobalNode() {
 		global[Node.x] 		= origin[Node.x] 		+ node[Node.x] 		+ tweenNode[Node.x];
 		global[Node.y] 		= origin[Node.y] 		+ node[Node.y] 		+ tweenNode[Node.y];
 		global[Node.z] 		= origin[Node.z] 		+ node[Node.z] 		+ tweenNode[Node.z];
@@ -188,23 +185,23 @@ class Bone implements IDisposable {
 		global[Node.pivotY]	= origin[Node.pivotY] 	+ node[Node.pivotY] + tweenNode[Node.pivotY];
 		
 		if (parent != null) {
-			_helpPoint.x 	= global[Node.x];
-			_helpPoint.y 	= global[Node.y];
-			_helpPoint 		= parent.globalTransformMatrix.transformPoint(_helpPoint);
-			global[Node.x] 		= _helpPoint.x;
-			global[Node.y] 		= _helpPoint.y;
-			global[Node.skewX] 	+= parent.global[Node.skewX];
-			global[Node.skewY] 	+= parent.global[Node.skewY];
+			_helpPoint.x = global[Node.x];
+			_helpPoint.y = global[Node.y];
+			_helpPoint = parent.globalTransformMatrix.transformPoint(_helpPoint);
+			global[Node.x] = _helpPoint.x;
+			global[Node.y] = _helpPoint.y;
+			global[Node.skewX] += parent.global[Node.skewX];
+			global[Node.skewY] += parent.global[Node.skewY];
 		}
 	}
 	
-	private inline function updateChildArmature() {
+	inline function updateChildArmature() {
 		if (childArmature != null) {
 			childArmature.update();
 		}
 	}
 	
-	private inline function getColorTransform():ColorTransform {
+	inline function getColorTransform():ColorTransform {
 		if (tween.differentColorTransform) {
 			if (armature.colorTransform != null) {
 				tweenColorTransform.concat(armature.colorTransform);

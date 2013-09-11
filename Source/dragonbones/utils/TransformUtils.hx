@@ -16,10 +16,9 @@ class TransformUtils{
 	public static inline function transformPointWithParent(bone:HelpNode, parent:HelpNode) {
 		nodeToMatrix(parent, _helpMatrix);
 		
-		_helpPoint.x = bone[Node.x];
-		_helpPoint.y = bone[Node.y];
-		
 		_helpMatrix.invert();
+		
+		_helpPoint.setTo(bone[Node.x], bone[Node.y]);
 		_helpPoint = _helpMatrix.transformPoint(_helpPoint);
 		
 		Node.setxy(bone, _helpPoint.x, _helpPoint.y);
@@ -34,7 +33,7 @@ class TransformUtils{
 		resultMatrix.c *= node[Node.scaleY];
 		resultMatrix.d *= node[Node.scaleY];  
 		resultMatrix.tx = node[Node.x];
-		resultMatrix.ty = node[Node.y];  
+		resultMatrix.ty = node[Node.y];
 	}
 	
 	public static inline function setOffSetColorTransform(from:ColorTransform, to:ColorTransform, offset:ColorTransform) {

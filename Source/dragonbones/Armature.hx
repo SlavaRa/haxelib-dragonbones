@@ -59,27 +59,19 @@ class Armature implements IAnimatable implements IDisposable{
 	var _rootBones:Array<Bone>;
 	
 	public function dispose() {
-		DisposeUtils.dispose(onZOrderUpdate);
-		DisposeUtils.dispose(onBoneFrame);
-		DisposeUtils.dispose(onMovementChange);
-		DisposeUtils.dispose(onMovementFrame);
-		DisposeUtils.dispose(onAnimationStart);
-		DisposeUtils.dispose(onAnimationComplete);
-		DisposeUtils.dispose(onAnimationLoopComplete);
-		DisposeUtils.dispose(animation);
+		onZOrderUpdate = DisposeUtils.dispose(onZOrderUpdate);
+		onBoneFrame = DisposeUtils.dispose(onBoneFrame);
+		onMovementChange = DisposeUtils.dispose(onMovementChange);
+		onMovementFrame = DisposeUtils.dispose(onMovementFrame);
+		onAnimationStart = DisposeUtils.dispose(onAnimationStart);
+		onAnimationComplete = DisposeUtils.dispose(onAnimationComplete);
+		onAnimationLoopComplete = DisposeUtils.dispose(onAnimationLoopComplete);
+		animation = DisposeUtils.dispose(animation);
 		
 		for (i in _rootBones) DisposeUtils.dispose(i);
 		
 		_rootBones = null;
-		onZOrderUpdate = null;
-		onBoneFrame = null;
-		onMovementChange = null;
-		onMovementFrame = null;
-		onAnimationStart = null;
-		onAnimationComplete = null;
-		onAnimationLoopComplete = null;
 		displayContainer = null;
-		animation = null;
 		bones = null;
 		colorTransform = null;
 	}

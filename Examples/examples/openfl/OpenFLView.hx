@@ -1,4 +1,4 @@
-package examples.nme;
+package examples.openfl;
 
 import dragonbones.animation.WorldClock;
 import dragonbones.Armature;
@@ -17,9 +17,9 @@ import flash.utils.ByteArray;
 /**
  * @author SlavaRa
  */
-class NMEView extends Sprite{
+class OpenFLView extends Sprite{
 
-	public static function main() Lib.current.addChild(new NMEView());
+	public static function main() Lib.current.addChild(new OpenFLView());
 	
 	public function new() {
 		super();
@@ -45,19 +45,19 @@ class NMEView extends Sprite{
 	
 	function initialize() {
 		#if flash
-		var url:String = "../../../Resources/dragonbones_png/character.png";
+		var url = "../../../Resources/dragonbones_png/character.png";
 		#elseif (cpp || neko)
-		var url:String = "../../../../Resources/dragonbones_png/character.png";
+		var url = "../../../../Resources/dragonbones_png/character.png";
 		#end
-		var urlRequest:URLRequest = new URLRequest(url);
-		var urlLoader:URLLoader = new URLLoader();
+		var urlRequest = new URLRequest(url);
+		var urlLoader = new URLLoader();
 		urlLoader.addEventListener(Event.COMPLETE, onUrlLoaderComplete);
 		urlLoader.dataFormat = URLLoaderDataFormat.BINARY;
 		urlLoader.load(urlRequest);
 	}
 	
 	function onUrlLoaderComplete(event:Event) {
-		var urlLoader:URLLoader = cast(event.target, URLLoader);
+		var urlLoader = cast(event.target, URLLoader);
 		urlLoader.removeEventListener(Event.COMPLETE, onUrlLoaderComplete);
 		
 		factory = new ArmatureFactory();
@@ -70,8 +70,8 @@ class NMEView extends Sprite{
 		var y:Float = 150;
 		
 		for (i in 0...10) {
-			var armature:Armature = factory.buildArmature("CharacterAnimations");
-			var display:DisplayObject = cast(armature.displayContainer, DisplayObject);
+			var armature = factory.buildArmature("CharacterAnimations");
+			var display = cast(armature.displayContainer, DisplayObject);
 			display.x = x;
 			display.y = y;
 			x += display.width + 10;

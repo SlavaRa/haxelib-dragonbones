@@ -14,15 +14,11 @@ class AnimationData implements IDisposable {
 	public var movementDataList(default, null):DataList;
 	
 	public function dispose() {
-		DisposeUtils.dispose(movementDataList);
-		movementDataList = null;
+		movementDataList = DisposeUtils.dispose(movementDataList);
 	}
 	
 	public function getMovementData(name:String):MovementData {
-		if (name == null) {
-			return null;
-		}
-		return cast movementDataList.getDataByName(name);
+		return name != null ? cast movementDataList.getDataByName(name) : null;
 	}
 	
 }

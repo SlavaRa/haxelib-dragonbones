@@ -8,5 +8,5 @@ typedef ExampleView = examples.starling.StarlingView
 #elseif gm2d
 typedef ExampleView = examples.gm2d.GM2DView;
 #else
-typedef ExampleView = examples.nme.NMEView;
+typedef ExampleView = examples.openfl.OpenFLView;
 #end

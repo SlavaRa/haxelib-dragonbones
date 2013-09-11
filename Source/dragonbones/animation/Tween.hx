@@ -159,9 +159,9 @@ class Tween{
 		}
 	}
 	
-	function getLoopListNode() {
-		var playedTime:Float = _rawDuration * _movementBoneData.delay;
-		var length:Int = _movementBoneData.frameList.length;
+	inline function getLoopListNode() {
+		var playedTime = _rawDuration * _movementBoneData.delay;
+		var length = _movementBoneData.frameList.length;
 		var nextFrameDataID:Int = 0;
 		var nextFrameDataTimeEdge:Float= 0;
 		var curFrameDataID:Int;
@@ -175,14 +175,14 @@ class Tween{
 			}
 		} while (playedTime >= nextFrameDataTimeEdge);
 		
-		var currentFrameData:FrameData = _movementBoneData.frameList[curFrameDataID];
-		var nextFrameData:FrameData = _movementBoneData.frameList[nextFrameDataID];
+		var currentFrameData = _movementBoneData.frameList[curFrameDataID];
+		var nextFrameData = _movementBoneData.frameList[nextFrameDataID];
 		
 		setOffset(currentFrameData.node, currentFrameData.colorTransform, nextFrameData.node, nextFrameData.colorTransform);
 		
-		var progress:Float = 1 - (nextFrameDataTimeEdge - playedTime) / frameDuration;
+		var progress = 1 - (nextFrameDataTimeEdge - playedTime) / frameDuration;
 		
-		var tweenEasing:Float = (_tweenEasing != _tweenEasing) ? currentFrameData.tweenEasing : _tweenEasing;
+		var tweenEasing = (_tweenEasing != _tweenEasing) ? currentFrameData.tweenEasing : _tweenEasing;
 		if (tweenEasing != 0) {
 			progress = getEaseValue(progress, tweenEasing);
 		}
@@ -194,7 +194,7 @@ class Tween{
 		TransformUtils.setTweenColorTransform(_curColorTransform, _offSetColorTransform, _offSetColorTransform, progress);
 	}
 	
-	private inline function setOffset(curNode:HelpNode, curColorTransform:ColorTransform, nextNode:HelpNode, nextColorTransform:ColorTransform) {
+	inline function setOffset(curNode:HelpNode, curColorTransform:ColorTransform, nextNode:HelpNode, nextColorTransform:ColorTransform) {
 		Node.copy(curNode, _curNode);
 		TransformUtils.setOffSetNode(_curNode, nextNode, _offSetNode);
 		TransformUtils.copyColorTransform(curColorTransform, _curColorTransform);
@@ -216,7 +216,7 @@ class Tween{
 		}
 	}
 	
-	private inline function updateBoneDisplayIndex(frameData:FrameData) {
+	inline function updateBoneDisplayIndex(frameData:FrameData) {
 		if(frameData.displayIndex >= 0) {
 			if(_node[Node.z] != frameData.node[Node.z]) {
 				_node[Node.z] = frameData.node[Node.z];
@@ -227,7 +227,7 @@ class Tween{
 		}
 	}
 	
-	function arriveFrameData(frameData:FrameData) {
+	inline function arriveFrameData(frameData:FrameData) {
 		updateBoneDisplayIndex(frameData);
 		_bone.visible = frameData.visible;
 		
@@ -236,7 +236,7 @@ class Tween{
 		}
 		
 		if((frameData.sound != null) && _soundManager.hasEventListener(SoundEvent.SOUND)) {
-			var soundEvent:SoundEvent = new SoundEvent(SoundEvent.SOUND);
+			var soundEvent = new SoundEvent(SoundEvent.SOUND);
 			soundEvent.movementID = _bone.armature.animation.movementID;
 			soundEvent.sound = frameData.sound;
 			soundEvent.armature = _bone.armature;
@@ -250,10 +250,10 @@ class Tween{
 	}
 	
 	function updateFrameData(progress:Float, ?activeFrame:Bool, ?isList:Bool):Float {
-		var playedTime:Float = _rawDuration * progress;
+		var playedTime = _rawDuration * progress;
 		if (playedTime >= _nextFrameDataTimeEdge) {
 			var curFrameDataID:Int = 0;
-			var length:Int = _movementBoneData.frameList.length;
+			var length = _movementBoneData.frameList.length;
 			do {
 				curFrameDataID = _nextFrameDataID;
 				_frameDuration = _movementBoneData.frameList[curFrameDataID].duration;
@@ -263,8 +263,8 @@ class Tween{
 				}
 			} while (playedTime >= _nextFrameDataTimeEdge);
 			
-			var curFrameData:FrameData = _movementBoneData.frameList[curFrameDataID];
-			var nextFrameData:FrameData = _movementBoneData.frameList[_nextFrameDataID];
+			var curFrameData = _movementBoneData.frameList[curFrameDataID];
+			var nextFrameData = _movementBoneData.frameList[_nextFrameDataID];
 			
 			if((nextFrameData.displayIndex >= 0) && _bone.armature.animation.tweenEnabled) {
 				_frameTweenEasing = curFrameData.tweenEasing;
@@ -287,7 +287,7 @@ class Tween{
 		progress = 1 - (_nextFrameDataTimeEdge - playedTime) / _frameDuration;
 		
 		if (_frameTweenEasing == _frameTweenEasing) {
-			var tweenEasing:Float = (_tweenEasing != _tweenEasing) ? _frameTweenEasing : _tweenEasing;
+			var tweenEasing = (_tweenEasing != _tweenEasing) ? _frameTweenEasing : _tweenEasing;
 			if (tweenEasing != 0) {
 				progress = getEaseValue(progress, tweenEasing);
 			}

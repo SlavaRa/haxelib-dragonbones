@@ -1,5 +1,5 @@
 package dragonbones.utils;
-import nme.utils.ByteArray;
+import flash.utils.ByteArray;
 
 /**
  * @author SlavaRa

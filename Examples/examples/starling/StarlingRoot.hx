@@ -2,11 +2,11 @@ package examples.starling;
 
 import dragonbones.Armature;
 import dragonbones.factorys.ArmatureFactory;
-import nme.Lib;
-import nme.net.URLLoader;
-import nme.net.URLLoaderDataFormat;
-import nme.net.URLRequest;
-import nme.utils.ByteArray;
+import flash.Lib;
+import flash.net.URLLoader;
+import flash.net.URLLoaderDataFormat;
+import flash.net.URLRequest;
+import flash.utils.ByteArray;
 import starling.core.Starling;
 import starling.display.DisplayObject;
 import starling.display.Sprite;
@@ -30,17 +30,17 @@ class StarlingRoot extends Sprite {
 	var factory:ArmatureFactory;
 	
 	function initialize() {
-		var url:String = "../../../Resources/dragonbones_png/character.png";
-		var urlRequest:URLRequest = new URLRequest(url);
-		var urlLoader:URLLoader = new URLLoader();
-		urlLoader.addEventListener(nme.events.Event.COMPLETE, onUrlLoaderComplete);
+		var url = "../../../Resources/dragonbones_png/character.png";
+		var urlRequest = new URLRequest(url);
+		var urlLoader = new URLLoader();
+		urlLoader.addEventListener(flash.events.Event.COMPLETE, onUrlLoaderComplete);
 		urlLoader.dataFormat = URLLoaderDataFormat.BINARY;
 		urlLoader.load(urlRequest);
 	}
 	
-	function onUrlLoaderComplete(event:nme.events.Event) {
-		var urlLoader:URLLoader = cast(event.target, URLLoader);
-		urlLoader.removeEventListener(nme.events.Event.COMPLETE, onUrlLoaderComplete);
+	function onUrlLoaderComplete(event:flash.events.Event) {
+		var urlLoader = cast(event.target, URLLoader);
+		urlLoader.removeEventListener(flash.events.Event.COMPLETE, onUrlLoaderComplete);
 		
 		factory = new ArmatureFactory();
 		factory.onDataParsed.addOnce(onFactoryDataParsed);
@@ -52,8 +52,8 @@ class StarlingRoot extends Sprite {
 		var y:Float = 150;
 		
 		for (i in 0...10) {
-			var armature:Armature = factory.buildArmature("CharacterAnimations");
-			var display:DisplayObject = cast(armature.displayContainer, DisplayObject);
+			var armature = factory.buildArmature("CharacterAnimations");
+			var display = cast(armature.displayContainer, DisplayObject);
 			display.x = x;
 			display.y = y;
 			x += display.width + 10;

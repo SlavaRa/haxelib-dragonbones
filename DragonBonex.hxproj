@@ -11,7 +11,7 @@
     <movie version="3" />
     <movie minorVersion="0" />
     <movie platform="NME" />
-    <movie background="#000000" />
+    <movie background="000000" />
     <movie preferredSDK="Haxe 3.0.0;3.0.0;" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
@@ -24,7 +24,7 @@
     <option flashStrict="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="True" />
-    <option additional="Error: Library openfl-native is not installed : run 'haxelib install openfl-native'" />
+    <option additional="" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>
@@ -40,7 +40,7 @@
   </library>
   <!-- Paths to exclude from the Project Explorer tree -->
   <hiddenPaths>
-    <!-- example: <hidden path="..." /> -->
+    <hidden path="obj" />
   </hiddenPaths>
   <!-- Executed before build -->
   <preBuildCommand />

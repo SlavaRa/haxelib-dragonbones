@@ -76,8 +76,8 @@ class XMLDataParser{
 	static function parseArmatures(armaturesXml:Xml) {
 		for (armatures in armaturesXml.elementsNamed(ConstValues.ARMATURES)) {
 			for (armature in armatures.elementsNamed(ConstValues.ARMATURE)) {
-				var name:String = armature.get(ConstValues.A_NAME);
-				var armatureData:ArmatureData = _curSkeletonData.getArmatureData(name);
+				var name = armature.get(ConstValues.A_NAME);
+				var armatureData = _curSkeletonData.getArmatureData(name);
 				if (armatureData != null) {
 					parseArmatureData(armature, armatureData);
 				} else {
@@ -91,10 +91,10 @@ class XMLDataParser{
 	
 	static function parseArmatureData(armatureXml:Xml, armatureData:ArmatureData) {
 		for (boneXml in armatureXml.elementsNamed(ConstValues.BONE)) {
-			var boneName:String 	= boneXml.get(ConstValues.A_NAME);
-			var parentName:String 	= boneXml.get(ConstValues.A_PARENT);
-			var parentXML:Xml 		= null;//BUG: getElementsByAttribute(boneXMLList, ConstValues.A_NAME, parentName)[0];
-			var boneData:BoneData 	= armatureData.getBoneData(boneName);
+			var boneName = boneXml.get(ConstValues.A_NAME);
+			var parentName = boneXml.get(ConstValues.A_PARENT);
+			var parentXML:Xml = null;//BUG: getElementsByAttribute(boneXMLList, ConstValues.A_NAME, parentName)[0];
+			var boneData = armatureData.getBoneData(boneName);
 			if(boneData != null) {
 				parseBoneData(boneXml, parentXML, boneData);
 			} else {
@@ -136,7 +136,7 @@ class XMLDataParser{
 	}
 	
 	static inline function parseDisplayData(displayXml:Xml, displayData:DisplayData) {
-		displayData.isArmature 	= displayXml.get(ConstValues.A_IS_ARMATURE) != null;
+		displayData.isArmature = displayXml.get(ConstValues.A_IS_ARMATURE) != null;
 		
 		var pivotX:Null<Int> = Std.parseInt(displayXml.get(ConstValues.A_PIVOT_X));
 		var pivotY:Null<Int> = Std.parseInt(displayXml.get(ConstValues.A_PIVOT_Y));
@@ -148,9 +148,9 @@ class XMLDataParser{
 	static function parseAnimations(animationsXml:Xml) {
 		for (animations in animationsXml.elementsNamed(ConstValues.ANIMATIONS)) {
 			for (animation in animations.elementsNamed(ConstValues.ANIMATION)) {
-				var name:String = animation.get(ConstValues.A_NAME);
-				var armatureData:ArmatureData = _curSkeletonData.getArmatureData(name);
-				var animationData:AnimationData = _curSkeletonData.getAnimationData(name);
+				var name = animation.get(ConstValues.A_NAME);
+				var armatureData = _curSkeletonData.getArmatureData(name);
+				var animationData = _curSkeletonData.getAnimationData(name);
 				if (animationData != null) {
 					parseAnimationData(animation, animationData, armatureData);
 				} else {
@@ -164,8 +164,8 @@ class XMLDataParser{
 	
 	static function parseAnimationData(animationXml:Xml, animationData:AnimationData, armatureData:ArmatureData) {
 		for (movement in animationXml.elementsNamed(ConstValues.MOVEMENT)) {
-			var name:String = movement.get(ConstValues.A_NAME);
-			var movementData:MovementData = animationData.getMovementData(name);
+			var name = movement.get(ConstValues.A_NAME);
+			var movementData = animationData.getMovementData(name);
 			if(movementData != null) {
 				parseMovementData(movement, armatureData, movementData);
 			} else {
@@ -178,8 +178,8 @@ class XMLDataParser{
 	
 	static function parseMovementData(movementXml:Xml, armatureData:ArmatureData, movementData:MovementData) {
 		if(_curSkeletonData != null) {
-			var frameRate:Int = _curSkeletonData.frameRate;
-			var duration:Int = Std.parseInt(movementXml.get(ConstValues.A_DURATION));
+			var frameRate = _curSkeletonData.frameRate;
+			var duration = Std.parseInt(movementXml.get(ConstValues.A_DURATION));
 			
 			movementData.duration 		= (duration > 1) ? (duration / frameRate) : 0;
 			movementData.durationTo 	= Std.parseInt(movementXml.get(ConstValues.A_DURATION_TO))		/ frameRate;
@@ -188,14 +188,14 @@ class XMLDataParser{
 			movementData.tweenEasing 	= Std.parseFloat(movementXml.get(ConstValues.A_TWEEN_EASING));
 		}
 		
-		var boneNames:Array<String> = armatureData.boneDataList.names.copy();
+		var boneNames = armatureData.boneDataList.names.copy();
 		
 		var movementBoneXMLList:Iterator<Xml> = movementXml.elementsNamed(ConstValues.BONE);
 		for (movementBoneXML in movementXml.elementsNamed(ConstValues.BONE)) {
-			var boneName:String = movementBoneXML.get(ConstValues.A_NAME);
-			var boneData:BoneData = armatureData.getBoneData(boneName);
+			var boneName = movementBoneXML.get(ConstValues.A_NAME);
+			var boneData = armatureData.getBoneData(boneName);
 			var parentMovementBoneXml:Xml = null;//BUG: getElementsByAttribute(movementBoneXMLList, ConstValues.A_NAME, boneData.parent)[0];
-			var movementBoneData:MovementBoneData = movementData.getMovementBoneData(boneName);
+			var movementBoneData = movementData.getMovementBoneData(boneName);
 			if(movementBoneXML != null) {
 				if(movementBoneData != null) {
 					parseMovementBoneData(movementBoneXML, parentMovementBoneXml, boneData, movementBoneData);
@@ -206,10 +206,7 @@ class XMLDataParser{
 				}
 			}
 			
-			var index:Int = Lambda.indexOf(boneNames, boneName);
-			if(index != -1) {
-				boneNames.splice(index, 1);
-			}
+			boneNames.remove(boneName);
 		}
 		
 		for (boneName in boneNames) {
@@ -218,7 +215,7 @@ class XMLDataParser{
 		
 		var i:Int = 0;
 		for (movementFrameXML in movementXml.elementsNamed(ConstValues.FRAME)) {
-			var movementFrameData:MovementFrameData = (movementData.movementFrameList.length > i) ? movementData.movementFrameList[i] : null;
+			var movementFrameData = (movementData.movementFrameList.length > i) ? movementData.movementFrameList[i] : null;
 			if(movementFrameData != null) {
 				parseMovementFrameData(movementFrameXML, movementFrameData);
 			} else {
@@ -337,13 +334,13 @@ class XMLDataParser{
 			frameData.sound 		= frameXml.get(ConstValues.A_SOUND);
 			frameData.soundEffect 	= frameXml.get(ConstValues.A_SOUND_EFFECT);
 			
-			var visible:String = frameXml.get(ConstValues.A_VISIBLE);
+			var visible = frameXml.get(ConstValues.A_VISIBLE);
 			frameData.visible = ((visible == "1") || (visible == "") || (visible == null));
 		}
 	}
 	
 	static inline function parseNode(xml:Xml, node:HelpNode) {
-		var angle2radian:Float = MathUtils.ANGLE_TO_RADIAN();
+		var angle2radian = MathUtils.ANGLE_TO_RADIAN();
 		Node.setValues(node,
 			Std.parseFloat(xml.get(ConstValues.A_X)),
 			Std.parseFloat(xml.get(ConstValues.A_Y)),
