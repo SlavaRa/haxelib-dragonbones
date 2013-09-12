@@ -11,5 +11,5 @@ typedef DisplayObject = gm2d.display.DisplayObject;
 #else
 typedef Sprite = flash.display.Sprite;
 typedef DisplayObjectContainer = flash.display.DisplayObjectContainer;
-typedef DisplayObject = flash.display.DisplayObject
+typedef DisplayObject = flash.display.DisplayObject;
 #end
