@@ -33,7 +33,6 @@
     <library name="openfl" />
     <library name="format" />
     <library name="msignal" />
-    <library name="flixel" />
     <library name="tilelayer" />
   </haxelib>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
