@@ -36,7 +36,7 @@ class GM2DView extends Screen{
 	
 	var factory:ArmatureFactory;
 	
-	function initialize() {
+	inline function initialize() {
 		#if (cpp || neko)
 		Game.showFPS = false;
 		#else
@@ -45,7 +45,7 @@ class GM2DView extends Screen{
 		Game.fpsColor = 0xFFFFFF;
 	}
 	
-	function loadAndCreateAnimations() {
+	inline function loadAndCreateAnimations() {
 		#if flash
 		var url = "../../../Resources/dragonbones_png/character.png";
 		#elseif (cpp || neko)

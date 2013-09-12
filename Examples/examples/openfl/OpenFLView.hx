@@ -30,20 +30,20 @@ class OpenFLView extends Sprite{
 		}
 	}
 	
+	var factory:ArmatureFactory;
+	
 	function onStageAddedToStage(?_) {
 		removeEventListener(Event.ADDED_TO_STAGE, onStageAddedToStage);
 		configureStage();
 		initialize();
 	}
 	
-	function configureStage() {
+	inline function configureStage() {
 		stage.align = StageAlign.TOP_LEFT;
 		stage.scaleMode = StageScaleMode.NO_SCALE;
 	}
 	
-	var factory:ArmatureFactory;
-	
-	function initialize() {
+	inline function initialize() {
 		#if flash
 		var url = "../../../Resources/dragonbones_png/character.png";
 		#elseif (cpp || neko)

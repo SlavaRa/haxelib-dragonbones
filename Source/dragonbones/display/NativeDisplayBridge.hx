@@ -1,6 +1,5 @@
 package dragonbones.display;
 import dragonbones.display.DisplayObject;
-import dragonbones.display.DisplayObjectContainer;
 import dragonbones.objects.Node;
 import flash.geom.ColorTransform;
 import flash.geom.Matrix;

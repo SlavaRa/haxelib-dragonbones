@@ -2,7 +2,7 @@ package dragonbones.factorys;
 import dragonbones.Armature;
 import dragonbones.Bone;
 import dragonbones.display.DisplayBridge;
-import dragonbones.display.Sprite;
+import dragonbones.display.DisplayObject;
 import dragonbones.objects.AnimationData;
 import dragonbones.objects.ArmatureData;
 import dragonbones.objects.BoneData;

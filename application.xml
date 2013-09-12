@@ -18,8 +18,10 @@
 	<haxelib name="msignal" />
 	<!--<haxelib name="starling" />-->
 	<!--<haxelib name="gm2d" />-->
+	<!--<haxelib name="flixel" />-->
+	<haxelib name="tilelayer" />
 	
-	<assets path="Assets" rename="assets" include="*" exclude="nme.svg" />
+	<assets path="Assets" rename="assets" include="*" />
 	
 	<haxeflag name="--dead-code-elimination" unless="haxe3" />
 	<haxeflag name="-dce std" if="haxe3" />

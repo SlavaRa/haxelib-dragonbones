@@ -16,5 +16,5 @@ class Main extends Sprite {
 		initialize();
 	}
 	
-	function initialize() addChild(new ExampleView());
+	inline function initialize() addChild(new ExampleView());
 }
