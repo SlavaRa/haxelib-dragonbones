@@ -26,8 +26,8 @@ class TransformUtils{
 	}
 	
 	public static inline function nodeToMatrix(node:HelpNode, resultMatrix:Matrix) {
-		resultMatrix.a = resultMatrix.d = MathUtils.cos(node[Node.rotation]);
-		resultMatrix.c = -(resultMatrix.b = MathUtils.sin(node[Node.rotation]));
+		resultMatrix.a = resultMatrix.d = Math.cos(node[Node.rotation]);
+		resultMatrix.c = -(resultMatrix.b = Math.sin(node[Node.rotation]));
 		resultMatrix.a *= node[Node.scaleX];
 		resultMatrix.b *= node[Node.scaleX];
 		resultMatrix.c *= node[Node.scaleY];

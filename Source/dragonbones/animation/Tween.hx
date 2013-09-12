@@ -24,12 +24,12 @@ class Tween{
 			easing = 0;
 			value = 0;
 		} else if (easing > 1) {
-			valueEase = 0.5 * (1 - MathUtils.cos(value * Math.PI)) - value;
+			valueEase = 0.5 * (1 - Math.cos(value * Math.PI)) - value;
 			easing -= 1;
 		} else if (easing > 0) {
-			valueEase = MathUtils.sin(value * MathUtils.HALF_PI()) - value;
+			valueEase = Math.sin(value * MathUtils.HALF_PI()) - value;
 		} else if (easing < 0) {
-			valueEase = 1 - MathUtils.cos(value * MathUtils.HALF_PI()) - value;
+			valueEase = 1 - Math.cos(value * MathUtils.HALF_PI()) - value;
 			easing *= -1;
 		}
 		return valueEase * easing + value;
