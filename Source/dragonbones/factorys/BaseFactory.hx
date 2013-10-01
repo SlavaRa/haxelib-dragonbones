@@ -1,7 +1,6 @@
 package dragonbones.factorys;
 import dragonbones.Armature;
 import dragonbones.Bone;
-import dragonbones.display.DisplayBridge;
 import dragonbones.display.DisplayObject;
 import dragonbones.objects.AnimationData;
 import dragonbones.objects.ArmatureData;
@@ -29,7 +28,7 @@ import msignal.Signal.Signal0;
  */
 class BaseFactory {
 
-	static var helpMatrix:Matrix = new Matrix();
+	static var helpMatrix = new Matrix();
 	
 	public function new() {
 		onDataParsed = new Signal0();
@@ -226,7 +225,7 @@ class BaseFactory {
 		return data;
 	}
 	
-	function buildBone(boneData:BoneData):Bone {
+	inline function buildBone(boneData:BoneData):Bone {
 		var bone = createBone();
 		Node.copy(boneData.node, bone.origin);
 		
@@ -287,12 +286,12 @@ class BaseFactory {
 					var subTexData:SubTextureData = cast(rect, SubTextureData);
 					
 					//1.4
-					if (pivotX == 0) {
+					/*if (pivotX == 0) {
 						pivotX = subTexData.pivotX;
 					}
 					if (pivotY == 0) {
 						pivotY = subTexData.pivotY;
-					}
+					}*/
 					
 					helpMatrix.identity();
 					helpMatrix.scale(nativeTexAtlas.scale, nativeTexAtlas.scale);

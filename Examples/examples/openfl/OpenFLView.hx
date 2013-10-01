@@ -1,7 +1,6 @@
 package examples.openfl;
 
 import dragonbones.animation.WorldClock;
-import dragonbones.Armature;
 import dragonbones.factorys.ArmatureFactory;
 import flash.display.DisplayObject;
 import flash.display.Sprite;
@@ -83,6 +82,7 @@ class OpenFLView extends Sprite{
 			addChild(display);
 			WorldClock.instance.add(armature);
 		}
+		
 		addEventListener(Event.ENTER_FRAME, onEnterFrame);
 	}
 	

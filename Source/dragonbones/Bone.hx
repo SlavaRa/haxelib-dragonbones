@@ -1,7 +1,6 @@
 package dragonbones;
 
 import dragonbones.animation.Tween;
-import dragonbones.display.DisplayBridge;
 import dragonbones.display.DisplayObject;
 import dragonbones.objects.Node;
 import dragonbones.utils.DisposeUtils;

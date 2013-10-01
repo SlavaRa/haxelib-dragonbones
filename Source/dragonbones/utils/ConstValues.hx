@@ -5,74 +5,77 @@ package dragonbones.utils;
  */
 class ConstValues{
 
-	public static inline var VERSION_14:String = "1.4";
-	public static inline var VERSION:String = "2.0";
-	public static inline var VERSION_21:String = "2.1";
+	public static inline var VERSION_14 = "1.4";
+	public static inline var VERSION_20 = "2.0";
+	public static inline var VERSION_21 = "2.1";
+	public static inline var VERSION_22 = "2.2";
+	public static inline var VERSION_23 = "2.3";
+	public static /*inline */var VERSIONS = ["1.4", "2.0", "2.1", "2.2", "2.3"];
 	
-	public static inline var SKELETON:String = "skeleton";
+	public static inline var SKELETON = "skeleton";
 	
-	public static inline var ARMATURES:String = "armatures";
-	public static inline var ARMATURE:String = "armature";
-	public static inline var BONE:String = "b";
-	public static inline var DISPLAY:String = "d";
+	public static inline var ARMATURES = "armatures";
+	public static inline var ARMATURE = "armature";
+	public static inline var BONE = "b";
+	public static inline var DISPLAY = "d";
 	
-	public static inline var ANIMATIONS:String = "animations";
-	public static inline var ANIMATION:String = "animation";
-	public static inline var MOVEMENT:String = "mov";
-	public static inline var FRAME:String = "f";
-	public static inline var COLOR_TRANSFORM:String = "colorTransform";
+	public static inline var ANIMATIONS = "animations";
+	public static inline var ANIMATION = "animation";
+	public static inline var MOVEMENT = "mov";
+	public static inline var FRAME = "f";
+	public static inline var COLOR_TRANSFORM = "colorTransform";
 
-	public static inline var TEXTURE_ATLAS:String = "TextureAtlas";
-	public static inline var SUB_TEXTURE:String = "SubTexture";
+	public static inline var TEXTURE_ATLAS = "TextureAtlas";
+	public static inline var SUB_TEXTURE = "SubTexture";
 
-	public static inline var AT:String = "@";
-	public static inline var A_VERSION:String = "version";
-	public static inline var A_FRAME_RATE:String = "frameRate";
-	public static inline var A_NAME:String = "name";
-	public static inline var A_DURATION:String = "dr";
-	public static inline var A_DURATION_TO:String = "to";
-	public static inline var A_DURATION_TWEEN:String = "drTW";
-	public static inline var A_LOOP:String = "lp";
-	public static inline var A_MOVEMENT_SCALE:String = "sc";
-	public static inline var A_MOVEMENT_DELAY:String = "dl";
+	public static inline var AT = "@";
+	public static inline var A_VERSION = "version";
+	public static inline var A_FRAME_RATE = "frameRate";
+	public static inline var A_NAME = "name";
+	public static inline var A_DURATION = "dr";
+	public static inline var A_DURATION_TO = "to";
+	public static inline var A_DURATION_TWEEN = "drTW";
+	public static inline var A_LOOP = "lp";
+	public static inline var A_MOVEMENT_SCALE = "sc";
+	public static inline var A_MOVEMENT_DELAY = "dl";
 
-	public static inline var A_PARENT:String = "parent";
-	public static inline var A_SKEW_X:String = "kX";
-	public static inline var A_SKEW_Y:String = "kY";
-	public static inline var A_SCALE_X:String = "cX";
-	public static inline var A_SCALE_Y:String = "cY";
-	public static inline var A_Z:String = "z";
-	public static inline var A_DISPLAY_INDEX:String = "dI";
-	public static inline var A_EVENT:String = "evt";
-	public static inline var A_SOUND:String = "sd";
-	public static inline var A_SOUND_EFFECT:String = "sdE";
-	public static inline var A_TWEEN_EASING:String ="twE";
-	public static inline var A_TWEEN_ROTATE:String ="twR";
-	public static inline var A_IS_ARMATURE:String = "isArmature";
-	public static inline var A_MOVEMENT:String = "mov";
-	public static inline var A_VISIBLE:String = "visible";
+	public static inline var A_PARENT = "parent";
+	public static inline var A_SKEW_X = "kX";
+	public static inline var A_SKEW_Y = "kY";
+	public static inline var A_SCALE_X = "cX";
+	public static inline var A_SCALE_Y = "cY";
+	public static inline var A_Z = "z";
+	public static inline var A_DISPLAY_INDEX = "dI";
+	public static inline var A_EVENT = "evt";
+	public static inline var A_SOUND = "sd";
+	public static inline var A_SOUND_EFFECT = "sdE";
+	public static inline var A_TWEEN_EASING ="twE";
+	public static inline var A_TWEEN_ROTATE ="twR";
+	public static inline var A_IS_ARMATURE = "isArmature";
+	public static inline var A_MOVEMENT = "mov";
+	public static inline var A_VISIBLE = "visible";
 
-	public static inline var A_X:String = "x";
-	public static inline var A_Y:String = "y";
-	public static inline var A_WIDTH:String = "width";
-	public static inline var A_HEIGHT:String = "height";
-	public static inline var A_PIVOT_X:String = "pX";
-	public static inline var A_PIVOT_Y:String = "pY";
+	public static inline var A_X = "x";
+	public static inline var A_Y = "y";
+	public static inline var A_WIDTH = "width";
+	public static inline var A_HEIGHT = "height";
+	public static inline var A_PIVOT_X = "pX";
+	public static inline var A_PIVOT_Y = "pY";
 	
-	public static inline var A_ALPHA:String = "a";
-	public static inline var A_RED:String = "r";
-	public static inline var A_GREEN:String = "g";
-	public static inline var A_BLUE:String = "b";
+	public static inline var A_ALPHA = "a";
+	public static inline var A_RED = "r";
+	public static inline var A_GREEN = "g";
+	public static inline var A_BLUE = "b";
 
-	public static inline var A_ALPHA_MULTIPLIER:String = "aM";
-	public static inline var A_RED_MULTIPLIER:String = "rM";
-	public static inline var A_GREEN_MULTIPLIER:String = "gM";
-	public static inline var A_BLUE_MULTIPLIER:String = "bM";
+	public static inline var A_ALPHA_MULTIPLIER = "aM";
+	public static inline var A_RED_MULTIPLIER = "rM";
+	public static inline var A_GREEN_MULTIPLIER = "gM";
+	public static inline var A_BLUE_MULTIPLIER = "bM";
 
-	public static inline var V_SOUND_LEFT:String = "l";
-	public static inline var V_SOUND_RIGHT:String = "r";
-	public static inline var V_SOUND_LEFT_TO_RIGHT:String = "lr";
-	public static inline var V_SOUND_RIGHT_TO_LEFT:String = "rl";
-	public static inline var V_SOUND_FADE_IN:String = "in";
-	public static inline var V_SOUND_FADE_OUT:String = "out";
+	public static inline var V_SOUND_LEFT = "l";
+	public static inline var V_SOUND_RIGHT = "r";
+	public static inline var V_SOUND_LEFT_TO_RIGHT = "lr";
+	public static inline var V_SOUND_RIGHT_TO_LEFT = "rl";
+	public static inline var V_SOUND_FADE_IN = "in";
+	public static inline var V_SOUND_FADE_OUT = "out";
 }

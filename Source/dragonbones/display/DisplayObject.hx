@@ -1,6 +1,12 @@
 package dragonbones.display;
 
 #if (flash11 && starling)
+typedef DisplayBridge = StarlingDisplayBridge;
+#else
+typedef DisplayBridge = NativeDisplayBridge;
+#end
+
+#if (flash11 && starling)
 typedef Sprite = starling.display.Sprite;
 typedef DisplayObjectContainer = starling.display.DisplayObjectContainer;
 typedef DisplayObject = starling.display.DisplayObject;

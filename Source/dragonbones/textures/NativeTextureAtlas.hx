@@ -60,8 +60,8 @@ class NativeTextureAtlas implements ITextureAtlas {
 			subTexData.height = Std.parseInt(subTexXml.get(ConstValues.A_HEIGHT)) / scale;
 			
 			//1.4
-			subTexData.pivotX = Std.parseInt(subTexXml.get(ConstValues.A_PIVOT_X));
-			subTexData.pivotY = Std.parseInt(subTexXml.get(ConstValues.A_PIVOT_Y));
+			//subTexData.pivotX = Std.parseInt(subTexXml.get(ConstValues.A_PIVOT_X));
+			//subTexData.pivotY = Std.parseInt(subTexXml.get(ConstValues.A_PIVOT_Y));
 			
 			_name2SubTexData.set(subTexName, subTexData);
 		}

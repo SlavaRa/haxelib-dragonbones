@@ -66,9 +66,10 @@ class StarlingTextureAtlas extends TextureAtlas implements ITextureAtlas{
 			var frameHeight = Std.parseFloat(subTexture.get("frameHeight")) / scale;
 			
 			//1.4
-			var region = new SubTextureData(x, y, width, height);
-			region.pivotX = Std.parseInt(subTexture.get(ConstValues.A_PIVOT_X));
-			region.pivotY = Std.parseInt(subTexture.get(ConstValues.A_PIVOT_Y));
+			var region:SubTextureData = null;
+			//var region = new SubTextureData(x, y, width, height);
+			//region.pivotX = Std.parseInt(subTexture.get(ConstValues.A_PIVOT_X));
+			//region.pivotY = Std.parseInt(subTexture.get(ConstValues.A_PIVOT_Y));
 			
 			var frame:Rectangle = null;
 			if((frameWidth > 0) && (frameHeight > 0)) {

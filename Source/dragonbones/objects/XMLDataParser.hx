@@ -33,7 +33,8 @@ class XMLDataParser{
 	
 	static inline function checkSkeletonXMLVersion(skeletonXML:Xml) {
 		switch (skeletonXML.firstElement().get(ConstValues.A_VERSION)) {
-			case ConstValues.VERSION_14, ConstValues.VERSION, ConstValues.VERSION_21:
+			//TODO: refactor here
+			case ConstValues.VERSION_14, ConstValues.VERSION_20, ConstValues.VERSION_21, ConstValues.VERSION_22, ConstValues.VERSION_23:
 				return;
 			case _: throw "Nonsupport data version!";
 		}

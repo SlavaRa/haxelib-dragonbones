@@ -13,7 +13,6 @@ import flash.geom.Rectangle;
 import flash.xml.XML;
 import starling.core.Starling;
 import starling.display.Image;
-import starling.display.Sprite;
 import starling.textures.SubTexture;
 import starling.textures.Texture;
 import starling.textures.TextureAtlas;
@@ -23,7 +22,7 @@ import starling.textures.TextureAtlas;
  */
 class StarlingFactory extends BaseFactory{
 
-	static var helpMatrix:Matrix = new Matrix();
+	static var helpMatrix = new Matrix();
 	
 	public function new() {
 		super();
@@ -36,29 +35,21 @@ class StarlingFactory extends BaseFactory{
 	public var optimizeForRenderToTexture:Bool;
 	public var scaleForTex:Float;
 	
-	override function createArmature():Armature {
-		return new Armature(new Sprite());
-	}
-	
-	override function createBone():Bone {
-		return new Bone(new DisplayBridge());
-	}
-	
 	override function createTextureDisplay(texAtlas:ITextureAtlas, fullName:String, pivotX:Int = 0, pivotY:Int = 0):Dynamic {
 		//1.4
-		if(Std.is(texAtlas, StarlingTextureAtlas)) {
-			var starlingTextureAtlas:StarlingTextureAtlas = cast(texAtlas, StarlingTextureAtlas);
-			var rectangle:Rectangle = starlingTextureAtlas.getRegion(fullName);
-			if(Std.is(rectangle, SubTextureData)){
-				var subTextureData:SubTextureData = cast(rectangle, SubTextureData);
-				if (pivotX == 0) {
-					pivotX = subTextureData.pivotX;
-				}
-				if (pivotY == 0) {
-					pivotY = subTextureData.pivotY;
-				}
-			}
-		}
+		//if(Std.is(texAtlas, StarlingTextureAtlas)) {
+			//var starlingTextureAtlas:StarlingTextureAtlas = cast(texAtlas, StarlingTextureAtlas);
+			//var rectangle:Rectangle = starlingTextureAtlas.getRegion(fullName);
+			//if(Std.is(rectangle, SubTextureData)){
+				//var subTextureData:SubTextureData = cast(rectangle, SubTextureData);
+				//if (pivotX == 0) {
+					//pivotX = subTextureData.pivotX;
+				//}
+				//if (pivotY == 0) {
+					//pivotY = subTextureData.pivotY;
+				//}
+			//}
+		//}
 		
 		var texture:Texture = cast(texAtlas, TextureAtlas).getTexture(fullName);
 		if(Std.is(texture, SubTexture)) {
@@ -94,7 +85,7 @@ class StarlingFactory extends BaseFactory{
 			movieClip.gotoAndStop(movieClip.totalFrames);
 			tex = Texture.fromBitmapData(bitmapData, generateMipMaps, optimizeForRenderToTexture, scaleForTex);
 		} else {
-			//
+			//TODO: ?
 		}
 		
 		var texAtlas = new StarlingTextureAtlas(tex, new XML(texAtlasXml.toString()));

@@ -30,7 +30,7 @@ class StarlingView extends Sprite {
 		initialize();
 	}
 	
-	function initialize() new Starling(StarlingRoot, stage).start();
+	inline function initialize() new Starling(StarlingRoot, stage).start();
 }
 
 /**
