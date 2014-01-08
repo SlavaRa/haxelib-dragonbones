@@ -255,7 +255,7 @@ class BaseFactory {
 		} else return throw "non supported type";
 	}
 	
-	inline function createTextureAtlas(content:Dynamic, texAtlasXML:Xml):ITextureAtlas {
+	function createTextureAtlas(content:Dynamic, texAtlasXML:Xml):ITextureAtlas {
 		return new NativeTextureAtlas(content, texAtlasXML);
 	}
 	

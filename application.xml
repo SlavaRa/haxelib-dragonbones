@@ -3,7 +3,7 @@
 	
 	<meta title="dragonboneshx3" package="dragonboneshx3" version="1.0.0" company="SlavaRa" />
 	
-	<app main="dragonbones.Main" file="dragonboneshx3" path="bin"/>
+	<app main="dragonbones.Main" file="dragonboneshx3" path="bin" swf-version="11.5"/>
 	<!--<app main="Main" file="dragonboneshx3" path="bin" swf-version="11.3"/>-->
 	
 	<window background="#000000" fps="60" />
@@ -13,15 +13,10 @@
 	<source path="Source" />
 	<source path="Examples" />
 	<haxelib name="openfl" />
-	<!--<haxelib name="openfl-stage3d" />-->
 	<haxelib name="format" />
 	<haxelib name="msignal" />
-	<!--<haxelib name="starling" />-->
-	<!--<haxelib name="gm2d" />-->
-	<!--<haxelib name="flixel" />-->
-	<haxelib name="tilelayer" />
+	<haxelib name="starling" />
 	
 	<haxeflag name="--dead-code-elimination" unless="haxe3" />
 	<haxeflag name="-dce std" if="haxe3" />
-	
 </project>

@@ -1,5 +1,6 @@
 package examples.starling;
 
+import dragonbones.display.DisplayObject;
 import dragonbones.factorys.ArmatureFactory;
 import flash.display.Sprite;
 import flash.events.Event;
@@ -7,6 +8,7 @@ import flash.Lib;
 import flash.net.URLLoader;
 import flash.net.URLLoaderDataFormat;
 import flash.net.URLRequest;
+import flash.utils.ByteArray;
 import starling.core.Starling;
 
 /**
@@ -36,7 +38,7 @@ class StarlingView extends Sprite {
 /**
  * @author SlavaRa
  */
-class StarlingRoot extends Sprite {
+class StarlingRoot extends starling.display.Sprite {
 
 	public function new() {
 		super();

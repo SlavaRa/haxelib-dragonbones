@@ -1,15 +1,10 @@
 package dragonbones.factorys;
-import dragonbones.Armature;
-import dragonbones.Bone;
-import dragonbones.display.DisplayBridge;
 import dragonbones.textures.ITextureAtlas;
 import dragonbones.textures.StarlingTextureAtlas;
-import dragonbones.textures.SubTextureData;
 import dragonbones.utils.ConstValues;
 import flash.display.BitmapData;
 import flash.display.MovieClip;
 import flash.geom.Matrix;
-import flash.geom.Rectangle;
 import flash.xml.XML;
 import starling.core.Starling;
 import starling.display.Image;
@@ -36,21 +31,6 @@ class StarlingFactory extends BaseFactory{
 	public var scaleForTex:Float;
 	
 	override function createTextureDisplay(texAtlas:ITextureAtlas, fullName:String, pivotX:Int = 0, pivotY:Int = 0):Dynamic {
-		//1.4
-		//if(Std.is(texAtlas, StarlingTextureAtlas)) {
-			//var starlingTextureAtlas:StarlingTextureAtlas = cast(texAtlas, StarlingTextureAtlas);
-			//var rectangle:Rectangle = starlingTextureAtlas.getRegion(fullName);
-			//if(Std.is(rectangle, SubTextureData)){
-				//var subTextureData:SubTextureData = cast(rectangle, SubTextureData);
-				//if (pivotX == 0) {
-					//pivotX = subTextureData.pivotX;
-				//}
-				//if (pivotY == 0) {
-					//pivotY = subTextureData.pivotY;
-				//}
-			//}
-		//}
-		
 		var texture:Texture = cast(texAtlas, TextureAtlas).getTexture(fullName);
 		if(Std.is(texture, SubTexture)) {
 			var image = new Image(cast(texture, SubTexture));
@@ -58,7 +38,6 @@ class StarlingFactory extends BaseFactory{
 			image.pivotY = pivotY;
 			return image;
 		}
-		
 		return null;
 	}
 	
