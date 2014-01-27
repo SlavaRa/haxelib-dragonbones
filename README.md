@@ -11,5 +11,5 @@ TARGETS:
 
 
 ==============
-TUTORIALS:
-coming soon
+TUTORIALS:<br/>
+https://github.com/SlavaRa/dragonbones-haxe3-samples
