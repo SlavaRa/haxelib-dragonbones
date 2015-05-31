@@ -1,22 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-	
-	<meta title="dragonboneshx3" package="dragonboneshx3" version="1.0.0" company="SlavaRa" />
-	
-	<app main="dragonbones.Main" file="dragonboneshx3" path="bin" swf-version="11.5"/>
-	<!--<app main="Main" file="dragonboneshx3" path="bin" swf-version="11.3"/>-->
-	
+	<meta title="dragonbones" package="dragonbones" version="3.0.1" company="SlavaRa" />
 	<window background="#000000" fps="60" />
 	<window width="800" height="480" unless="mobile" />
 	<window orientation="landscape" vsync="false" antialiasing="0" if="cpp" />
-	
-	<source path="Source" />
-	<source path="Examples" />
+	<source path="src" />
+	<source path="examples" />
 	<haxelib name="openfl" />
 	<haxelib name="format" />
 	<haxelib name="msignal" />
-	<haxelib name="starling" />
-	
-	<haxeflag name="--dead-code-elimination" unless="haxe3" />
-	<haxeflag name="-dce std" if="haxe3" />
+	<haxeflag name="-swf-lib" value="lib/starling.swc" if="flash" />
 </project>

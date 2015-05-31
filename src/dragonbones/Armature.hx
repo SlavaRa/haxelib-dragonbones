@@ -1,4 +1,4 @@
-package dragonbones;
+package src.dragonbones;
 
 import dragonbones.animation.Animation;
 import dragonbones.animation.IAnimatable;
