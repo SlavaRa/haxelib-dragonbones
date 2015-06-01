@@ -244,22 +244,25 @@ import dragonbones.objects.Frame;
     }
     
     var _fadeTotalTime:Float;
+	
     function get_FadeTotalTime():Float
     {
         return _fadeTotalTime;
     }
     
     var _timeScale:Float;
+	
     /**
-		 * The amount by which passed time should be scaled. Used to slow down or speed up the animation. Defaults to 1.
-		 */
+	 * The amount by which passed time should be scaled. Used to slow down or speed up the animation. Defaults to 1.
+	 */
     function get_TimeScale():Float
     {
         return _timeScale;
     }
+	
     public function setTimeScale(value:Float):AnimationState
     {
-        if (Math.isNaN(value) || value == Infinity) 
+        if (Math.isNaN(value) || value == Math.POSITIVE_INFINITY) 
         {
             value = 1;
         }
@@ -268,24 +271,26 @@ import dragonbones.objects.Frame;
     }
     
     var _playTimes:Int;
+	
     /**
-		 * playTimes Play times(0:loop forever, 1~+∞:play times, -1~-∞:will fade animation after play complete).
-		 */
+	 * playTimes Play times(0:loop forever, 1~+∞:play times, -1~-∞:will fade animation after play complete).
+	 */
     function get_PlayTimes():Int
     {
         return _playTimes;
     }
+	
     public function setPlayTimes(value:Int):AnimationState
     {
         if (Math.round(_totalTime * 0.001 * _clip.frameRate) < 2) 
         {
-            _playTimes = value < (0) ? -1:1;
+            _playTimes = value < 0 ? -1:1;
         }
         else 
         {
-            _playTimes = value < (0) ? -value:value;
+            _playTimes = value < 0 ? -value : value;
         }
-        autoFadeOut = value < (0) ? true:false;
+        autoFadeOut = value < 0;
         return this;
     }
     
@@ -314,7 +319,7 @@ import dragonbones.objects.Frame;
         _isComplete = false;
         _currentFrameIndex = -1;
         _currentPlayTimes = -1;
-        if (Math.round(_totalTime * _clip.frameRate * 0.001) < 2 || timeScale == Infinity) 
+        if (Math.round(_totalTime * _clip.frameRate * 0.001) < 2 || timeScale == Math.POSITIVE_INFINITY) 
         {
             _currentTime = _totalTime;
         }
@@ -347,10 +352,10 @@ import dragonbones.objects.Frame;
     }
     
     /**
-		 * Fade out the animation state
-		 * @param fadeOutTime 
-		 * @param pauseBeforeFadeOutComplete pause the animation before fade out complete
-		 */
+	 * Fade out the animation state
+	 * @param fadeOutTime 
+	 * @param pauseBeforeFadeOutComplete pause the animation before fade out complete
+	 */
     public function fadeOut(fadeTotalTime:Float, pausePlayhead:Bool):AnimationState
     {
         if (_armature == null) 
@@ -398,8 +403,8 @@ import dragonbones.objects.Frame;
     }
     
     /**
-		 * Play the current animation. 如果动画已经播放完毕, 将不会继续播放.
-		 */
+	 * Play the current animation. 如果动画已经播放完毕, 将不会继续播放.
+	 */
     public function play():AnimationState
     {
         _isPlaying = true;
@@ -407,8 +412,8 @@ import dragonbones.objects.Frame;
     }
     
     /**
-		 * Stop playing current animation.
-		 */
+	 * Stop playing current animation.
+	 */
     public function stop():AnimationState
     {
         _isPlaying = false;
@@ -421,10 +426,10 @@ import dragonbones.objects.Frame;
     }
     
     /**
-		 * Adds a transform which should be animated. This allows you to reduce the number of animations you have to create.
-		 * @param timelineName Bone's timeline name.
-		 * @param recursive if involved child armature's timeline.
-		 */
+	 * Adds a transform which should be animated. This allows you to reduce the number of animations you have to create.
+	 * @param timelineName Bone's timeline name.
+	 * @param recursive if involved child armature's timeline.
+	 */
     public function addMixingTransform(timelineName:String, recursive:Bool = true):AnimationState
     {
         if (recursive) 
@@ -442,7 +447,7 @@ import dragonbones.objects.Frame;
                 }
                 if (currentBone != null && (currentBone == bone || currentBone.contains(bone))) 
                 {
-                    if (_clip.getTimeline(boneName)) 
+                    if (_clip.getTimeline(boneName) != null) 
                     {
                         if (Lambda.indexOf(_mixingTransforms, boneName) < 0) 
                         {
@@ -452,7 +457,7 @@ import dragonbones.objects.Frame;
                 }
             }
         }
-        else if (_clip.getTimeline(timelineName)) 
+        else if (_clip.getTimeline(timelineName) != null) 
         {
             if (Lambda.indexOf(_mixingTransforms, timelineName) < 0) 
             {
@@ -465,10 +470,10 @@ import dragonbones.objects.Frame;
     }
     
     /**
-		 * Removes a transform which was supposed be animated.
-		 * @param timelineName Bone's timeline name.
-		 * @param recursive If involved child armature's timeline.
-		 */
+	 * Removes a transform which was supposed be animated.
+	 * @param timelineName Bone's timeline name.
+	 * @param recursive If involved child armature's timeline.
+	 */
     public function removeMixingTransform(timelineName:String, recursive:Bool = true):AnimationState
     {
         if (recursive) 
@@ -517,21 +522,18 @@ import dragonbones.objects.Frame;
     function advanceTime(passedTime:Float):Bool
     {
         passedTime *= _timeScale;
-        
         advanceFadeTime(passedTime);
-        
         if (_fadeWeight != 0) 
         {
             advanceTimelinesTime(passedTime);
         }
-        
         return _isFadeOut && _fadeState == 1;
     }
     
     /**
-		 * @private
-		 * Update timeline state based on mixing transforms and clip.
-		 */
+	 * @private
+	 * Update timeline state based on mixing transforms and clip.
+	 */
     function updateTimelineStates():Void
     {
         var timelineState:TimelineState;
@@ -539,7 +541,7 @@ import dragonbones.objects.Frame;
         while (i-->0)
         {
             timelineState = _timelineStateList[i];
-            if (!_armature.getBone(timelineState.name)) 
+            if (_armature.getBone(timelineState.name) == null) 
             {
                 removeTimelineState(timelineState);
             }
@@ -921,4 +923,3 @@ import dragonbones.objects.Frame;
         _clip = null;
     }
 }
-

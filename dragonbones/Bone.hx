@@ -232,31 +232,31 @@ class Bone extends DBObject
 		 */
     public function getBones(returnCopy:Bool = true):Array<Bone>
     {
-        return (returnCopy) ? _boneList.concat():_boneList;
+        return returnCopy ? _boneList.copy() : _boneList;
     }
     
     /**
-		 * Get all Slot instance associated with this bone.
-		 * @return A Vector.&lt;Slot&gt; instance.
-		 * @see dragonBones.Slot
-		 */
+	 * Get all Slot instance associated with this bone.
+	 * @return A Vector.&lt;Slot&gt; instance.
+	 * @see dragonBones.Slot
+	 */
     public function getSlots(returnCopy:Bool = true):Array<Slot>
     {
-        return (returnCopy) ? _slotList.concat():_slotList;
+        return returnCopy ? _slotList.copy() : _slotList;
     }
     
     /**
-		 * Add a bone or slot as child
-		 * @param a Slot or Bone instance
-		 * @see dragonBones.core.DBObject
-		 */
+	 * Add a bone or slot as child
+	 * @param a Slot or Bone instance
+	 * @see dragonBones.core.DBObject
+	 */
     public function addChild(child:DBObject):Void
     {
         if (child == null) 
         {
             throw new ArgumentError();
         }
-        var bone:Bone = try cast(child, Bone) catch(e:Dynamic) null;
+        var bone:Bone = cast(child, Bone);
         if (bone == this || (bone != null && bone.contains(this))) 
         {
             throw new ArgumentError("An Bone cannot be added as a child to itself or one of its children (or children's children, etc.)");
@@ -269,45 +269,36 @@ class Bone extends DBObject
         
         if (bone != null) 
         {
-            _boneList.fixed = false;
             _boneList[_boneList.length] = bone;
-            _boneList.fixed = true;
             bone.setParent(this);
             bone.setArmature(this._armature);
         }
         else if (Std.is(child, Slot)) 
         {
-            var slot:Slot = try cast(child, Slot) catch(e:Dynamic) null;
-            _slotList.fixed = false;
+            var slot:Slot = cast(child, Slot);
             _slotList[_slotList.length] = slot;
-            _slotList.fixed = true;
             slot.setParent(this);
             slot.setArmature(this._armature);
         }
     }
     
     /**
-		 * remove a child bone or slot
-		 * @param a Slot or Bone instance
-		 * @see dragonBones.core.DBObject
-		 */
+	 * remove a child bone or slot
+	 * @param a Slot or Bone instance
+	 * @see dragonBones.core.DBObject
+	 */
     public function removeChild(child:DBObject):Void
     {
-        if (child == null) 
-        {
-            throw new ArgumentError();
-        }
+        if (child == null) throw new ArgumentError();
         
         var index:Int;
         if (Std.is(child, Bone)) 
         {
-            var bone:Bone = try cast(child, Bone) catch(e:Dynamic) null;
+            var bone:Bone = cast(child, Bone);
             index = Lambda.indexOf(_boneList, bone);
             if (index >= 0) 
             {
-                _boneList.fixed = false;
                 _boneList.splice(index, 1);
-                _boneList.fixed = true;
                 bone.setParent(null);
                 bone.setArmature(null);
             }
@@ -318,7 +309,7 @@ class Bone extends DBObject
         }
         else if (Std.is(child, Slot)) 
         {
-            var slot:Slot = try cast(child, Slot) catch(e:Dynamic) null;
+            var slot:Slot = cast(child, Slot);
             index = Lambda.indexOf(_slotList, slot);
             if (index >= 0) 
             {
@@ -326,10 +317,7 @@ class Bone extends DBObject
                 slot.setParent(null);
                 slot.setArmature(null);
             }
-            else 
-            {
-                throw new ArgumentError();
-            }
+            else throw new ArgumentError();
         }
     }
     
@@ -343,18 +331,14 @@ class Bone extends DBObject
         _global.y = this._origin.y + _tween.y + this._offset.y;
     }
     
-    
     function update(needUpdate:Bool = false):Void
     {
         _needUpdate--;
-        if (needUpdate || _needUpdate > 0 || (this._parent && this._parent._needUpdate > 0)) 
+        if (needUpdate || _needUpdate > 0 || (this._parent != null && this._parent._needUpdate > 0)) 
         {
             _needUpdate = 1;
         }
-        else 
-        {
-            return;
-        }
+        else return;
         
         if (_frameCachedPosition >= 0 && _frameCachedDuration <= 0) 
         {
@@ -449,7 +433,6 @@ class Bone extends DBObject
         }
     }
     
-    
     function updateColor(
             aOffset:Float,
             rOffset:Float,
@@ -472,7 +455,6 @@ class Bone extends DBObject
         _isColorChanged = colorChanged;
     }
     
-    
     function hideSlots():Void
     {
         for (slot in _slotList)
@@ -481,7 +463,7 @@ class Bone extends DBObject
         }
     }
     
-    /** @When bone timeline enter a key frame, call this func*/
+    /** When bone timeline enter a key frame, call this func*/
     function arriveAtFrame(frame:Frame, timelineState:TimelineState, animationState:AnimationState, isCross:Bool):Void
     {
         var displayControl:Bool = 
@@ -492,7 +474,7 @@ class Bone extends DBObject
         if (displayControl) 
         {
             var slot:Slot;
-            var tansformFrame:TransformFrame = try cast(frame, TransformFrame) catch(e:Dynamic) null;
+            var tansformFrame:TransformFrame = cast(frame, TransformFrame);
             var displayIndex:Int = tansformFrame.displayIndex;
             for (slot in _slotList)
             {
@@ -540,7 +522,6 @@ class Bone extends DBObject
         }
     }
     
-    
     function addState(timelineState:TimelineState):Void
     {
         if (Lambda.indexOf(_timelineStateList, timelineState) < 0) 
@@ -550,14 +531,9 @@ class Bone extends DBObject
         }
     }
     
-    
     function removeState(timelineState:TimelineState):Void
     {
-        var index:Int = Lambda.indexOf(_timelineStateList, timelineState);
-        if (index >= 0) 
-        {
-            _timelineStateList.splice(index, 1);
-        }
+		_timelineStateList.remove(_timelineStateList);
     }
     
     function blendingTimeline():Void

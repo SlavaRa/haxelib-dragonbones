@@ -44,7 +44,6 @@ class Animation
         return lastAnimationName;
     }
     
-    
     /**
 	 * Whether animation tweening is enabled or not.
 	 */
@@ -220,7 +219,7 @@ class Animation
             animationName:String,
             fadeInTime:Float = -1,
             duration:Float = -1,
-            playTimes:Float = Math.Nan,
+            playTimes:Float = Math.NaN,
             layer:Int = 0,
             group:String = null,
             fadeOutMode:String = SAME_LAYER_AND_GROUP,
@@ -328,7 +327,7 @@ class Animation
         while (i-->0)
         {
             var slot:Slot = slotList[i];
-            if (slot.childArmature) 
+            if (slot.childArmature != null) 
             {
                 slot.childArmature.animation.gotoAndPlay(animationName, fadeInTime);
             }
@@ -364,7 +363,7 @@ class Animation
         var animationState:AnimationState = getState(animationName, layer);
         if (animationState == null) 
         {
-            animationState = gotoAndPlay(animationName, fadeInTime, duration, NaN, layer, group, fadeOutMode);
+            animationState = gotoAndPlay(animationName, fadeInTime, duration, Math.NaN, layer, group, fadeOutMode);
         }
         
         if (normalizedTime >= 0) 
@@ -377,7 +376,6 @@ class Animation
         }
         
         animationState.stop();
-        
         return animationState;
     }
     
@@ -410,10 +408,10 @@ class Animation
     }
     
     /**
-		 * Returns the AnimationState named name.
-		 * @return A AnimationState instance.
-		 * @see dragonBones.animation.AnimationState.
-		 */
+	 * Returns the AnimationState named name.
+	 * @return A AnimationState instance.
+	 * @see dragonBones.animation.AnimationState.
+	 */
     public function getState(name:String, layer:Int = 0):AnimationState
     {
         var i:Int = _animationStateList.length;

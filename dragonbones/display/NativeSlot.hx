@@ -53,7 +53,7 @@ class NativeSlot extends Slot
     
     override function removeDisplayFromContainer():Void
     {
-        if (_nativeDisplay != null && _nativeDisplay.parent) 
+        if (_nativeDisplay != null && _nativeDisplay.parent != null) 
         {
             _nativeDisplay.parent.removeChild(_nativeDisplay);
         }

@@ -31,7 +31,7 @@ import openfl.geom.Point;
         tweenScale = true;
         displayIndex = 0;
         visible = true;
-        zOrder = Math.Nan;
+        zOrder = Math.NaN;
         
         global = new DBTransform();
         transform = new DBTransform();

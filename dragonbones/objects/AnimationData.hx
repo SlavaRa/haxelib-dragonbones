@@ -31,7 +31,7 @@ import openfl.errors.ArgumentError;
         fadeTime = 0;
         playTimes = 0;
         autoTween = true;
-        tweenEasing = Math.Nan;
+        tweenEasing = Math.NaN;
         hideTimelineNameMap = new Array<String>();
         hideTimelineNameMap.fixed = true;
         

@@ -74,22 +74,11 @@ import openfl.geom.Point;
     
     
     var _weight:Float;
-    
-    
     var _transform:DBTransform;
-    
-    
     var _pivot:Point;
-    
-    
     var _blendEnabled:Bool;
-    
-    
     var _isComplete:Bool;
-    
-    
     var _animationState:AnimationState;
-    
     var _totalTime:Int;
     var _currentTime:Int;
     var _currentFrameIndex:Int;
@@ -101,14 +90,12 @@ import openfl.geom.Point;
     var _tweenColor:Bool;
     var _rawAnimationScale:Float;
     var _updateState:Int;
-    
     var _armature:Armature;
     var _animation:Animation;
     var _bone:Bone;
     var _timeline:TransformTimeline;
     var _originTransform:DBTransform;
     var _originPivot:Point;
-    
     var _durationTransform:DBTransform;
     var _durationPivot:Point;
     var _durationColor:ColorTransform;
@@ -119,7 +106,6 @@ import openfl.geom.Point;
     {
         _transform = new DBTransform();
         _pivot = new Point();
-        
         _durationTransform = new DBTransform();
         _durationPivot = new Point();
         _durationColor = new ColorTransform();
@@ -135,12 +121,9 @@ import openfl.geom.Point;
         _timeline = timeline;
         _originTransform = _timeline.originTransform;
         _originPivot = _timeline.originPivot;
-        
         name = _timeline.name;
-        
         _totalTime = _timeline.duration;
         _rawAnimationScale = _animationState.clip.scale;
-        
         _isComplete = false;
         _blendEnabled = false;
         _tweenTransform = false;
@@ -148,9 +131,8 @@ import openfl.geom.Point;
         _tweenColor = false;
         _currentFrameIndex = -1;
         _currentTime = -1;
-        _tweenEasing = Math.Nan;
+        _tweenEasing = Math.NaN;
         _weight = 1;
-        
         _transform.x = 0;
         _transform.y = 0;
         _transform.scaleX = 1;
@@ -159,7 +141,6 @@ import openfl.geom.Point;
         _transform.skewY = 0;
         _pivot.x = 0;
         _pivot.y = 0;
-        
         _durationTransform.x = 0;
         _durationTransform.y = 0;
         _durationTransform.scaleX = 1;
@@ -168,32 +149,21 @@ import openfl.geom.Point;
         _durationTransform.skewY = 0;
         _durationPivot.x = 0;
         _durationPivot.y = 0;
-        
-        var _sw0_ = (_timeline.frameList.length);        
-
-        switch (_sw0_)
+        switch (_timeline.frameList.length)
         {
-            case 0:
-                _updateState = 0;
-            
-            case 1:
-                _updateState = -1;
-            
-            default:
-                _updateState = 1;
-                break;
+            case 0: _updateState = 0;
+            case 1: _updateState = -1;
+            default: _updateState = 1;
         }
         
         _bone.addState(this);
     }
-    
     
     function fadeOut():Void
     {
         _transform.skewX = TransformUtil.formatRadian(_transform.skewX);
         _transform.skewY = TransformUtil.formatRadian(_transform.skewY);
     }
-    
     
     function update(progress:Float):Void
     {
@@ -296,13 +266,11 @@ import openfl.geom.Point;
                 {
                     break;
                 }
-                currentFrame = try cast(frameList[_currentFrameIndex], TransformFrame) catch(e:Dynamic) null;
-                
+                currentFrame = cast(frameList[_currentFrameIndex], TransformFrame);
                 if (prevFrame != null) 
                 {
                     _bone.arriveAtFrame(prevFrame, this, _animationState, true);
                 }
-                
                 _currentFrameDuration = currentFrame.duration;
                 _currentFramePosition = currentFrame.position;
                 prevFrame = currentFrame;
@@ -319,7 +287,7 @@ import openfl.geom.Point;
                 }
                 else 
                 {
-                    _tweenEasing = Math.Nan;
+                    _tweenEasing = Math.NaN;
                     _tweenTransform = false;
                     _tweenScale = false;
                     _tweenColor = false;
@@ -340,8 +308,8 @@ import openfl.geom.Point;
         {
             nextFrameIndex = 0;
         }
-        var currentFrame:TransformFrame = try cast(_timeline.frameList[_currentFrameIndex], TransformFrame) catch(e:Dynamic) null;
-        var nextFrame:TransformFrame = try cast(_timeline.frameList[nextFrameIndex], TransformFrame) catch(e:Dynamic) null;
+        var currentFrame:TransformFrame = cast(_timeline.frameList[_currentFrameIndex], TransformFrame);
+        var nextFrame:TransformFrame = cast(_timeline.frameList[nextFrameIndex], TransformFrame);
         var tweenEnabled:Bool = false;
         if (
             nextFrameIndex == 0 &&
@@ -352,12 +320,12 @@ import openfl.geom.Point;
             _animationState.currentPlayTimes >= _animationState.playTimes &&
             ((_currentFramePosition + _currentFrameDuration) / _totalTime + currentPlayTimes - _timeline.offset) * _timeline.scale > 0.999999))) 
         {
-            _tweenEasing = Math.Nan;
+            _tweenEasing = Math.NaN;
             tweenEnabled = false;
         }
         else if (currentFrame.displayIndex < 0 || nextFrame.displayIndex < 0) 
         {
-            _tweenEasing = Math.Nan;
+            _tweenEasing = Math.NaN;
             tweenEnabled = false;
         }
         else if (_animationState.autoTween) 
@@ -392,7 +360,7 @@ import openfl.geom.Point;
             _tweenEasing = currentFrame.tweenEasing;
             if (Math.isNaN(_tweenEasing) || _tweenEasing == 10)   //frame no tween  
             {
-                _tweenEasing = Math.Nan;
+                _tweenEasing = Math.NaN;
                 tweenEnabled = false;
             }
             else 
@@ -428,14 +396,14 @@ import openfl.geom.Point;
             _durationPivot.y = nextFrame.pivot.y - currentFrame.pivot.y;
             
             if (
-                _durationTransform.x ||
-                _durationTransform.y ||
-                _durationTransform.skewX ||
-                _durationTransform.skewY ||
-                _durationTransform.scaleX ||
-                _durationTransform.scaleY ||
-                _durationPivot.x ||
-                _durationPivot.y) 
+                _durationTransform.x != 0 ||
+                _durationTransform.y != 0 ||
+                _durationTransform.skewX != 0 ||
+                _durationTransform.skewY != 0 ||
+                _durationTransform.scaleX != 0 ||
+                _durationTransform.scaleY != 0 ||
+                _durationPivot.x != 0 ||
+                _durationPivot.y != 0) 
             {
                 _tweenTransform = true;
                 _tweenScale = currentFrame.tweenScale;
@@ -563,7 +531,7 @@ import openfl.geom.Point;
         
         if (!_tweenColor && _animationState.displayControl) 
         {
-            if (currentFrame.color) 
+            if (currentFrame.color != null) 
             {
                 _bone.updateColor(
                         currentFrame.color.alphaOffset,
@@ -638,7 +606,7 @@ import openfl.geom.Point;
         
         if (_tweenColor && _animationState.displayControl) 
         {
-            if (currentFrame.color) 
+            if (currentFrame.color != null) 
             {
                 _bone.updateColor(
                         currentFrame.color.alphaOffset + _durationColor.alphaOffset * progress,
@@ -679,7 +647,7 @@ import openfl.geom.Point;
             !_animation._isFading) 
         {
             var timelineCached:TimelineCached = _timeline.timelineCached;
-            if (!_bone._timelineCached) 
+            if (_bone._timelineCached == null) 
             {
                 _bone._timelineCached = timelineCached;
                 for (slot/* AS3HX WARNING could not determine type for var: slot exp: ECall(EField(EIdent(_bone),getSlots),[EIdent(false)]) type: null */ in _bone.getSlots(false))
@@ -690,20 +658,20 @@ import openfl.geom.Point;
             
             var framePosition:Int = ((isNoTweenFrame) ? _currentFramePosition:_currentTime) * 0.001 * _rawAnimationScale * _armature.cacheFrameRate;
             _bone._frameCachedPosition = framePosition;
-            if (timelineCached.getFrame(framePosition)) 
+            if (timelineCached.getFrame(framePosition) != null) 
             {
                 isCachedFrame = true;
                 _bone._frameCachedDuration = -1;
             }
             else 
             {
-                _bone._frameCachedDuration = (isNoTweenFrame) ? (_currentFrameDuration * 0.001 * _rawAnimationScale * _armature.cacheFrameRate || 1):1;
+                _bone._frameCachedDuration = isNoTweenFrame ? (_currentFrameDuration * 0.001 * _rawAnimationScale * _armature.cacheFrameRate || 1):1;
             }
         }
-        else if (_bone._timelineCached) 
+        else if (_bone._timelineCached != null) 
         {
             _bone._timelineCached = null;
-            for (slot/* AS3HX WARNING could not determine type for var: slot exp: ECall(EField(EIdent(_bone),getSlots),[EIdent(false)]) type: null */ in _bone.getSlots(false))
+            for (Lambda.has(_bone.getSlots(false), slot))
             {
                 slot._timelineCached = null;
             }
@@ -716,10 +684,10 @@ import openfl.geom.Point;
     
     function updateSingleFrame():Void
     {
-        var currentFrame:TransformFrame = try cast(_timeline.frameList[0], TransformFrame) catch(e:Dynamic) null;
+        var currentFrame:TransformFrame = cast(_timeline.frameList[0], TransformFrame);
         _bone.arriveAtFrame(currentFrame, this, _animationState, false);
         _isComplete = true;
-        _tweenEasing = Math.Nan;
+        _tweenEasing = Math.NaN;
         _tweenTransform = false;
         _tweenScale = false;
         _tweenColor = false;
@@ -728,16 +696,15 @@ import openfl.geom.Point;
         if (_blendEnabled) 
         {
             /**
-				 * <使用绝对数据>
-				 * 单帧的timeline，第一个关键帧的transform为0
-				 * timeline.originTransform = firstFrame.transform;
-				 * eachFrame.transform = eachFrame.transform - timeline.originTransform;
-				 * firstFrame.transform == 0;
-				 * 
-				 * <使用相对数据>
-				 * 使用相对数据时，timeline.originTransform = 0，第一个关键帧的transform有可能不为 0
-				 */
-            
+			 * <使用绝对数据>
+			 * 单帧的timeline，第一个关键帧的transform为0
+			 * timeline.originTransform = firstFrame.transform;
+			 * eachFrame.transform = eachFrame.transform - timeline.originTransform;
+			 * firstFrame.transform == 0;
+			 * 
+			 * <使用相对数据>
+			 * 使用相对数据时，timeline.originTransform = 0，第一个关键帧的transform有可能不为 0
+			 */
             if (_animationState.additiveBlending) 
             {
                 _transform.x = currentFrame.transform.x;
@@ -768,7 +735,7 @@ import openfl.geom.Point;
             
             if (_animationState.displayControl) 
             {
-                if (currentFrame.color) 
+                if (currentFrame.color != null) 
                 {
                     _bone.updateColor(
                             currentFrame.color.alphaOffset,
@@ -781,19 +748,13 @@ import openfl.geom.Point;
                             currentFrame.color.blueMultiplier,
                             true
                             );
-                }
-                else if (_bone._isColorChanged) 
-                {
-                    _bone.updateColor(0, 0, 0, 0, 1, 1, 1, 1, false);
-                }
+                } else if (_bone._isColorChanged) _bone.updateColor(0, 0, 0, 0, 1, 1, 1, 1, false);
             }
         }
     }
     
-    function clear():Void
-    {
-        if (_bone != null) 
-        {
+    function clear():Void {
+        if (_bone != null) {
             _bone.removeState(this);
             _bone = null;
         }
@@ -805,4 +766,3 @@ import openfl.geom.Point;
         _originPivot = null;
     }
 }
-

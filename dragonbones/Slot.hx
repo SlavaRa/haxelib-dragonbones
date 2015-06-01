@@ -3,6 +3,7 @@ import dragonbones.core.DBObject;
 import dragonbones.objects.DisplayData;
 import dragonbones.objects.FrameCached;
 import dragonbones.objects.TimelineCached;
+import openfl.display.BlendMode;
 import openfl.errors.ArgumentError;
 import openfl.errors.IllegalOperationError;
 import openfl.geom.ColorTransform;
@@ -11,7 +12,7 @@ import openfl.geom.Matrix;
 class Slot extends DBObject
 {
     public var zOrder(get, set):Float;
-    public var blendMode(get, set):String;
+    public var blendMode(get, set):BlendMode;
     public var display(get, set):Dynamic;
     public var childArmature(get, set):Armature;
     public var displayList(get, set):Array<Dynamic>;

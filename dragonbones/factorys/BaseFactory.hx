@@ -292,7 +292,7 @@ class BaseFactory extends EventDispatcher
 		 * @param The registration pivotY position.
 		 * @return An Object.
 		 */
-    public function getTextureDisplay(textureName:String, textureAtlasName:String = null, pivotX:Float = Math.Nan, pivotY:Float = Math.Nan):Dynamic
+    public function getTextureDisplay(textureName:String, textureAtlasName:String = null, pivotX:Float = Math.NaN, pivotY:Float = Math.NaN):Dynamic
     {
         var textureAtlas:Dynamic;
         if (textureAtlasName != null) 
