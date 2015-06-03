@@ -34,7 +34,7 @@ class DBObject
 	 * This DBObject instance global transform instance.
 	 * @see dragonBones.objects.DBTransform
 	 */
-    function get_Global():DBTransform
+    function get_global():DBTransform
     {
         return _global;
     }
@@ -44,7 +44,7 @@ class DBObject
 		 * This Bone instance origin transform instance.
 		 * @see dragonBones.objects.DBTransform
 		 */
-    function get_Origin():DBTransform
+    function get_origin():DBTransform
     {
         return _origin;
     }
@@ -55,33 +55,32 @@ class DBObject
 		 * This Bone instance offset transform instance.
 		 * @see dragonBones.objects.DBTransform
 		 */
-    function get_Offset():DBTransform
+    function get_offset():DBTransform
     {
         return _offset;
     }
     
-    
     var _visible:Bool;
-    function get_Visible():Bool
+    function get_visible():Bool
     {
         return _visible;
     }
-    function set_Visible(value:Bool):Bool
+    function set_visible(value:Bool):Bool
     {
         _visible = value;
         return value;
     }
     
-    
     var _armature:Armature;
     /**
-		 * The armature this DBObject instance belongs to.
-		 */
-    function get_Armature():Armature
+	 * The armature this DBObject instance belongs to.
+	 */
+    function get_armature():Armature
     {
         return _armature;
     }
-    
+
+    public
     function setArmature(value:Armature):Void
     {
         if (_armature != null) 
@@ -100,7 +99,7 @@ class DBObject
     /**
 		 * Indicates the Bone instance that directly contains this DBObject instance if any.
 		 */
-    function get_Parent():Bone
+    function get_parent():Bone
     {
         return _parent;
     }
@@ -117,15 +116,12 @@ class DBObject
         _global = new DBTransform();
         _origin = new DBTransform();
         _offset = new DBTransform();
-        _offset.scaleX = _offset.scaleY = 1;
-        
+        _offset.scaleX = 1;
+		_offset.scaleY = 1;
         _visible = true;
-        
         _armature = null;
         _parent = null;
-        
         userData = null;
-        
         this.inheritRotation = true;
         this.inheritScale = true;
         this.inheritTranslation = true;
@@ -137,12 +133,10 @@ class DBObject
     public function dispose():Void
     {
         userData = null;
-        
         _globalTransformMatrix = null;
         _global = null;
         _origin = null;
         _offset = null;
-        
         _armature = null;
         _parent = null;
     }
@@ -155,7 +149,7 @@ class DBObject
     function calculateParentTransform():Dynamic
     {
         
-        if (this.parent && (this.inheritTranslation || this.inheritRotation || this.inheritScale)) 
+        if (this.parent != null && (this.inheritTranslation || this.inheritRotation || this.inheritScale)) 
         {
             var parentGlobalTransform:DBTransform = this._parent._globalTransformForChild;
             var parentGlobalTransformMatrix:Matrix = this._parent._globalTransformMatrixForChild;
@@ -197,7 +191,6 @@ class DBObject
         calculateRelativeParentTransform();
         TransformUtil.transformToMatrix(_global, _globalTransformMatrix, true);
         var output:Dynamic = calculateParentTransform();
-        
         if (output != null) 
         {
             _globalTransformMatrix.concat(output.parentGlobalTransformMatrix);

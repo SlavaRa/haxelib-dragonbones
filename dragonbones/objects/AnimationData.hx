@@ -6,7 +6,9 @@ import openfl.errors.ArgumentError;
 @:final class AnimationData extends Timeline
 {
     public var timelineList(get, never):Array<TransformTimeline>;
-
+	var _timelineList:Array<TransformTimeline>;
+    function get_timelineList() return _timelineList;
+	
     public var name:String;
     public var frameRate:Int;
     public var fadeTime:Float;
@@ -19,12 +21,6 @@ import openfl.errors.ArgumentError;
     
     public var hideTimelineNameMap:Array<String>;
     
-    var _timelineList:Array<TransformTimeline>;
-    function get_TimelineList():Array<TransformTimeline>
-    {
-        return _timelineList;
-    }
-    
     public function new()
     {
         super();
@@ -33,27 +29,14 @@ import openfl.errors.ArgumentError;
         autoTween = true;
         tweenEasing = Math.NaN;
         hideTimelineNameMap = new Array<String>();
-        hideTimelineNameMap.fixed = true;
-        
         _timelineList = new Array<TransformTimeline>();
-        _timelineList.fixed = true;
     }
     
     public override function dispose():Void
     {
         super.dispose();
-        
-        hideTimelineNameMap.fixed = false;
-        hideTimelineNameMap.length = 0;
         hideTimelineNameMap = null;
-        
-        _timelineList.fixed = false;
-        for (timeline in _timelineList)
-        {
-            timeline.dispose();
-        }
-        _timelineList.fixed = false;
-        _timelineList.length = 0;
+        for (timeline in _timelineList) timeline.dispose();
         _timelineList = null;
     }
     
@@ -79,9 +62,7 @@ import openfl.errors.ArgumentError;
         
         if (Lambda.indexOf(_timelineList, timeline) < 0) 
         {
-            _timelineList.fixed = false;
             _timelineList[_timelineList.length] = timeline;
-            _timelineList.fixed = true;
         }
     }
 }

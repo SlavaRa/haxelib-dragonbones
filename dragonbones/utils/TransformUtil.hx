@@ -50,15 +50,8 @@ class TransformUtil
     
     public static function formatRadian(radian:Float):Float
     {
-        //radian %= DOUBLE_PI;
-        if (radian > Math.PI) 
-        {
-            radian -= DOUBLE_PI;
-        }
-        if (radian < -Math.PI) 
-        {
-            radian += DOUBLE_PI;
-        }
+        if (radian > Math.PI) radian -= DOUBLE_PI;
+        if (radian < -Math.PI) radian += DOUBLE_PI;
         return radian;
     }
     
@@ -66,10 +59,8 @@ class TransformUtil
     {
         transformToMatrix(transform, _helpTransformMatrix, true);
         transformToMatrix(parent, _helpParentTransformMatrix, true);
-        
         _helpParentTransformMatrix.invert();
         _helpTransformMatrix.concat(_helpParentTransformMatrix);
-        
         matrixToTransform(_helpTransformMatrix, transform, transform.scaleX * parent.scaleX >= 0, transform.scaleY * parent.scaleY >= 0);
     }
     
@@ -77,38 +68,38 @@ class TransformUtil
     {
         transform.x = matrix.tx;
         transform.y = matrix.ty;
-        transform.scaleX = Math.sqrt(matrix.a * matrix.a + matrix.b * matrix.b) * ((scaleXF) ? 1:-1);
-        transform.scaleY = Math.sqrt(matrix.d * matrix.d + matrix.c * matrix.c) * ((scaleYF) ? 1:-1);
+        transform.scaleX = Math.sqrt(matrix.a * matrix.a + matrix.b * matrix.b) * (scaleXF ? 1 : -1);
+        transform.scaleY = Math.sqrt(matrix.d * matrix.d + matrix.c * matrix.c) * (scaleYF ? 1 : -1);
         
-        var skewXArray:Array<Dynamic> = [];
-        skewXArray[0] = Math.acos(matrix.d / transform.scaleY);
-        skewXArray[1] = -skewXArray[0];
-        skewXArray[2] = Math.asin(-matrix.c / transform.scaleY);
-        skewXArray[3] = skewXArray[2] >= (0) ? Math.PI - skewXArray[2]:skewXArray[2] - Math.PI;
+        var skewX0 = Math.acos(matrix.d / transform.scaleY);
+        var skewX1 = -skewX0;
+        var skewX2 = Math.asin(-matrix.c / transform.scaleY);
+        var skewX3 = skewX2 >= 0 ? Math.PI - skewX2 : skewX2 - Math.PI;
         
-        if (Std.parseFloat(skewXArray[0]).toFixed(4) == Std.parseFloat(skewXArray[2]).toFixed(4) || Std.parseFloat(skewXArray[0]).toFixed(4) == Std.parseFloat(skewXArray[3]).toFixed(4)) 
+        if (toFixed(skewX0, 4) == toFixed(skewX2, 4) || toFixed(skewX0, 4) == toFixed(skewX3, 4))
         {
-            transform.skewX = skewXArray[0];
+            transform.skewX = skewX0;
         }
         else 
         {
-            transform.skewX = skewXArray[1];
+            transform.skewX = skewX1;
         }
         
-        var skewYArray:Array<Dynamic> = [];
-        skewYArray[0] = Math.acos(matrix.a / transform.scaleX);
-        skewYArray[1] = -skewYArray[0];
-        skewYArray[2] = Math.asin(matrix.b / transform.scaleX);
-        skewYArray[3] = skewYArray[2] >= (0) ? Math.PI - skewYArray[2]:skewYArray[2] - Math.PI;
-        
-        if (Std.parseFloat(skewYArray[0]).toFixed(4) == Std.parseFloat(skewYArray[2]).toFixed(4) || Std.parseFloat(skewYArray[0]).toFixed(4) == Std.parseFloat(skewYArray[3]).toFixed(4)) 
+        var skewY0 = Math.acos(matrix.a / transform.scaleX);
+        var skewY1 = -skewY0;
+        var skewY2 = Math.asin(matrix.b / transform.scaleX);
+        var skewY3 = skewY2 >= (0) ? Math.PI - skewY2 : skewY2 - Math.PI;
+        if (toFixed(skewY0, 4) == toFixed(skewY2, 4) || toFixed(skewY0, 4) == toFixed(skewY3, 4)) 
         {
-            transform.skewY = skewYArray[0];
+            transform.skewY = skewY0;
         }
         else 
         {
-            transform.skewY = skewYArray[1];
+            transform.skewY = skewY1;
         }
     }
 
+	static function toFixed(v:Float, decimalPlaces:Int):Float {
+		return Std.int(v * decimalPlaces) / decimalPlaces;
+	}
 }

@@ -88,9 +88,11 @@ class Armature extends EventDispatcher implements IAnimatable {
     public var userData:Dynamic;
     
     /** Set it to true when slot's zorder changed*/
+	public
     var _slotsZOrderChanged:Bool;
     
     /** Store event needed to dispatch in current frame. When advanceTime execute complete, dispath them.*/
+	public
     var _eventList:Array<Event>;
     
     /** Store slots based on slots' zOrder*/
@@ -107,7 +109,7 @@ class Armature extends EventDispatcher implements IAnimatable {
 	 * ArmatureData.
 	 * @see dragonBones.objects.ArmatureData.
 	 */
-    function get_ArmatureData():ArmatureData
+    function get_armatureData():ArmatureData
     {
         return _armatureData;
     }
@@ -117,7 +119,7 @@ class Armature extends EventDispatcher implements IAnimatable {
     /**
 	 * Armature's display object. It's instance type depends on render engine. For example "openfl.display.DisplayObject" or "startling.display.DisplayObject"
 	 */
-	function get_Display():Dynamic
+	function get_display():Dynamic
     {
         return _display;
     }
@@ -128,19 +130,19 @@ class Armature extends EventDispatcher implements IAnimatable {
 	 * An Animation instance
 	 * @see dragonBones.animation.Animation
 	 */
-	function get_Animation():Animation
+	function get_animation():Animation
     {
         return _animation;
     }
     
     var _cacheFrameRate:Int;
 	
-    function get_CacheFrameRate():Int
+    function get_cacheFrameRate():Int
     {
         return _cacheFrameRate;
     }
 	
-    function set_CacheFrameRate(value:Int):Int
+    function set_cacheFrameRate(value:Int):Int
     {
         _cacheFrameRate = value;
         return value;
@@ -250,26 +252,20 @@ class Armature extends EventDispatcher implements IAnimatable {
         if (_slotsZOrderChanged) 
         {
             updateSlotsZOrder();
-            if (this.hasEventListener(ArmatureEvent.Z_ORDER_UPDATED)) 
+            if (hasEventListener(ArmatureEvent.Z_ORDER_UPDATED)) 
             {
-                this.dispatchEvent(new ArmatureEvent(ArmatureEvent.Z_ORDER_UPDATED));
+                dispatchEvent(new ArmatureEvent(ArmatureEvent.Z_ORDER_UPDATED));
             }
         }
         
-        if (_eventList.length) 
-        {
-            for (event in _eventList)
-            {
-                this.dispatchEvent(event);
-            }
-            _eventList.length = 0;
-        }
-        
+		for (event in _eventList)
+		{
+			dispatchEvent(event);
+			_eventList.remove(event);
+		}
+		
         _lockDispose = false;
-        if (_delayDispose) 
-        {
-            dispose();
-        }
+        if (_delayDispose) dispose();
     }
     
     /**
@@ -293,10 +289,7 @@ class Armature extends EventDispatcher implements IAnimatable {
     {
         for (slot in _slotList)
         {
-            if (slot.name == slotName) 
-            {
-                return slot;
-            }
+            if (slot.name == slotName) return slot;
         }
         return null;
     }
@@ -313,10 +306,7 @@ class Armature extends EventDispatcher implements IAnimatable {
         {
             for (slot in _slotList)
             {
-                if (slot.display == display) 
-                {
-                    return slot;
-                }
+                if (slot.display == display) return slot;
             }
         }
         return null;
@@ -331,14 +321,8 @@ class Armature extends EventDispatcher implements IAnimatable {
     public function addSlot(slot:Slot, boneName:String):Void
     {
         var bone:Bone = getBone(boneName);
-        if (bone != null) 
-        {
-            bone.addChild(slot);
-        }
-        else 
-        {
-            throw new ArgumentError();
-        }
+        if (bone != null) bone.addChild(slot);
+        else throw new ArgumentError();
     }
     
     /**
@@ -348,26 +332,19 @@ class Armature extends EventDispatcher implements IAnimatable {
 	 */
     public function removeSlot(slot:Slot):Void
     {
-        if (slot == null || slot.armature != this) 
-        {
-            throw new ArgumentError();
-        }
-        
+        if (slot == null || slot.armature != this) throw new ArgumentError();
         slot.parent.removeChild(slot);
     }
     
     /**
-		 * Remove a Slot instance from this Armature instance.
-		 * @param The name of the Slot instance to remove.
-		 * @see dragonBones.Slot
-		 */
+	 * Remove a Slot instance from this Armature instance.
+	 * @param The name of the Slot instance to remove.
+	 * @see dragonBones.Slot
+	 */
     public function removeSlotByName(slotName:String):Slot
     {
         var slot:Slot = getSlot(slotName);
-        if (slot != null) 
-        {
-            removeSlot(slot);
-        }
+        if (slot != null) removeSlot(slot);
         return slot;
     }
     
@@ -379,7 +356,7 @@ class Armature extends EventDispatcher implements IAnimatable {
 	 */
     public function getBones(returnCopy:Bool = true):Array<Bone>
     {
-        return (returnCopy) ? _boneList.copy():_boneList;
+        return returnCopy ? _boneList.copy():_boneList;
     }
     
     /**
@@ -392,10 +369,7 @@ class Armature extends EventDispatcher implements IAnimatable {
     {
         for (bone in _boneList)
         {
-            if (bone.name == boneName) 
-            {
-                return bone;
-            }
+            if (bone.name == boneName) return bone;
         }
         return null;
     }
@@ -409,7 +383,7 @@ class Armature extends EventDispatcher implements IAnimatable {
     public function getBoneByDisplay(display:Dynamic):Bone
     {
         var slot:Slot = getSlotByDisplay(display);
-        return (slot != null) ? slot.parent:null;
+        return slot != null ? slot.parent : null;
     }
     
     /**
@@ -423,21 +397,12 @@ class Armature extends EventDispatcher implements IAnimatable {
         if (parentName != null) 
         {
             var boneParent:Bone = getBone(parentName);
-            if (boneParent != null) 
-            {
-                boneParent.addChild(bone);
-            }
-            else 
-            {
-                throw new ArgumentError();
-            }
+            if (boneParent != null) boneParent.addChild(bone);
+            else throw new ArgumentError();
         }
         else 
         {
-            if (bone.parent) 
-            {
-                bone.parent.removeChild(bone);
-            }
+            if (bone.parent != null) bone.parent.removeChild(bone);
             bone.setArmature(this);
         }
     }
@@ -449,11 +414,7 @@ class Armature extends EventDispatcher implements IAnimatable {
 	 */
     public function removeBone(bone:Bone):Void
     {
-        if (bone == null || bone.armature != this) 
-        {
-            throw new ArgumentError();
-        }
-        
+        if (bone == null || bone.armature != this) throw new ArgumentError();
         if (bone.parent != null) bone.parent.removeChild(bone);
         else bone.setArmature(null);
     }
@@ -470,6 +431,7 @@ class Armature extends EventDispatcher implements IAnimatable {
         return bone;
     }
     
+	public
     function addDBObject(object:DBObject):Void {
         if (Std.is(object, Slot)) {
             var slot:Slot = cast(object, Slot);
@@ -485,7 +447,8 @@ class Armature extends EventDispatcher implements IAnimatable {
             }
         }
     }
-    
+
+    public
     function removeDBObject(object:DBObject):Void
     {
         if (Std.is(object, Slot)) 
@@ -512,12 +475,8 @@ class Armature extends EventDispatcher implements IAnimatable {
         while (i-->0)
         {
             var slot:Slot = _slotList[i];
-            if (slot._isShowDisplay) 
-            {
-                slot.addDisplayToContainer(_display);
-            }
+            if (slot._isShowDisplay) slot.addDisplayToContainer(_display);
         }
-        
         _slotsZOrderChanged = false;
     }
     
@@ -546,6 +505,7 @@ class Armature extends EventDispatcher implements IAnimatable {
     }
     
     /** When AnimationState enter a key frame, call this func*/
+	public
     function arriveAtFrame(frame:Frame, timelineState:TimelineState, animationState:AnimationState, isCross:Bool):Void
     {
         if (frame.event != null && this.hasEventListener(FrameEvent.ANIMATION_FRAME_EVENT)) 
@@ -576,6 +536,6 @@ class Armature extends EventDispatcher implements IAnimatable {
     
     function sortSlot(slot1:Slot, slot2:Slot):Int
     {
-        return slot1.zOrder < (slot2.zOrder) ? 1:-1;
+        return slot1.zOrder < slot2.zOrder ? 1 : -1;
     }
 }

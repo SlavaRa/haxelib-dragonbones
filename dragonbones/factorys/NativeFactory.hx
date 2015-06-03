@@ -11,25 +11,24 @@ import openfl.errors.Error;
 import openfl.display.MovieClip;
 import openfl.display.Shape;
 import openfl.display.Sprite;
+import openfl.geom.Matrix;
 import openfl.geom.Rectangle;
 
 class NativeFactory extends BaseFactory
 {
+	static var _helpMatrix = new Matrix();
+	
     /**
-		 * If enable BitmapSmooth
-		 */
+	 * If enable BitmapSmooth
+	 */
     public var fillBitmapSmooth:Bool;
     
     /**
-		 * If use bitmapData Texture（When using dbswf，you can use vector element，if enable useBitmapDataTexture，dbswf will be force converted to BitmapData）
-		 */
+	 * If use bitmapData Texture（When using dbswf，you can use vector element，if enable useBitmapDataTexture，dbswf will be force converted to BitmapData）
+	 */
     public var useBitmapDataTexture:Bool;
     
-    public function new()
-    {
-        super(this);
-    }
-    
+    public function new() super();
     
     override function generateTextureAtlas(content:Dynamic, textureAtlasRawData:Dynamic):ITextureAtlas
     {

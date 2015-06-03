@@ -11,24 +11,18 @@ import dragonbones.utils.TransformUtil;
 import openfl.geom.ColorTransform;
 import openfl.geom.Point;
 
-@:final class TimelineState
-{
-    static var HALF_PI:Float = Math.PI * 0.5;
-    static var DOUBLE_PI:Float = Math.PI * 2;
-    
+class TimelineState {
+    static var HALF_PI = Math.PI * 0.5;
+    static var DOUBLE_PI = Math.PI * 2;
     static var _pool:Array<TimelineState> = new Array<TimelineState>();
-    
-    
-    static function borrowObject():TimelineState
-    {
-        if (_pool.length == 0) 
-        {
-            return new TimelineState();
-        }
+	
+	public
+    static function borrowObject():TimelineState {
+        if (_pool.length == 0) return new TimelineState();
         return _pool.pop();
     }
     
-    
+	public
     static function returnObject(timeline:TimelineState):Void
     {
         if (Lambda.indexOf(_pool, timeline) < 0) 
@@ -39,17 +33,13 @@ import openfl.geom.Point;
         timeline.clear();
     }
     
-    
-    static function clear():Void
+	public
+    static function reset():Void
     {
         var i:Int = _pool.length;
-        while (i-->0)
-        {
-            _pool[i].clear();
-        }
-        _pool.length = 0;
+        while (i-->0) _pool[i].clear();
+		_pool = [];
     }
-    
     
     public static function getEaseValue(value:Float, easing:Float):Float
     {
@@ -72,13 +62,22 @@ import openfl.geom.Point;
         return (valueEase - value) * easing + value;
     }
     
-    
+	public
     var _weight:Float;
+	
+	public
     var _transform:DBTransform;
+	
+	public
     var _pivot:Point;
+	
+	public
     var _blendEnabled:Bool;
     var _isComplete:Bool;
+	
+	public
     var _animationState:AnimationState;
+	
     var _totalTime:Int;
     var _currentTime:Int;
     var _currentFrameIndex:Int;
@@ -111,7 +110,7 @@ import openfl.geom.Point;
         _durationColor = new ColorTransform();
     }
     
-    
+    public
     function fadeIn(bone:Bone, animationState:AnimationState, timeline:TransformTimeline):Void
     {
         _bone = bone;
@@ -159,12 +158,14 @@ import openfl.geom.Point;
         _bone.addState(this);
     }
     
+	public
     function fadeOut():Void
     {
         _transform.skewX = TransformUtil.formatRadian(_transform.skewX);
         _transform.skewY = TransformUtil.formatRadian(_transform.skewY);
     }
-    
+
+    public
     function update(progress:Float):Void
     {
         if (_updateState > 0) 
@@ -190,8 +191,7 @@ import openfl.geom.Point;
         {
             _isComplete = false;
             currentPlayTimes = Math.ceil(Math.abs(currentTime) / _totalTime) || 1;
-            //currentTime -= Math.floor(currentTime / _totalTime) * _totalTime;
-            currentTime -= as3hx.Compat.parseInt(currentTime / _totalTime) * _totalTime;
+            currentTime -= Math.floor(currentTime / _totalTime) * _totalTime;
             
             if (currentTime < 0) 
             {
@@ -228,8 +228,7 @@ import openfl.geom.Point;
             }
             else 
             {
-                //currentTime -= Math.floor(currentTime / _totalTime) * _totalTime;
-                currentTime -= as3hx.Compat.parseInt(currentTime / _totalTime) * _totalTime;
+                currentTime -= Math.floor(currentTime / _totalTime) * _totalTime;
             }
         }
         
@@ -316,7 +315,7 @@ import openfl.geom.Point;
             (
             !_animationState.lastFrameAutoTween ||
             (
-            _animationState.playTimes &&
+            _animationState.playTimes != 0 &&
             _animationState.currentPlayTimes >= _animationState.playTimes &&
             ((_currentFramePosition + _currentFrameDuration) / _totalTime + currentPlayTimes - _timeline.offset) * _timeline.scale > 0.999999))) 
         {
@@ -428,22 +427,14 @@ import openfl.geom.Point;
                 _durationColor.greenMultiplier = nextFrame.color.greenMultiplier - currentFrame.color.greenMultiplier;
                 _durationColor.blueMultiplier = nextFrame.color.blueMultiplier - currentFrame.color.blueMultiplier;
                 
-                if (
-                    _durationColor.alphaOffset ||
-                    _durationColor.redOffset ||
-                    _durationColor.greenOffset ||
-                    _durationColor.blueOffset ||
-                    _durationColor.alphaMultiplier ||
-                    _durationColor.redMultiplier ||
-                    _durationColor.greenMultiplier ||
-                    _durationColor.blueMultiplier) 
-                {
-                    _tweenColor = true;
-                }
-                else 
-                {
-                    _tweenColor = false;
-                }
+				_tweenColor = _durationColor.alphaOffset != 0
+							|| _durationColor.redOffset != 0
+							|| _durationColor.greenOffset != 0
+							|| _durationColor.blueOffset != 0
+							|| _durationColor.alphaMultiplier != 0
+							|| _durationColor.redMultiplier != 0
+							|| _durationColor.greenMultiplier != 0
+							|| _durationColor.blueMultiplier != 0;
             }
             else if (currentFrame.color != null) 
             {
@@ -452,7 +443,6 @@ import openfl.geom.Point;
                 _durationColor.redOffset = -currentFrame.color.redOffset;
                 _durationColor.greenOffset = -currentFrame.color.greenOffset;
                 _durationColor.blueOffset = -currentFrame.color.blueOffset;
-                
                 _durationColor.alphaMultiplier = 1 - currentFrame.color.alphaMultiplier;
                 _durationColor.redMultiplier = 1 - currentFrame.color.redMultiplier;
                 _durationColor.greenMultiplier = 1 - currentFrame.color.greenMultiplier;
@@ -465,16 +455,12 @@ import openfl.geom.Point;
                 _durationColor.redOffset = nextFrame.color.redOffset;
                 _durationColor.greenOffset = nextFrame.color.greenOffset;
                 _durationColor.blueOffset = nextFrame.color.blueOffset;
-                
                 _durationColor.alphaMultiplier = nextFrame.color.alphaMultiplier - 1;
                 _durationColor.redMultiplier = nextFrame.color.redMultiplier - 1;
                 _durationColor.greenMultiplier = nextFrame.color.greenMultiplier - 1;
                 _durationColor.blueMultiplier = nextFrame.color.blueMultiplier - 1;
             }
-            else 
-            {
-                _tweenColor = false;
-            }
+            else  _tweenColor = false;
         }
         else 
         {
@@ -495,7 +481,6 @@ import openfl.geom.Point;
                     _transform.skewY = currentFrame.transform.skewY;
                     _transform.scaleX = currentFrame.transform.scaleX;
                     _transform.scaleY = currentFrame.transform.scaleY;
-                    
                     _pivot.x = currentFrame.pivot.x;
                     _pivot.y = currentFrame.pivot.y;
                 }
@@ -507,12 +492,10 @@ import openfl.geom.Point;
                     _transform.skewY = _originTransform.skewY + currentFrame.transform.skewY;
                     _transform.scaleX = _originTransform.scaleX * currentFrame.transform.scaleX;
                     _transform.scaleY = _originTransform.scaleY * currentFrame.transform.scaleY;
-                    
                     _pivot.x = _originPivot.x + currentFrame.pivot.x;
                     _pivot.y = _originPivot.y + currentFrame.pivot.y;
                 }
             }
-            
             _bone.invalidUpdate();
         }
         else if (!_tweenScale) 
@@ -650,13 +633,13 @@ import openfl.geom.Point;
             if (_bone._timelineCached == null) 
             {
                 _bone._timelineCached = timelineCached;
-                for (slot/* AS3HX WARNING could not determine type for var: slot exp: ECall(EField(EIdent(_bone),getSlots),[EIdent(false)]) type: null */ in _bone.getSlots(false))
+                for (slot in _bone.getSlots(false))
                 {
                     slot._timelineCached = _timeline.getSlotTimelineCached(slot.name);
                 }
             }  //Math.floor  
             
-            var framePosition:Int = ((isNoTweenFrame) ? _currentFramePosition:_currentTime) * 0.001 * _rawAnimationScale * _armature.cacheFrameRate;
+            var framePosition:Int = (isNoTweenFrame ? _currentFramePosition : _currentTime) * 0.001 * _rawAnimationScale * _armature.cacheFrameRate;
             _bone._frameCachedPosition = framePosition;
             if (timelineCached.getFrame(framePosition) != null) 
             {

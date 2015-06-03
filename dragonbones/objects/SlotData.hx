@@ -4,17 +4,14 @@ import openfl.errors.ArgumentError;
 @:final class SlotData
 {
     public var displayDataList(get, never):Array<DisplayData>;
+    var _displayDataList:Array<DisplayData>;
+    function get_displayDataList() return _displayDataList;
 
     public var name:String;
     public var parent:String;
     public var zOrder:Float;
     public var blendMode:String;
     
-    var _displayDataList:Array<DisplayData>;
-    function get_DisplayDataList():Array<DisplayData>
-    {
-        return _displayDataList;
-    }
     
     public function new()
     {
@@ -29,8 +26,6 @@ import openfl.errors.ArgumentError;
         {
             _displayDataList[i].dispose();
         }
-        _displayDataList.fixed = false;
-        _displayDataList.length = 0;
         _displayDataList = null;
     }
     
@@ -42,9 +37,7 @@ import openfl.errors.ArgumentError;
         }
         if (Lambda.indexOf(_displayDataList, displayData) < 0) 
         {
-            _displayDataList.fixed = false;
             _displayDataList[_displayDataList.length] = displayData;
-            _displayDataList.fixed = true;
         }
         else 
         {

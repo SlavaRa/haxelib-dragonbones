@@ -6,22 +6,16 @@ import openfl.errors.ArgumentError;
 @:final class BoneData
 {
     public var areaDataList(get, never):Array<IAreaData>;
+    var _areaDataList:Array<IAreaData>;
+    function get_areaDataList() return _areaDataList;
 
     public var name:String;
     public var parent:String;
     public var length:Float;
-    
     public var global:DBTransform;
     public var transform:DBTransform;
-    
     public var inheritScale:Bool;
     public var inheritRotation:Bool;
-    
-    var _areaDataList:Array<IAreaData>;
-    function get_AreaDataList():Array<IAreaData>
-    {
-        return _areaDataList;
-    }
     
     public function new()
     {
@@ -38,17 +32,8 @@ import openfl.errors.ArgumentError;
     {
         global = null;
         transform = null;
-        
-        if (_areaDataList != null) 
-        {
-            for (areaData in _areaDataList)
-            {
-                areaData.dispose();
-            }
-            _areaDataList.fixed = false;
-            _areaDataList.length = 0;
-            _areaDataList = null;
-        }
+		for (areaData in _areaDataList) areaData.dispose();
+		_areaDataList = null;
     }
     
     public function getAreaData(areaName:String):IAreaData
@@ -77,9 +62,7 @@ import openfl.errors.ArgumentError;
         
         if (Lambda.indexOf(_areaDataList, areaData) < 0) 
         {
-            _areaDataList.fixed = false;
             _areaDataList[_areaDataList.length] = areaData;
-            _areaDataList.fixed = true;
         }
     }
 }

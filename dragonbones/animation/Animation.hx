@@ -31,7 +31,7 @@ class Animation
     /**
 	* Unrecommended API. Recommend use animationList.
 	*/
-    function get_MovementList():Array<String>
+    function get_movementList():Array<String>
     {
         return _animationList;
     }
@@ -39,7 +39,7 @@ class Animation
     /**
 	* Unrecommended API. Recommend use lastAnimationName.
 	*/
-    function get_MovementID():String
+    function get_movementID():String
     {
         return lastAnimationName;
     }
@@ -51,15 +51,21 @@ class Animation
     
     var _armature:Armature;
     var _animationStateList:Array<AnimationState>;
+	
+	public
     var _lastAnimationState:AnimationState;
+	
+	public
     var _isFading:Bool;
+	
+	public
     var _animationStateCount:Int;
     
     /**
 	 * The last AnimationState this Animation played.
 	 * @see dragonBones.objects.AnimationData.
 	 */
-    function get_LastAnimationState():AnimationState
+    function get_lastAnimationState():AnimationState
     {
         return _lastAnimationState;
     }
@@ -68,7 +74,7 @@ class Animation
 	 * The name of the last AnimationData played.
 	 * @see dragonBones.objects.AnimationData.
 	 */
-	function get_LastAnimationName():String
+	function get_lastAnimationName():String
     {
         return (_lastAnimationState != null) ? _lastAnimationState.name:null;
     }
@@ -79,7 +85,7 @@ class Animation
 	 * An vector containing all AnimationData names the Animation can play.
 	 * @see dragonBones.objects.AnimationData.
 	 */
-    function get_AnimationList():Array<String>
+    function get_animationList():Array<String>
     {
         return _animationList;
     }
@@ -90,7 +96,7 @@ class Animation
 	 * Is the animation playing.
 	 * @see dragonBones.animation.AnimationState.
 	 */
-    function get_IsPlaying():Bool
+    function get_isPlaying():Bool
     {
         return _isPlaying && !isComplete;
     }
@@ -99,7 +105,7 @@ class Animation
 	 * Is animation complete.
 	 * @see dragonBones.animation.AnimationState.
 	 */
-    function get_IsComplete():Bool
+    function get_isComplete():Bool
     {
         if (_lastAnimationState != null) 
         {
@@ -124,12 +130,12 @@ class Animation
     /**
 	 * The amount by which passed time should be scaled. Used to slow down or speed up animations. Defaults to 1.
 	 */
-    function get_TimeScale():Float
+    function get_timeScale():Float
     {
         return _timeScale;
     }
 	
-    function set_TimeScale(value:Float):Float
+    function set_timeScale(value:Float):Float
     {
         if (Math.isNaN(value) || value < 0) 
         {
@@ -145,15 +151,15 @@ class Animation
 	 * The AnimationData list associated with this Animation instance.
 	 * @see dragonBones.objects.AnimationData.
 	 */
-    function get_AnimationDataList():Array<AnimationData>
+    function get_animationDataList():Array<AnimationData>
     {
         return _animationDataList;
     }
 	
-    function set_AnimationDataList(value:Array<AnimationData>):Array<AnimationData>
+    function set_animationDataList(value:Array<AnimationData>):Array<AnimationData>
     {
         _animationDataList = value;
-        _animationList.length = 0;
+        _animationList = [];
         for (animationData in _animationDataList)
         {
             _animationList[_animationList.length] = animationData.name;
@@ -191,9 +197,6 @@ class Animation
         {
             AnimationState.returnObject(_animationStateList[i]);
         }
-        _animationList.length = 0;
-        _animationStateList.length = 0;
-        
         _armature = null;
         _animationDataList = null;
         _animationList = null;
@@ -226,10 +229,7 @@ class Animation
             pauseFadeOut:Bool = true,
             pauseFadeIn:Bool = true):AnimationState
     {
-        if (_animationDataList == null) 
-        {
-            return null;
-        }
+        if (_animationDataList == null) return null;
         var i:Int = _animationDataList.length;
         var animationData:AnimationData;
         while (i-->0)
@@ -240,19 +240,14 @@ class Animation
                 break;
             }
         }
-        if (animationData == null) 
-        {
-            return null;
-        }
+        if (animationData == null) return null;
         _isPlaying = true;
         _isFading = true;
-        
-        //
-        fadeInTime = fadeInTime < (0) ? (animationData.fadeTime < (0) ? 0.3:animationData.fadeTime):fadeInTime;
+        fadeInTime = fadeInTime < 0 ? (animationData.fadeTime < 0 ? 0.3:animationData.fadeTime):fadeInTime;
         var durationScale:Float;
         if (duration < 0) 
         {
-            durationScale = animationData.scale < (0) ? 1:animationData.scale;
+            durationScale = animationData.scale < 0 ? 1:animationData.scale;
         }
         else 
         {
@@ -445,6 +440,7 @@ class Animation
         return false;
     }
     
+	public
     function advanceTime(passedTime:Float):Void
     {
         if (!_isPlaying) 
@@ -471,7 +467,8 @@ class Animation
         
         _isFading = isFading;
     }
-    
+
+    public
     function updateAnimationStates():Void
     {
         var i:Int = _animationStateList.length;
@@ -486,7 +483,6 @@ class Animation
         if (Lambda.indexOf(_animationStateList, animationState) < 0) 
         {
             _animationStateList.unshift(animationState);
-            
             _animationStateCount = _animationStateList.length;
         }
     }

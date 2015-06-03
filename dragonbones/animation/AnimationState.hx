@@ -28,7 +28,8 @@ import dragonbones.objects.Frame;
     public var playTimes(get, never):Int;
 
     static var _pool:Array<AnimationState> = new Array<AnimationState>();
-    
+
+    public
     static function borrowObject():AnimationState
     {
         if (_pool.length == 0) 
@@ -37,7 +38,8 @@ import dragonbones.objects.Frame;
         }
         return _pool.pop();
     }
-    
+
+    public
     static function returnObject(animationState:AnimationState):Void
     {
         animationState.clear();
@@ -48,27 +50,23 @@ import dragonbones.objects.Frame;
         }
     }
     
-    static function clear():Void
+    static function reset():Void
     {
         var i:Int = _pool.length;
-        while (i-->0)
-        {
-            _pool[i].clear();
-        }
-        _pool.length = 0;
-        
-        TimelineState.clear();
+        while (i-->0) _pool[i].clear();
+		_pool = [];
+        TimelineState.reset();
     }
     
     /**
-		 * Sometimes, we want slots controlled by a spedific animation state when animation is doing mix or addition.
-		 * It determine if animation's color change, displayIndex change, visible change can apply to its display
-		 */
+	 * Sometimes, we want slots controlled by a spedific animation state when animation is doing mix or addition.
+	 * It determine if animation's color change, displayIndex change, visible change can apply to its display
+	 */
     public var displayControl:Bool;
     
     /**
-		 * If animation mixing use additive blending.
-		 */
+	 * If animation mixing use additive blending.
+	 */
     public var additiveBlending:Bool;
     public function setAdditiveBlending(value:Bool):AnimationState
     {
@@ -143,7 +141,7 @@ import dragonbones.objects.Frame;
     /**
 		 * The name of the animation state.
 		 */
-    function get_Name():String
+    function get_name():String
     {
         return _name;
     }
@@ -151,9 +149,9 @@ import dragonbones.objects.Frame;
     
     var _layer:Int;
     /**
-		 * The layer of the animation. When calculating the final blend weights, animations in higher layers will get their weights.
-		 */
-    function get_Layer():Int
+	 * The layer of the animation. When calculating the final blend weights, animations in higher layers will get their weights.
+	 */
+    function get_layer():Int
     {
         return _layer;
     }
@@ -163,7 +161,7 @@ import dragonbones.objects.Frame;
     /**
 		 * The group of the animation.
 		 */
-    function get_Group():String
+    function get_group():String
     {
         return _group;
     }
@@ -173,7 +171,7 @@ import dragonbones.objects.Frame;
 		 * The clip that is being played by this animation state.
 		 * @see dragonBones.objects.AnimationData.
 		 */
-    function get_Clip():AnimationData
+    function get_clip():AnimationData
     {
         return _clip;
     }
@@ -182,14 +180,14 @@ import dragonbones.objects.Frame;
     /**
 		 * Is animation complete.
 		 */
-    function get_IsComplete():Bool
+    function get_isComplete():Bool
     {
         return _isComplete;
     }
     /**
 		 * Is animation playing.
 		 */
-    function get_IsPlaying():Bool
+    function get_isPlaying():Bool
     {
         return (_isPlaying && !_isComplete);
     }
@@ -198,7 +196,7 @@ import dragonbones.objects.Frame;
     /**
 		 * Current animation played times
 		 */
-    function get_CurrentPlayTimes():Int
+    function get_currentPlayTimes():Int
     {
         return _currentPlayTimes < (0) ? 0:_currentPlayTimes;
     }
@@ -207,16 +205,16 @@ import dragonbones.objects.Frame;
     /**
 		 * The length of the animation clip in seconds.
 		 */
-    function get_TotalTime():Float
+    function get_totalTime():Float
     {
         return _totalTime * 0.001;
     }
     
     var _currentTime:Int;
     /**
-		 * The current time of the animation.
-		 */
-    function get_CurrentTime():Float
+	 * The current time of the animation.
+	 */
+    function get_currentTime():Float
     {
         return _currentTime < (0) ? 0:_currentTime * 0.001;
     }
@@ -232,20 +230,20 @@ import dragonbones.objects.Frame;
     }
     
     var _fadeWeight:Float;
-    function get_FadeWeight():Float
+    function get_fadeWeight():Float
     {
         return _fadeWeight;
     }
     
     var _fadeState:Int;
-    function get_FadeState():Int
+    function get_fadeState():Int
     {
         return _fadeState;
     }
     
     var _fadeTotalTime:Float;
 	
-    function get_FadeTotalTime():Float
+    function get_fadeTotalTime():Float
     {
         return _fadeTotalTime;
     }
@@ -255,7 +253,7 @@ import dragonbones.objects.Frame;
     /**
 	 * The amount by which passed time should be scaled. Used to slow down or speed up the animation. Defaults to 1.
 	 */
-    function get_TimeScale():Float
+    function get_timeScale():Float
     {
         return _timeScale;
     }
@@ -275,7 +273,7 @@ import dragonbones.objects.Frame;
     /**
 	 * playTimes Play times(0:loop forever, 1~+∞:play times, -1~-∞:will fade animation after play complete).
 	 */
-    function get_PlayTimes():Int
+    function get_playTimes():Int
     {
         return _playTimes;
     }
@@ -300,7 +298,7 @@ import dragonbones.objects.Frame;
         _mixingTransforms = new Array<String>();
     }
     
-    
+	public
     function fadeIn(armature:Armature, clip:AnimationData, fadeTotalTime:Float, timeScale:Float, playTimes:Float, pausePlayhead:Bool):AnimationState
     {
         _armature = armature;
@@ -328,7 +326,7 @@ import dragonbones.objects.Frame;
             _currentTime = -1;
         }
         _time = 0;
-        _mixingTransforms.length = 0;
+        _mixingTransforms = [];
         
         //fade start
         _isFadeOut = false;
@@ -358,17 +356,9 @@ import dragonbones.objects.Frame;
 	 */
     public function fadeOut(fadeTotalTime:Float, pausePlayhead:Bool):AnimationState
     {
-        if (_armature == null) 
-        {
-            return null;
-        }
-        
-        if (Math.isNaN(fadeTotalTime) || fadeTotalTime < 0) 
-        {
-            fadeTotalTime = 0;
-        }
+        if (_armature == null) return null;
+        if (Math.isNaN(fadeTotalTime) || fadeTotalTime < 0) fadeTotalTime = 0;
         _pausePlayheadInFade = pausePlayhead;
-        
         if (_isFadeOut) 
         {
             if (fadeTotalTime > _fadeTotalTime / _timeScale - (_fadeCurrentTime - _fadeBeginTime)) 
@@ -378,7 +368,7 @@ import dragonbones.objects.Frame;
                 return this;
             }
         }
-        else 
+        else
         {
             //第一次淡出
             //The first time to fade out.
@@ -387,8 +377,6 @@ import dragonbones.objects.Frame;
                 timelineState.fadeOut();
             }
         }  //fade start  
-        
-        
         
         _isFadeOut = true;
         _fadeTotalWeight = _fadeWeight;
@@ -422,7 +410,7 @@ import dragonbones.objects.Frame;
     
     public function getMixingTransform(timelineName:String):Bool
     {
-        return Lambda.indexOf(_mixingTransforms, timelineName) >= 0;
+        return Lambda.has(_mixingTransforms, timelineName);
     }
     
     /**
@@ -531,9 +519,9 @@ import dragonbones.objects.Frame;
     }
     
     /**
-	 * @private
 	 * Update timeline state based on mixing transforms and clip.
 	 */
+	public
     function updateTimelineStates():Void
     {
         var timelineState:TimelineState;
@@ -758,16 +746,10 @@ import dragonbones.objects.Frame;
             }
             
             currentPlayTimes = Math.ceil(currentTime / _totalTime) || 1;
-            //currentTime -= Math.floor(currentTime / _totalTime) * _totalTime;
-            currentTime -= as3hx.Compat.parseInt(currentTime / _totalTime) * _totalTime;
+            currentTime -= Math.floor(currentTime / _totalTime) * _totalTime;
             
-            if (isThisComplete) 
-            {
-                currentTime = _totalTime;
-            }
+            if (isThisComplete) currentTime = _totalTime;
         }  //update timeline  
-        
-        
         
         _isComplete = isThisComplete;
         var progress:Float = _time * 1000 / _totalTime;
@@ -909,16 +891,13 @@ import dragonbones.objects.Frame;
         }
     }
     
+	public
     function clear():Void
     {
         var i:Int = _timelineStateList.length;
-        while (i-->0)
-        {
-            TimelineState.returnObject(_timelineStateList[i]);
-        }
-        _timelineStateList.length = 0;
-        _mixingTransforms.length = 0;
-        
+        while (i-->0) TimelineState.returnObject(_timelineStateList[i]);
+        _timelineStateList = [];
+        _mixingTransforms = [];
         _armature = null;
         _clip = null;
     }

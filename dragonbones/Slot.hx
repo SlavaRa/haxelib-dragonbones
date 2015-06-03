@@ -11,53 +11,35 @@ import openfl.geom.Matrix;
 
 class Slot extends DBObject
 {
-    public var zOrder(get, set):Float;
-    public var blendMode(get, set):BlendMode;
-    public var display(get, set):Dynamic;
-    public var childArmature(get, set):Armature;
-    public var displayList(get, set):Array<Dynamic>;
-
-    /** @Need to keep the reference of DisplayData. When slot switch displayObject, it need to restore the display obect's origional pivot. */
-    var _displayDataList:Array<DisplayData>;
-    var _originZOrder:Float;
-    var _tweenZOrder:Float;
-    var _isShowDisplay:Bool;
-    var _timelineCached:TimelineCached;
-    var _offsetZOrder:Float;
-    var _displayIndex:Int;
-    var _colorTransform:ColorTransform;
-    
-    /**
-		 * zOrder. Support decimal for ensure dynamically added slot work toghther with animation controled slot.  
-		 * @return zOrder.
-		 */
-    function get_ZOrder():Float
+	/**
+	 * zOrder. Support decimal for ensure dynamically added slot work toghther with animation controled slot.  
+	 * @return zOrder.
+	 */
+	public var zOrder(get, set):Float;
+    function get_zOrder():Float
     {
         return _originZOrder + _tweenZOrder + _offsetZOrder;
     }
-    function set_ZOrder(value:Float):Float
+    function set_zOrder(value:Float):Float
     {
         if (zOrder != value) 
         {
             _offsetZOrder = value - _originZOrder - _tweenZOrder;
-            if (this._armature) 
+            if (this._armature != null) 
             {
                 this._armature._slotsZOrderChanged = true;
             }
         }
         return value;
     }
-    
-    var _blendMode:String;
-    /**
-		 * blendMode
-		 * @return blendMode.
-		 */
-    function get_BlendMode():String
+	
+	public var blendMode(get, set):BlendMode;
+	var _blendMode:BlendMode;
+    function get_blendMode()
     {
         return _blendMode;
     }
-    function set_BlendMode(value:String):String
+    function set_blendMode(value:BlendMode)
     {
         if (_blendMode != value) 
         {
@@ -66,16 +48,17 @@ class Slot extends DBObject
         }
         return value;
     }
-    
-    var _display:Dynamic;
+	
     /**
-		 * The DisplayObject belonging to this Slot instance. Instance type of this object varies from openfl.display.DisplayObject to startling.display.DisplayObject and subclasses.
-		 */
-    function get_Display():Dynamic
+	 * The DisplayObject belonging to this Slot instance. Instance type of this object varies from openfl.display.DisplayObject to startling.display.DisplayObject and subclasses.
+	 */
+	public var display(get, set):Dynamic;
+	var _display:Dynamic;
+    function get_display():Dynamic
     {
         return _display;
     }
-    function set_Display(value:Dynamic):Dynamic
+    function set_display(value:Dynamic):Dynamic
     {
         if (_displayIndex < 0) 
         {
@@ -83,7 +66,7 @@ class Slot extends DBObject
         }
         if (_displayList[_displayIndex] == value) 
         {
-            return;
+            return value;
         }
         _displayList[_displayIndex] = value;
         updateSlotDisplay();
@@ -91,54 +74,60 @@ class Slot extends DBObject
         updateTransform();
         return value;
     }
-    
-    var _childArmature:Armature;
-    /**
-		 * The sub-armature of this Slot instance.
-		 */
-    function get_ChildArmature():Armature
+	
+	/**
+	 * The sub-armature of this Slot instance.
+	 */
+    public var childArmature(get, set):Armature;
+	var _childArmature:Armature;
+    function get_childArmature():Armature
     {
         return _childArmature;
     }
-    function set_ChildArmature(value:Armature):Armature
+    function set_childArmature(value:Armature):Armature
     {
         display = value;
         return value;
     }
-    
-    //
+	
+	/**
+	 * The DisplayObject list belonging to this Slot instance (display or armature). Replace it to implement switch texture.
+	 */
+    public var displayList(get, set):Array<Dynamic>;
     var _displayList:Array<Dynamic>;
-    /**
-		 * The DisplayObject list belonging to this Slot instance (display or armature). Replace it to implement switch texture.
-		 */
-    function get_DisplayList():Array<Dynamic>
+    function get_displayList():Array<Dynamic>
     {
         return _displayList;
     }
-    function set_DisplayList(value:Array<Dynamic>):Array<Dynamic>
+    function set_displayList(value:Array<Dynamic>):Array<Dynamic>
     {
-        if (value == null) 
-        {
-            throw new ArgumentError();
-        }
-        if (_displayIndex < 0) 
-        {
-            _displayIndex = 0;
-        }
-        var i:Int = _displayList.length = value.length;
-        while (i-->0)
-        {
-            _displayList[i] = value[i];
-        }
-        
+        if (value == null) throw new ArgumentError();
+        if (_displayIndex < 0) _displayIndex = 0;
+		_displayList = value.copy();
         var displayIndexBackup:Int = _displayIndex;
         _displayIndex = -1;
         changeDisplay(displayIndexBackup);
         return value;
     }
+
+    /** Need to keep the reference of DisplayData. When slot switch displayObject, it need to restore the display obect's origional pivot. */
+    var _displayDataList:Array<DisplayData>;
+    var _originZOrder:Float;
+	
+	public
+    var _tweenZOrder:Float;
+	
+	public
+    var _isShowDisplay:Bool;
+	
+	public
+    var _timelineCached:TimelineCached;
+	
+    var _offsetZOrder:Float;
+    var _displayIndex:Int;
+    var _colorTransform:ColorTransform;
     
-    
-    override function set_Visible(value:Bool):Bool
+    override function set_visible(value:Bool):Bool
     {
         if (this._visible != value) 
         {
@@ -148,11 +137,10 @@ class Slot extends DBObject
         return value;
     }
     
-    
     override function setArmature(value:Armature):Void
     {
         super.setArmature(value);
-        if (this._armature) 
+        if (this._armature != null) 
         {
             this._armature._slotsZOrderChanged = true;
             addDisplayToContainer(this._armature.display);
@@ -164,8 +152,8 @@ class Slot extends DBObject
     }
     
     /**
-		 * Creates a Slot blank instance.
-		 */
+	 * Creates a Slot blank instance.
+	 */
     public function new(self:Slot)
     {
         super();
@@ -194,28 +182,20 @@ class Slot extends DBObject
     }
     
     /**
-		 * @inheritDoc
-		 */
+	 * @inheritDoc
+	 */
     public override function dispose():Void
     {
-        if (_displayList == null) 
-        {
-            return;
-        }
-        
+        if (_displayList == null) return;
         super.dispose();
-        
-        _displayList.length = 0;
-        
         _displayDataList = null;
         _displayList = null;
         _display = null;
         _childArmature = null;
-        
         _timelineCached = null;
     }
     
-    
+	public
     function update():Void
     {
         if (this._parent._needUpdate <= 0) 
@@ -269,10 +249,9 @@ class Slot extends DBObject
         {
             if (_isShowDisplay) 
             {
-                if (
-                    this._armature &&
-                    this._armature.animation.lastAnimationState &&
-                    _childArmature.animation.hasAnimation(this._armature.animation.lastAnimationState.name)) 
+                if (this._armature != null
+					&& this._armature.animation.lastAnimationState != null
+					&& _childArmature.animation.hasAnimation(this._armature.animation.lastAnimationState.name)) 
                 {
                     _childArmature.animation.gotoAndPlay(this._armature.animation.lastAnimationState.name);
                 }
@@ -289,7 +268,7 @@ class Slot extends DBObject
         }
     }
     
-    
+	public
     function changeDisplay(displayIndex:Int):Void
     {
         if (displayIndex < 0) 
@@ -326,7 +305,7 @@ class Slot extends DBObject
             else if (!_isShowDisplay) 
             {
                 _isShowDisplay = true;
-                if (this._armature) 
+                if (this._armature != null) 
                 {
                     this._armature._slotsZOrderChanged = true;
                     addDisplayToContainer(this._armature.display);
@@ -336,9 +315,9 @@ class Slot extends DBObject
         }
     }
     
-    /** @
-		 * Updates the display of the slot.
-		 */
+    /** 
+	 * Updates the display of the slot.
+	 */
     function updateSlotDisplay():Void
     {
         var currentDisplayIndex:Int = -1;
@@ -369,7 +348,7 @@ class Slot extends DBObject
         updateDisplay(_display);
         if (_display != null) 
         {
-            if (this._armature && _isShowDisplay) 
+            if (this._armature != null && _isShowDisplay) 
             {
                 if (currentDisplayIndex < 0) 
                 {
@@ -391,26 +370,18 @@ class Slot extends DBObject
     }
     
     /**
-		 * @private
-		 * Updates the color of the display object.
-		 * @param a
-		 * @param r
-		 * @param g
-		 * @param b
-		 * @param aM
-		 * @param rM
-		 * @param gM
-		 * @param bM
-		 */
-    function updateDisplayColor(
-            aOffset:Float,
-            rOffset:Float,
-            gOffset:Float,
-            bOffset:Float,
-            aMultiplier:Float,
-            rMultiplier:Float,
-            gMultiplier:Float,
-            bMultiplier:Float):Void
+	 * Updates the color of the display object.
+	 */
+	public
+    function updateDisplayColor (
+		aOffset:Float,
+		rOffset:Float,
+		gOffset:Float,
+		bOffset:Float,
+		aMultiplier:Float,
+		rMultiplier:Float,
+		gMultiplier:Float,
+		bMultiplier:Float):Void
     {
         _colorTransform.alphaOffset = aOffset;
         _colorTransform.redOffset = rOffset;
@@ -422,72 +393,59 @@ class Slot extends DBObject
         _colorTransform.blueMultiplier = bMultiplier;
     }
     
-    
     //Abstract method
-    
-    /**
-		 * @private
-		 */
     function updateDisplay(value:Dynamic):Void
     {
         throw new IllegalOperationError("Abstract method needs to be implemented in subclass!");
     }
     
-    /**
-		 * @private
-		 */
     function getDisplayIndex():Int
     {
         throw new IllegalOperationError("Abstract method needs to be implemented in subclass!");
     }
     
     /**
-		 * @private
-		 * Adds the original display object to another display object.
-		 * @param container
-		 * @param index
-		 */
+	 * Adds the original display object to another display object.
+	 * @param container
+	 * @param index
+	 */
+	public
     function addDisplayToContainer(container:Dynamic, index:Int = -1):Void
     {
         throw new IllegalOperationError("Abstract method needs to be implemented in subclass!");
     }
     
     /**
-		 * @private
-		 * remove the original display object from its parent.
-		 */
+	 * remove the original display object from its parent.
+	 */
     function removeDisplayFromContainer():Void
     {
         throw new IllegalOperationError("Abstract method needs to be implemented in subclass!");
     }
     
     /**
-		 * @private
-		 * Updates the transform of the slot.
-		 */
+	 * Updates the transform of the slot.
+	 */
     function updateTransform():Void
     {
         throw new IllegalOperationError("Abstract method needs to be implemented in subclass!");
     }
     
-    /**
-		 * @private
-		 */
+	public
     function updateDisplayVisible(value:Bool):Void
     {
         /**
-			 * bone.visible && slot.visible && updateVisible
-			 * this._parent.visible && this._visible && value;
-			 */
+		 * bone.visible && slot.visible && updateVisible
+		 * this._parent.visible && this._visible && value;
+		 */
         throw new IllegalOperationError("Abstract method needs to be implemented in subclass!");
     }
     
     /**
-		 * @private
      * Update the blend mode of the display object.
      * @param value The blend mode to use. 
      */
-    function updateDisplayBlendMode(value:String):Void
+    function updateDisplayBlendMode(value:BlendMode):Void
     {
         throw new IllegalOperationError("Abstract method needs to be implemented in subclass!");
     }

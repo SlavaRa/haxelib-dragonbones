@@ -1,34 +1,25 @@
-package dragonbones.objects;
-
-import nme.errors.ArgumentError;
-import nme.errors.Error;
-
 /**
-	 * Copyright 2012-2013. DragonBones. All Rights Reserved.
-	 * @playerversion Flash 10.0, Flash 10
-	 * @langversion 3.0
-	 * @version 2.0
-	 */
-
+ * Copyright 2012-2013. DragonBones. All Rights Reserved.
+ */
+package dragonbones.objects;
 import dragonbones.core.DragonBones;
-import dragonbones.core.DragonBonesInternal;
 import dragonbones.textures.TextureData;
 import dragonbones.utils.ConstValues;
 import dragonbones.utils.DBDataUtil;
-
+import haxe.xml.Fast;
+import openfl.errors.ArgumentError;
+import openfl.errors.Error;
 import openfl.geom.ColorTransform;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 import openfl.utils.Dictionary;
 
-
-
 /**
-	 * The XMLDataParser class parses xml data from dragonBones generated maps.
-	 */
-@:final class XMLDataParser
+ * The XMLDataParser class parses xml data from dragonBones generated maps.
+ */
+class XMLDataParser
 {
-    public static function parseTextureAtlasData(rawData:FastXML, scale:Float = 1):Dynamic
+    public static function parseTextureAtlasData(rawData:Fast, scale:Float = 1):Dynamic
     {
         var textureAtlasData:Dynamic = { };
         textureAtlasData.__name = rawData.node.attribute.innerData(ConstValues.A_NAME);
@@ -67,11 +58,11 @@ import openfl.utils.Dictionary;
     }
     
     /**
-		 * Parse the SkeletonData.
-		 * @param xml The SkeletonData xml to parse.
-		 * @return A SkeletonData instance.
-		 */
-    public static function parseSkeletonData(rawData:FastXML, ifSkipAnimationData:Bool = false, outputAnimationDictionary:Dictionary = null):SkeletonData
+	 * Parse the SkeletonData.
+	 * @param xml The SkeletonData xml to parse.
+	 * @return A SkeletonData instance.
+	 */
+    public static function parseSkeletonData(rawData:Fast, ifSkipAnimationData:Bool = false, outputAnimationDictionary:Dictionary = null):SkeletonData
     {
         if (rawData == null) 
         {
@@ -82,13 +73,11 @@ import openfl.utils.Dictionary;
         {
             
             case "2.3", "3.0", DragonBones.DATA_VERSION:
-
                 switch (version)
-                {case "3.0":
+                {
+					case "3.0":
                     //Update2_3To3_0.format(rawData as XML);
-                    break;
                 }
-            
             default:
                 throw new Error("Nonsupport version!");
         }
@@ -106,7 +95,7 @@ import openfl.utils.Dictionary;
         return data;
     }
     
-    static function parseArmatureData(armatureXML:FastXML, data:SkeletonData, frameRate:Int, isGlobalData:Bool, ifSkipAnimationData:Bool, outputAnimationDictionary:Dictionary):ArmatureData
+    static function parseArmatureData(armatureXML:Fast, data:SkeletonData, frameRate:Int, isGlobalData:Bool, ifSkipAnimationData:Bool, outputAnimationDictionary:Dictionary):ArmatureData
     {
         var armatureData:ArmatureData = new ArmatureData();
         armatureData.name = armatureXML.node.attribute.innerData(ConstValues.A_NAME);
@@ -127,7 +116,7 @@ import openfl.utils.Dictionary;
         }
         armatureData.sortBoneDataList();
         
-        var animationXML:FastXML;
+        var animationXML:Fast;
         if (ifSkipAnimationData) 
         {
             if (outputAnimationDictionary != null) 
@@ -170,7 +159,7 @@ import openfl.utils.Dictionary;
         return armatureData;
     }
     
-    static function parseBoneData(boneXML:FastXML, isGlobalData:Bool):BoneData
+    static function parseBoneData(boneXML:Fast, isGlobalData:Bool):BoneData
     {
         var boneData:BoneData = new BoneData();
         boneData.name = boneXML.node.attribute.innerData(ConstValues.A_NAME);
@@ -198,7 +187,7 @@ import openfl.utils.Dictionary;
         return boneData;
     }
     
-    static function parseRectangleData(rectangleXML:FastXML):RectangleData
+    static function parseRectangleData(rectangleXML:Fast):RectangleData
     {
         var rectangleData:RectangleData = new RectangleData();
         rectangleData.name = rectangleXML.node.attribute.innerData(ConstValues.A_NAME);
@@ -210,7 +199,7 @@ import openfl.utils.Dictionary;
         return rectangleData;
     }
     
-    static function parseEllipseData(ellipseXML:FastXML):EllipseData
+    static function parseEllipseData(ellipseXML:Fast):EllipseData
     {
         var ellipseData:EllipseData = new EllipseData();
         ellipseData.name = ellipseXML.node.attribute.innerData(ConstValues.A_NAME);
@@ -222,7 +211,7 @@ import openfl.utils.Dictionary;
         return ellipseData;
     }
     
-    static function parseSkinData(skinXML:FastXML, data:SkeletonData):SkinData
+    static function parseSkinData(skinXML:Fast, data:SkeletonData):SkinData
     {
         var skinData:SkinData = new SkinData();
         skinData.name = skinXML.node.attribute.innerData(ConstValues.A_NAME);
@@ -235,7 +224,7 @@ import openfl.utils.Dictionary;
         return skinData;
     }
     
-    static function parseSlotData(slotXML:FastXML, data:SkeletonData):SlotData
+    static function parseSlotData(slotXML:Fast, data:SkeletonData):SlotData
     {
         var slotData:SlotData = new SlotData();
         slotData.name = slotXML.node.attribute.innerData(ConstValues.A_NAME);
@@ -250,7 +239,7 @@ import openfl.utils.Dictionary;
         return slotData;
     }
     
-    static function parseDisplayData(displayXML:FastXML, data:SkeletonData):DisplayData
+    static function parseDisplayData(displayXML:Fast, data:SkeletonData):DisplayData
     {
         var displayData:DisplayData = new DisplayData();
         displayData.name = displayXML.node.attribute.innerData(ConstValues.A_NAME);
@@ -268,7 +257,7 @@ import openfl.utils.Dictionary;
     }
     
     
-    static function parseAnimationData(animationXML:FastXML, armatureData:ArmatureData, frameRate:Int, isGlobalData:Bool):AnimationData
+    static function parseAnimationData(animationXML:Fast, armatureData:ArmatureData, frameRate:Int, isGlobalData:Bool):AnimationData
     {
         var animationData:AnimationData = new AnimationData();
         animationData.name = animationXML.node.attribute.innerData(ConstValues.A_NAME);
@@ -310,7 +299,7 @@ import openfl.utils.Dictionary;
         return animationData;
     }
     
-    static function parseTransformTimeline(timelineXML:FastXML, duration:Int, frameRate:Int, isGlobalData:Bool):TransformTimeline
+    static function parseTransformTimeline(timelineXML:Fast, duration:Int, frameRate:Int, isGlobalData:Bool):TransformTimeline
     {
         var timeline:TransformTimeline = new TransformTimeline();
         timeline.name = timelineXML.node.attribute.innerData(ConstValues.A_NAME);
@@ -331,14 +320,14 @@ import openfl.utils.Dictionary;
         return timeline;
     }
     
-    static function parseMainFrame(frameXML:FastXML, frameRate:Int):Frame
+    static function parseMainFrame(frameXML:Fast, frameRate:Int):Frame
     {
         var frame:Frame = new Frame();
         parseFrame(frameXML, frame, frameRate);
         return frame;
     }
     
-    static function parseTransformFrame(frameXML:FastXML, frameRate:Int, isGlobalData:Bool):TransformFrame
+    static function parseTransformFrame(frameXML:Fast, frameRate:Int, isGlobalData:Bool):TransformFrame
     {
         var frame:TransformFrame = new TransformFrame();
         parseFrame(frameXML, frame, frameRate);
@@ -363,7 +352,7 @@ import openfl.utils.Dictionary;
         frame.scaleOffset.x = getNumber(frameXML, ConstValues.A_SCALE_X_OFFSET, 0) || 0;
         frame.scaleOffset.y = getNumber(frameXML, ConstValues.A_SCALE_Y_OFFSET, 0) || 0;
         
-        var colorTransformXML:FastXML = frameXML.get(ConstValues.COLOR_TRANSFORM).get(0);
+        var colorTransformXML:Fast = frameXML.get(ConstValues.COLOR_TRANSFORM).get(0);
         if (colorTransformXML != null) 
         {
             frame.color = new ColorTransform();
@@ -373,7 +362,7 @@ import openfl.utils.Dictionary;
         return frame;
     }
     
-    static function parseTimeline(timelineXML:FastXML, timeline:Timeline):Void
+    static function parseTimeline(timelineXML:Fast, timeline:Timeline):Void
     {
         var position:Int = 0;
         var frame:Frame;
@@ -388,7 +377,7 @@ import openfl.utils.Dictionary;
         }
     }
     
-    static function parseFrame(frameXML:FastXML, frame:Frame, frameRate:Int):Void
+    static function parseFrame(frameXML:Fast, frame:Frame, frameRate:Int):Void
     {
         frame.duration = Math.round((as3hx.Compat.parseInt(frameXML.node.attribute.innerData(ConstValues.A_DURATION)) || 1) * 1000 / frameRate);
         frame.action = frameXML.node.attribute.innerData(ConstValues.A_ACTION);
@@ -396,7 +385,7 @@ import openfl.utils.Dictionary;
         frame.sound = frameXML.node.attribute.innerData(ConstValues.A_SOUND);
     }
     
-    static function parseTransform(transformXML:FastXML, transform:DBTransform, pivot:Point = null):Void
+    static function parseTransform(transformXML:Fast, transform:DBTransform, pivot:Point = null):Void
     {
         if (transformXML != null) 
         {
@@ -417,7 +406,7 @@ import openfl.utils.Dictionary;
         }
     }
     
-    static function parseColorTransform(colorTransformXML:FastXML, colorTransform:ColorTransform):Void
+    static function parseColorTransform(colorTransformXML:Fast, colorTransform:ColorTransform):Void
     {
         if (colorTransformXML != null) 
         {
@@ -436,7 +425,7 @@ import openfl.utils.Dictionary;
         }
     }
     
-    static function getBoolean(data:FastXML, key:String, defaultValue:Bool):Bool
+    static function getBoolean(data:Fast, key:String, defaultValue:Bool):Bool
     {
         if (data != null && data.node.attribute.innerData(key).length() > 0) 
         {
@@ -453,7 +442,7 @@ import openfl.utils.Dictionary;
         return defaultValue;
     }
     
-    static function getNumber(data:FastXML, key:String, defaultValue:Float):Float
+    static function getNumber(data:Fast, key:String, defaultValue:Float):Float
     {
         if (data != null && data.node.attribute.innerData(key).length() > 0) 
         {
@@ -467,9 +456,5 @@ import openfl.utils.Dictionary;
             }
         }
         return defaultValue;
-    }
-
-    public function new()
-    {
     }
 }

@@ -41,54 +41,36 @@ class BaseFactory extends EventDispatcher
     var _currentDataName:String;
     var _currentTextureAtlasName:String;
     
-    public function new(self:BaseFactory)
+    function new()
     {
         super(this);
-        
-        if (self != this) 
-        {
-            throw new IllegalOperationError("Abstract class can not be instantiated!");
-        }
-        
         _loaderContext.allowCodeImport = true;
-        
         _dataDic = { };
         _textureAtlasDic = { };
-        
         _currentDataName = null;
         _currentTextureAtlasName = null;
     }
     
     /**
-		 * Returns a SkeletonData instance.
-		 * @param The name of an existing SkeletonData instance.
-		 * @return A SkeletonData instance with given name (if exist).
-		 */
+	 * Returns a SkeletonData instance.
+	 * @param The name of an existing SkeletonData instance.
+	 * @return A SkeletonData instance with given name (if exist).
+	 */
     public function getSkeletonData(name:String):SkeletonData
     {
         return Reflect.field(_dataDic, name);
     }
     
     /**
-		 * Add a SkeletonData instance to this BaseFactory instance.
-		 * @param A SkeletonData instance.
-		 * @param (optional) A name for this SkeletonData instance.
-		 */
+	 * Add a SkeletonData instance to this BaseFactory instance.
+	 * @param A SkeletonData instance.
+	 * @param (optional) A name for this SkeletonData instance.
+	 */
     public function addSkeletonData(data:SkeletonData, name:String = null):Void
     {
-        if (data == null) 
-        {
-            throw new ArgumentError();
-        }
-        name = name || data.name;
-        if (name == null) 
-        {
-            throw new ArgumentError("Unnamed data!");
-        }
-        if (Reflect.field(_dataDic, name)) 
-        {
-            throw new ArgumentError();
-        }
+		name = data.name;
+        if(name == null) throw new ArgumentError("Unnamed data!");
+        if(Reflect.field(_dataDic, name)) throw new ArgumentError();
         Reflect.setField(_dataDic, name, data);
     }
     
@@ -102,20 +84,20 @@ class BaseFactory extends EventDispatcher
     }
     
     /**
-		 * Return the TextureAtlas by that name.
-		 * @param The name of the TextureAtlas to return.
-		 * @return A textureAtlas.
-		 */
+	 * Return the TextureAtlas by that name.
+	 * @param The name of the TextureAtlas to return.
+	 * @return A textureAtlas.
+	 */
     public function getTextureAtlas(name:String):Dynamic
     {
         return Reflect.field(_textureAtlasDic, name);
     }
     
     /**
-		 * Add a textureAtlas to this BaseFactory instance.
-		 * @param A textureAtlas to add to this BaseFactory instance.
-		 * @param (optional) A name for this TextureAtlas.
-		 */
+	 * Add a textureAtlas to this BaseFactory instance.
+	 * @param A textureAtlas to add to this BaseFactory instance.
+	 * @param (optional) A name for this TextureAtlas.
+	 */
     public function addTextureAtlas(textureAtlas:Dynamic, name:String = null):Void
     {
         if (textureAtlas == null) 
@@ -138,18 +120,18 @@ class BaseFactory extends EventDispatcher
     }
     
     /**
-		 * Remove a textureAtlas from this baseFactory instance.
-		 * @param The name of the TextureAtlas to remove.
-		 */
+	 * Remove a textureAtlas from this baseFactory instance.
+	 * @param The name of the TextureAtlas to remove.
+	 */
     public function removeTextureAtlas(name:String):Void
     {
 		//TODO slavara: check this
     }
     
     /**
-		 * Cleans up resources used by this BaseFactory instance.
-		 * @param (optional) Destroy all internal references.
-		 */
+	 * Cleans up resources used by this BaseFactory instance.
+	 * @param (optional) Destroy all internal references.
+	 */
     public function dispose(disposeData:Bool = true):Void
     {
         if (disposeData) 
@@ -172,18 +154,18 @@ class BaseFactory extends EventDispatcher
     }
     
     /**
-		 * Build and returns a new Armature instance.
-		 * @example 
-		 * <listing>
-		 * var armature:Armature = factory.buildArmature('dragon');
-		 * </listing>
-		 * @param armatureName The name of this Armature instance.
-		 * @param The name of this animation.
-		 * @param The name of this SkeletonData.
-		 * @param The name of this textureAtlas.
-		 * @param The name of this skin.
-		 * @return A Armature instance.
-		 */
+	 * Build and returns a new Armature instance.
+	 * @example 
+	 * <listing>
+	 * var armature:Armature = factory.buildArmature('dragon');
+	 * </listing>
+	 * @param armatureName The name of this Armature instance.
+	 * @param The name of this animation.
+	 * @param The name of this SkeletonData.
+	 * @param The name of this textureAtlas.
+	 * @param The name of this skin.
+	 * @return A Armature instance.
+	 */
     public function buildArmature(armatureName:String, animationName:String = null, skeletonName:String = null, textureAtlasName:String = null, skinName:String = null):Armature
     {
         var data:SkeletonData;
@@ -275,23 +257,23 @@ class BaseFactory extends EventDispatcher
     }
     
     /**
-		 * Add a new animation to armature.
-		 * @param animationRawData (XML, JSON).
-		 * @param target armature.
-		 */
+	 * Add a new animation to armature.
+	 * @param animationRawData (XML, JSON).
+	 * @param target armature.
+	 */
     public function addAnimationToArmature(animationRawData:Dynamic, armature:Armature, isGlobalData:Bool = false):Void
     {
         armature._armatureData.addAnimationData(DataParser.parseAnimationDataByAnimationRawData(animationRawData, armature._armatureData, isGlobalData));
     }
     
     /**
-		 * Return the TextureDisplay.
-		 * @param The name of this Texture.
-		 * @param The name of the TextureAtlas.
-		 * @param The registration pivotX position.
-		 * @param The registration pivotY position.
-		 * @return An Object.
-		 */
+	 * Return the TextureDisplay.
+	 * @param The name of this Texture.
+	 * @param The name of the TextureAtlas.
+	 * @param The registration pivotX position.
+	 * @param The registration pivotY position.
+	 * @return An Object.
+	 */
     public function getTextureDisplay(textureName:String, textureAtlasName:String = null, pivotX:Float = Math.NaN, pivotY:Float = Math.NaN):Dynamic
     {
         var textureAtlas:Dynamic;
@@ -360,27 +342,21 @@ class BaseFactory extends EventDispatcher
     function buildSlots(armature:Armature, armatureData:ArmatureData, skinData:SkinData, skinDataCopy:SkinData):Void
     {
         var helpArray:Array<Dynamic> = [];
-        for (slotData/* AS3HX WARNING could not determine type for var: slotData exp: EField(EIdent(skinData),slotDataList) type: null */ in skinData.slotDataList)
+        for (slotData in skinData.slotDataList)
         {
             var bone:Bone = armature.getBone(slotData.parent);
-            if (bone == null) 
-            {
-                continue;
-            }
+            if (bone == null) continue;
             var slot:Slot = generateSlot();
             slot.name = slotData.name;
             slot.blendMode = slotData.blendMode;
             slot._originZOrder = slotData.zOrder;
             slot._displayDataList = slotData.displayDataList;
-            
             helpArray.length = 0;
             var i:Int = slotData.displayDataList.length;
             while (i-->0)
             {
                 var displayData:DisplayData = slotData.displayDataList[i];
-                
                 var _sw0_ = (displayData.type);                
-
                 switch (_sw0_)
                 {
                     case DisplayData.ARMATURE:
@@ -406,15 +382,11 @@ class BaseFactory extends EventDispatcher
                 }
             }  //如果显示对象有name属性并且name属性可以设置的话，将name设置为与slot同名，dragonBones并不依赖这些属性，只是方便开发者    //==================================================  
             
-            
-            
-            
-            
             for (displayObject in helpArray)
             {
                 if (Std.is(displayObject, Armature)) 
                 {
-                    (try cast(displayObject, Armature) catch(e:Dynamic) null).display["name"] = slot.name;
+                    cast(displayObject, Armature).display["name"] = slot.name;
                 }
                 else 
                 {
@@ -445,34 +417,34 @@ class BaseFactory extends EventDispatcher
     }
     
     /**
-		 * @private
-		 * Generates an Armature instance.
-		 * @return Armature An Armature instance.
-		 */
+	 * @private
+	 * Generates an Armature instance.
+	 * @return Armature An Armature instance.
+	 */
     function generateArmature():Armature
     {
         return null;
     }
     
     /**
-		 * @private
-		 * Generates an Slot instance.
-		 * @return Slot An Slot instance.
-		 */
+	 * @private
+	 * Generates an Slot instance.
+	 * @return Slot An Slot instance.
+	 */
     function generateSlot():Slot
     {
         return null;
     }
     
     /**
-		 * @private
-		 * Generates a DisplayObject
-		 * @param textureAtlas The TextureAtlas.
-		 * @param fullName A qualified name.
-		 * @param pivotX A pivot x based value.
-		 * @param pivotY A pivot y based value.
-		 * @return
-		 */
+	 * @private
+	 * Generates a DisplayObject
+	 * @param textureAtlas The TextureAtlas.
+	 * @param fullName A qualified name.
+	 * @param pivotX A pivot x based value.
+	 * @param pivotY A pivot y based value.
+	 * @return
+	 */
     function generateDisplay(textureAtlas:Dynamic, fullName:String, pivotX:Float, pivotY:Float):Dynamic
     {
         return null;
@@ -484,24 +456,24 @@ class BaseFactory extends EventDispatcher
     var _textureAtlasLoadingDic:Dynamic = { };
     
     /**
-		 * Parses the raw data and returns a SkeletonData instance.	
-		 * @example 
-		 * <listing>
-		 * import openfl.events.Event; 
-		 * import dragonBones.factorys.NativeFactory;
-		 * 
-		 * [Embed(source = "../assets/Dragon1.swf", mimeType = "application/octet-stream")]
-		 *	static const ResourcesData:Class;
-		 * var factory:NativeFactory = new NativeFactory(); 
-		 * factory.addEventListener(Event.COMPLETE, textureCompleteHandler);
-		 * factory.parseData(new ResourcesData());
-		 * </listing>
-		 * @param ByteArray. Represents the raw data for the whole DragonBones system.
-		 * @param String. (optional) The SkeletonData instance name.
-		 * @param Boolean. (optional) flag if delay animation data parsing. Delay animation data parsing can reduce the data paring time to improve loading performance.
-		 * @param Dictionary. (optional) output parameter. If it is not null, and ifSkipAnimationData is true, it will be fulfilled animationData, so that developers can parse it later.
-		 * @return A SkeletonData instance.
-		 */
+	 * Parses the raw data and returns a SkeletonData instance.	
+	 * @example 
+	 * <listing>
+	 * import openfl.events.Event; 
+	 * import dragonBones.factorys.NativeFactory;
+	 * 
+	 * [Embed(source = "../assets/Dragon1.swf", mimeType = "application/octet-stream")]
+	 *	static const ResourcesData:Class;
+	 * var factory:NativeFactory = new NativeFactory(); 
+	 * factory.addEventListener(Event.COMPLETE, textureCompleteHandler);
+	 * factory.parseData(new ResourcesData());
+	 * </listing>
+	 * @param ByteArray. Represents the raw data for the whole DragonBones system.
+	 * @param String. (optional) The SkeletonData instance name.
+	 * @param Boolean. (optional) flag if delay animation data parsing. Delay animation data parsing can reduce the data paring time to improve loading performance.
+	 * @param Dictionary. (optional) output parameter. If it is not null, and ifSkipAnimationData is true, it will be fulfilled animationData, so that developers can parse it later.
+	 * @return A SkeletonData instance.
+	 */
     public function parseData(bytes:ByteArray, dataName:String = null, ifSkipAnimationData:Bool = false, outputAnimationDictionary:Dictionary = null):SkeletonData
     {
         if (bytes == null) 

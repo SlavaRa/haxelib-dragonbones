@@ -23,7 +23,7 @@ class DBDataUtil
         while (i-->0)
         {
             var boneData:BoneData = boneDataList[i];
-            if (boneData.parent) 
+            if (boneData.parent != null) 
             {
                 var parentBoneData:BoneData = armatureData.getBoneData(boneData.parent);
                 if (parentBoneData != null) 
@@ -70,8 +70,7 @@ class DBDataUtil
             var timeline:TransformTimeline = animationData.getTimeline(boneData.name);
             if (timeline == null) 
             {
-                {i++;continue;
-                }
+				continue;
             }
             
             var slotData:SlotData = null;
@@ -139,7 +138,7 @@ class DBDataUtil
                 {
                     var dLX:Float = frame.transform.skewX - prevFrame.transform.skewX;
                     
-                    if (prevFrame.tweenRotate) 
+                    if (prevFrame.tweenRotate != 0) 
                     {
                         
                         if (prevFrame.tweenRotate > 0) 
@@ -194,7 +193,7 @@ class DBDataUtil
             {
                 var parentTimelineList:Array<TransformTimeline> = new Array<TransformTimeline>();
                 var parentDataList:Array<BoneData> = new Array<BoneData>();
-                while (parentTimeline)
+                while (parentTimeline != null)
                 {
                     parentTimelineList.push(parentTimeline);
                     parentDataList.push(parentData);
@@ -222,7 +221,7 @@ class DBDataUtil
                 {
                     parentTimeline = parentTimelineList[i];
                     parentData = parentDataList[i];
-                    getTimelineTransform(parentTimeline, frame.position, currentTransform, !globalTransform);
+                    getTimelineTransform(parentTimeline, frame.position, currentTransform, globalTransform == null);
                     
                     if (globalTransform == null) 
                     {
@@ -299,13 +298,11 @@ class DBDataUtil
         {
             var boneData:BoneData = boneDataList[i];
             var boneName:String = boneData.name;
-            if (!animationData.getTimeline(boneName)) 
+            if (animationData.getTimeline(boneName) == null) 
             {
                 if (animationData.hideTimelineNameMap.indexOf(boneName) < 0) 
                 {
-                    animationData.hideTimelineNameMap.fixed = false;
                     animationData.hideTimelineNameMap.push(boneName);
-                    animationData.hideTimelineNameMap.fixed = true;
                 }
             }
         }

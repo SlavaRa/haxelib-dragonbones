@@ -4,28 +4,25 @@ import openfl.geom.Point;
 
 class SkeletonData
 {
-    public var armatureNames(get, never):Array<String>;
-    public var armatureDataList(get, never):Array<ArmatureData>;
 
     public var name:String;
     
     var _subTexturePivots:Dynamic;
     
-    function get_ArmatureNames():Array<String>
+    public var armatureNames(get, never):Array<String>;
+    function get_armatureNames():Array<String>
     {
         var nameList:Array<String> = new Array<String>();
-        for (armatureData/* AS3HX WARNING could not determine type for var: armatureData exp: EIdent(_armatureDataList) type: null */ in _armatureDataList)
+        for (armatureData in _armatureDataList)
         {
             nameList[nameList.length] = armatureData.name;
         }
         return nameList;
     }
     
+	public var armatureDataList(get, never):Array<ArmatureData>;
     var _armatureDataList:Array<ArmatureData>;
-    function get_ArmatureDataList():Array<ArmatureData>
-    {
-        return _armatureDataList;
-    }
+    function get_armatureDataList() return _armatureDataList;
     
     public function new()
     {
@@ -35,13 +32,7 @@ class SkeletonData
     
     public function dispose():Void
     {
-        for (armatureData in _armatureDataList)
-        {
-            armatureData.dispose();
-        }
-        _armatureDataList.fixed = false;
-        _armatureDataList.length = 0;
-        
+        for (armatureData in _armatureDataList) armatureData.dispose();
         _armatureDataList = null;
         _subTexturePivots = null;
     }
@@ -69,9 +60,7 @@ class SkeletonData
         
         if (Lambda.indexOf(_armatureDataList, armatureData) < 0) 
         {
-            _armatureDataList.fixed = false;
             _armatureDataList[_armatureDataList.length] = armatureData;
-            _armatureDataList.fixed = true;
         }
         else 
         {
@@ -84,9 +73,7 @@ class SkeletonData
         var index:Int = Lambda.indexOf(_armatureDataList, armatureData);
         if (index >= 0) 
         {
-            _armatureDataList.fixed = false;
             _armatureDataList.splice(index, 1);
-            _armatureDataList.fixed = true;
         }
     }
     
@@ -97,9 +84,7 @@ class SkeletonData
         {
             if (_armatureDataList[i].name == armatureName) 
             {
-                _armatureDataList.fixed = false;
                 _armatureDataList.splice(i, 1);
-                _armatureDataList.fixed = true;
             }
         }
     }

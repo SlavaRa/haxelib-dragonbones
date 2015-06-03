@@ -4,29 +4,19 @@ import openfl.errors.ArgumentError;
 @:final class SkinData
 {
     public var slotDataList(get, never):Array<SlotData>;
+    var _slotDataList:Array<SlotData>;
+    function get_slotDataList() return _slotDataList;
 
     public var name:String;
-    
-    var _slotDataList:Array<SlotData>;
-    function get_SlotDataList():Array<SlotData>
-    {
-        return _slotDataList;
-    }
     
     public function new()
     {
         _slotDataList = new Array<SlotData>();
     }
     
-    public function dispose():Void
-    {
+    public function dispose():Void {
         var i:Int = _slotDataList.length;
-        while (i-->0)
-        {
-            _slotDataList[i].dispose();
-        }
-        _slotDataList.fixed = false;
-        _slotDataList.length = 0;
+        while (i-->0) _slotDataList[i].dispose();
         _slotDataList = null;
     }
     
@@ -52,9 +42,7 @@ import openfl.errors.ArgumentError;
         
         if (Lambda.indexOf(_slotDataList, slotData) < 0) 
         {
-            _slotDataList.fixed = false;
             _slotDataList[_slotDataList.length] = slotData;
-            _slotDataList.fixed = true;
         }
         else 
         {

@@ -45,7 +45,7 @@ class NativeSlot extends Slot
             }
             else 
             {
-                nativeContainer.addChildAt(_nativeDisplay, Math.min(index, nativeContainer.numChildren));
+                nativeContainer.addChildAt(_nativeDisplay, Std.int(Math.min(index, nativeContainer.numChildren)));
             }
         }
     }
@@ -102,12 +102,11 @@ class NativeSlot extends Slot
         {
             switch (blendMode)
             {
-                case BlendMode.ADD, BlendMode.ALPHA, BlendMode.DARKEN, BlendMode.DIFFERENCE, BlendMode.ERASE, BlendMode.HARDLIGHT, BlendMode.INVERT, BlendMode.LAYER, BlendMode.LIGHTEN, BlendMode.MULTIPLY, BlendMode.NORMAL, BlendMode.OVERLAY, BlendMode.SCREEN, BlendMode.SHADER, BlendMode.SUBTRACT:
+                case BlendMode.ADD, BlendMode.ALPHA, BlendMode.DARKEN, BlendMode.DIFFERENCE, BlendMode.ERASE, BlendMode.HARDLIGHT, BlendMode.INVERT, BlendMode.LAYER, BlendMode.LIGHTEN, BlendMode.MULTIPLY, BlendMode.NORMAL, BlendMode.OVERLAY, BlendMode.SCREEN, /*BlendMode.SHADER, */BlendMode.SUBTRACT:
                     _nativeDisplay.blendMode = blendMode;
                 
                 default:
                     //_nativeDisplay.blendMode = BlendMode.NORMAL;
-                    break;
             }
         }
     }

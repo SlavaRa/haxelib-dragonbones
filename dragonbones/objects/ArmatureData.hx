@@ -7,42 +7,28 @@ import openfl.errors.ArgumentError;
 @:final class ArmatureData
 {
     public var boneDataList(get, never):Array<BoneData>;
+	var _boneDataList:Array<BoneData>;
+    function get_boneDataList() return _boneDataList;
+	
     public var skinDataList(get, never):Array<SkinData>;
+    var _skinDataList:Array<SkinData>;
+    function get_skinDataList() return _skinDataList;
+	
     public var animationDataList(get, never):Array<AnimationData>;
+    var _animationDataList:Array<AnimationData>;
+    function get_animationDataList() return _animationDataList;
+	
     public var areaDataList(get, never):Array<IAreaData>;
+    var _areaDataList:Array<IAreaData>;
+    function get_areaDataList() return _areaDataList;
 
     public var name:String;
-    
-    var _boneDataList:Array<BoneData>;
-    function get_BoneDataList():Array<BoneData>
-    {
-        return _boneDataList;
-    }
-    
-    var _skinDataList:Array<SkinData>;
-    function get_SkinDataList():Array<SkinData>
-    {
-        return _skinDataList;
-    }
-    
-    var _animationDataList:Array<AnimationData>;
-    function get_AnimationDataList():Array<AnimationData>
-    {
-        return _animationDataList;
-    }
-    
-    var _areaDataList:Array<IAreaData>;
-    function get_AreaDataList():Array<IAreaData>
-    {
-        return _areaDataList;
-    }
-    
+	
     public function new()
     {
         _boneDataList = new Array<BoneData>();
         _skinDataList = new Array<SkinData>();
         _animationDataList = new Array<AnimationData>();
-        
         _areaDataList = new Array<IAreaData>();
     }
     
@@ -64,12 +50,6 @@ import openfl.errors.ArgumentError;
             _animationDataList[i].dispose();
         }
         
-        _boneDataList.fixed = false;
-        _boneDataList.length = 0;
-        _skinDataList.fixed = false;
-        _skinDataList.length = 0;
-        _animationDataList.fixed = false;
-        _animationDataList.length = 0;
         //_animationsCached。clear();
         _boneDataList = null;
         _skinDataList = null;
@@ -129,9 +109,7 @@ import openfl.errors.ArgumentError;
         
         if (Lambda.indexOf(_boneDataList, boneData) < 0) 
         {
-            _boneDataList.fixed = false;
             _boneDataList[_boneDataList.length] = boneData;
-            _boneDataList.fixed = true;
         }
         else 
         {
@@ -148,9 +126,7 @@ import openfl.errors.ArgumentError;
         
         if (Lambda.indexOf(_skinDataList, skinData) < 0) 
         {
-            _skinDataList.fixed = false;
             _skinDataList[_skinDataList.length] = skinData;
-            _skinDataList.fixed = true;
         }
         else 
         {
@@ -167,27 +143,21 @@ import openfl.errors.ArgumentError;
         
         if (Lambda.indexOf(_animationDataList, animationData) < 0) 
         {
-            _animationDataList.fixed = false;
             _animationDataList[_animationDataList.length] = animationData;
-            _animationDataList.fixed = true;
         }
     }
     
     public function sortBoneDataList():Void
     {
         var i:Int = _boneDataList.length;
-        if (i == 0) 
-        {
-            return;
-        }
-        
+        if (i == 0) return;
         var helpArray:Array<Dynamic> = [];
         while (i-->0)
         {
             var boneData:BoneData = _boneDataList[i];
             var level:Int = 0;
             var parentData:BoneData = boneData;
-            while (parentData)
+            while (parentData != null)
             {
                 level++;
                 parentData = getBoneData(parentData.parent);
@@ -230,9 +200,7 @@ import openfl.errors.ArgumentError;
         
         if (Lambda.indexOf(_areaDataList, areaData) < 0) 
         {
-            _areaDataList.fixed = false;
             _areaDataList[_areaDataList.length] = areaData;
-            _areaDataList.fixed = true;
         }
     }
 }

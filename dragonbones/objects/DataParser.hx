@@ -3,6 +3,7 @@ import dragonbones.objects.DecompressedData;
 import dragonbones.objects.SkeletonData;
 import dragonbones.utils.BytesType;
 import dragonbones.utils.ConstValues;
+import haxe.xml.Fast;
 import openfl.errors.Error;
 import openfl.utils.ByteArray;
 import openfl.utils.Dictionary;
@@ -101,9 +102,9 @@ class DataParser
     
     public static function parseTextureAtlas(rawData:Dynamic, scale:Float = 1):Dynamic
     {
-        if (Std.is(rawData, FastXML)) 
+        if (Std.is(rawData, Fast)) 
         {
-            return XMLDataParser.parseTextureAtlasData(try cast(rawData, FastXML) catch(e:Dynamic) null, scale);
+            return XMLDataParser.parseTextureAtlasData(cast(rawData, Fast), scale);
         }
         else 
         {
@@ -114,9 +115,9 @@ class DataParser
     
     public static function parseData(rawData:Dynamic, ifSkipAnimationData:Bool = false, outputAnimationDictionary:Dictionary = null):SkeletonData
     {
-        if (Std.is(rawData, FastXML)) 
+        if (Std.is(rawData, Fast)) 
         {
-            return XMLDataParser.parseSkeletonData(try cast(rawData, FastXML) catch(e:Dynamic) null, ifSkipAnimationData, outputAnimationDictionary);
+            return XMLDataParser.parseSkeletonData(try cast(rawData, Fast) catch(e:Dynamic) null, ifSkipAnimationData, outputAnimationDictionary);
         }
         else 
         {
@@ -129,9 +130,9 @@ class DataParser
     {
         var animationData:AnimationData = armatureData.animationDataList[0];
         
-        if (Std.is(animationRawData, FastXML)) 
+        if (Std.is(animationRawData, Fast)) 
         {
-            return XMLDataParser.parseAnimationData((try cast(animationRawData, FastXML) catch(e:Dynamic) null), armatureData, animationData.frameRate, isGlobalData);
+            return XMLDataParser.parseAnimationData(cast(animationRawData, Fast), armatureData, animationData.frameRate, isGlobalData);
         }
         else 
         {
@@ -141,14 +142,10 @@ class DataParser
     
     public static function parseFrameRate(rawData:Dynamic):Int
     {
-        if (Std.is(rawData, FastXML)) 
+        if (Std.is(rawData, Fast)) 
         {
-            return Int(cast((rawData), XML).attribute(ConstValues.A_FRAME_RATE));
+            return Std.parseInt(cast((rawData), Fast).attribute(ConstValues.A_FRAME_RATE));
         }
-        else 
-        {
-            return Int(rawData[ConstValues.A_FRAME_RATE]);
-        }
+        else return Std.parseInt(rawData[ConstValues.A_FRAME_RATE]);
     }
-
 }

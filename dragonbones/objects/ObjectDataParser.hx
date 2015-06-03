@@ -1,17 +1,12 @@
 package dragonbones.objects;
-
-import dragonbones.objects.RectangleData;
-import nme.errors.ArgumentError;
-import nme.errors.Error;
-
 import dragonbones.core.DragonBones;
-import dragonbones.core.DragonBonesInternal;
 import dragonbones.objects.AnimationData;
 import dragonbones.objects.ArmatureData;
 import dragonbones.objects.BoneData;
 import dragonbones.objects.DBTransform;
 import dragonbones.objects.DisplayData;
 import dragonbones.objects.Frame;
+import dragonbones.objects.RectangleData;
 import dragonbones.objects.SkeletonData;
 import dragonbones.objects.SkinData;
 import dragonbones.objects.SlotData;
@@ -21,15 +16,14 @@ import dragonbones.objects.TransformTimeline;
 import dragonbones.textures.TextureData;
 import dragonbones.utils.ConstValues;
 import dragonbones.utils.DBDataUtil;
-
+import openfl.errors.ArgumentError;
+import openfl.errors.Error;
 import openfl.geom.ColorTransform;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 import openfl.utils.Dictionary;
 
-
-
-@:final class ObjectDataParser
+class ObjectDataParser
 {
     public static function parseTextureAtlasData(rawData:Dynamic, scale:Float = 1):Dynamic
     {
@@ -456,16 +450,12 @@ import openfl.utils.Dictionary;
             switch (Std.string(Reflect.field(data, key)))
             {
                 case "NaN", "", "false", "null", "undefined":
-                    return NaN;
+                    return Math.NaN;
                 
                 default:
                     return Std.parseFloat(Reflect.field(data, key));
             }
         }
         return defaultValue;
-    }
-
-    public function new()
-    {
     }
 }

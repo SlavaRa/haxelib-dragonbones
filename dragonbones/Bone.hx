@@ -18,86 +18,79 @@ import openfl.geom.Point;
 
 class Bone extends DBObject
 {
-    public var childArmature(get, never):Armature;
-    public var display(get, set):Dynamic;
-    public var node(get, never):DBTransform;
-    public var slot(get, never):Slot;
+    /**
+	 * The instance dispatch sound event.
+	 */
+    static var _soundManager:SoundEventManager = SoundEventManager.getInstance();
 
     /**
-		 * The instance dispatch sound event.
-		 */
-    static var _soundManager:SoundEventManager = SoundEventManager.getInstance();
-    
-    
-    /**
-		 * Unrecommended API. Recommend use slot.childArmature.
-		 */
-    function get_ChildArmature():Armature
-    {
-        var slot:Slot = this.slot;
-        if (slot != null) 
-        {
-            return slot.childArmature;
-        }
-        return null;
-    }
+	 * Unrecommended API. Recommend use slot.childArmature.
+	 */
+	public var childArmature(get, never):Armature;
+    function get_childArmature() return slot != null ? slot.childArmature : null;
     
     /**
-		 * Unrecommended API. Recommend use slot.display.
-		 */
-    function get_Display():Dynamic
-    {
-        var slot:Slot = this.slot;
-        if (slot != null) 
-        {
-            return slot.display;
-        }
-        return null;
-    }
-    function set_Display(value:Dynamic):Dynamic
-    {
-        var slot:Slot = this.slot;
-        if (slot != null) 
-        {
-            slot.display = value;
-        }
+	 * Unrecommended API. Recommend use slot.display.
+	 */
+	public var display(get, set):Dynamic;
+    function get_display() return slot != null ? slot.display : null;
+    function set_display(value:Dynamic):Dynamic {
+        if (slot != null) slot.display = value;
         return value;
     }
     
     /**
-		 * Unrecommended API. Recommend use offset.
-		 */
-    function get_Node():DBTransform
-    {
-        return _offset;
-    }
+	 * Unrecommended API. Recommend use offset.
+	 */
+	public var node(get, never):DBTransform;
+    function get_node():DBTransform return _offset;
     
+	public var slot(get, never):Slot;
+	function get_slot() return _slotList.length > 0 ? _slotList[0] : null;
+	
     /**
-		 * AnimationState that slots belong to the bone will be controlled by.
-		 * Sometimes, we want slots controlled by a spedific animation state when animation is doing mix or addition.
-		 */
+	 * AnimationState that slots belong to the bone will be controlled by.
+	 * Sometimes, we want slots controlled by a spedific animation state when animation is doing mix or addition.
+	 */
     public var displayController:String;
 	
     var _tween:DBTransform;
+	
+	public
     var _tweenPivot:Point;
+	
+	public
     var _needUpdate:Int;
+	
+	public
     var _isColorChanged:Bool;
+	
+	public
     var _frameCachedPosition:Int;
+
+	public
     var _frameCachedDuration:Int;
+	
+	public
     var _timelineCached:TimelineCached;
+	
     var _boneList:Array<Bone>;
     var _slotList:Array<Slot>;
     var _timelineStateList:Array<TimelineState>;
     var _tempGlobalTransformForChild:DBTransform;
+	
+	public
     var _globalTransformForChild:DBTransform;
     var _tempGlobalTransformMatrixForChild:Matrix;
+	
+	public
     var _globalTransformMatrixForChild:Matrix;
     
     public var applyOffsetTranslationToChild:Bool = true;
     public var applyOffsetRotationToChild:Bool = true;
     public var applyOffsetScaleToChild:Bool = false;
     
-    override function set_Visible(value:Bool):Bool
+    override function set_visible(value:Bool):Bool
     {
         if (this._visible != value) 
         {
@@ -110,7 +103,7 @@ class Bone extends DBObject
         return value;
     }
     
-    
+    public
     override function setArmature(value:Armature):Void
     {
         super.setArmature(value);
@@ -128,28 +121,19 @@ class Bone extends DBObject
         }
     }
     
-    function get_Slot():Slot
-    {
-        return _slotList.length > (0) ? _slotList[0]:null;
-    }
-    
     /**
-		 * Creates a Bone blank instance.
-		 */
+	 * Creates a Bone blank instance.
+	 */
     public function new()
     {
         super();
-        
         _tween = new DBTransform();
         _tweenPivot = new Point();
-        _tween.scaleX = _tween.scaleY = 1;
-        
+        _tween.scaleX = 1;
+		_tween.scaleY = 1;
         _boneList = new Array<Bone>();
-        _boneList.fixed = true;
         _slotList = new Array<Slot>();
-        _slotList.fixed = true;
         _timelineStateList = new Array<TimelineState>();
-        
         _needUpdate = 2;
         _isColorChanged = false;
         _frameCachedPosition = -1;
@@ -157,34 +141,16 @@ class Bone extends DBObject
     }
     
     /**
-		 * @inheritDoc
-		 */
+	 * @inheritDoc
+	 */
     public override function dispose():Void
     {
-        if (_boneList == null) 
-        {
-            return;
-        }
-        
+        if (_boneList == null) return;
         super.dispose();
         var i:Int = _boneList.length;
-        while (i-->0)
-        {
-            _boneList[i].dispose();
-        }
-        
+        while (i-->0) _boneList[i].dispose();
         i = _slotList.length;
-        while (i-->0)
-        {
-            _slotList[i].dispose();
-        }
-        
-        _boneList.fixed = false;
-        _boneList.length = 0;
-        _slotList.fixed = false;
-        _slotList.length = 0;
-        _timelineStateList.length = 0;
-        
+        while (i-->0) _slotList[i].dispose();
         _tween = null;
         _tweenPivot = null;
         _boneList = null;
@@ -194,29 +160,23 @@ class Bone extends DBObject
     }
     
     /**
-		 * Force update the bone in next frame even if the bone is not moving.
-		 */
+	 * Force update the bone in next frame even if the bone is not moving.
+	 */
     public function invalidUpdate():Void
     {
         _needUpdate = 2;
     }
     
     /**
-		 * If contains some bone or slot
-		 * @param Slot or Bone instance
-		 * @return Boolean
-		 * @see dragonBones.core.DBObject
-		 */
+	 * If contains some bone or slot
+	 * @param Slot or Bone instance
+	 * @return Boolean
+	 * @see dragonBones.core.DBObject
+	 */
     public function contains(child:DBObject):Bool
     {
-        if (child == null) 
-        {
-            throw new ArgumentError();
-        }
-        if (child == this) 
-        {
-            return false;
-        }
+        if (child == null) throw new ArgumentError();
+        if (child == this) return false;
         var ancestor:DBObject = child;
         while (!(ancestor == this || ancestor == null))
         {
@@ -226,10 +186,10 @@ class Bone extends DBObject
     }
     
     /**
-		 * Get all Bone instance associated with this bone.
-		 * @return A Vector.&lt;Slot&gt; instance.
-		 * @see dragonBones.Slot
-		 */
+	 * Get all Bone instance associated with this bone.
+	 * @return A Vector.&lt;Slot&gt; instance.
+	 * @see dragonBones.Slot
+	 */
     public function getBones(returnCopy:Bool = true):Array<Bone>
     {
         return returnCopy ? _boneList.copy() : _boneList;
@@ -252,21 +212,14 @@ class Bone extends DBObject
 	 */
     public function addChild(child:DBObject):Void
     {
-        if (child == null) 
-        {
-            throw new ArgumentError();
-        }
+        if (child == null) throw new ArgumentError();
         var bone:Bone = cast(child, Bone);
         if (bone == this || (bone != null && bone.contains(this))) 
         {
             throw new ArgumentError("An Bone cannot be added as a child to itself or one of its children (or children's children, etc.)");
         }
         
-        if (child.parent) 
-        {
-            child.parent.removeChild(child);
-        }
-        
+        if (child.parent != null) child.parent.removeChild(child);
         if (bone != null) 
         {
             _boneList[_boneList.length] = bone;
@@ -290,12 +243,10 @@ class Bone extends DBObject
     public function removeChild(child:DBObject):Void
     {
         if (child == null) throw new ArgumentError();
-        
-        var index:Int;
         if (Std.is(child, Bone)) 
         {
             var bone:Bone = cast(child, Bone);
-            index = Lambda.indexOf(_boneList, bone);
+            var index:Int = Lambda.indexOf(_boneList, bone);
             if (index >= 0) 
             {
                 _boneList.splice(index, 1);
@@ -310,7 +261,7 @@ class Bone extends DBObject
         else if (Std.is(child, Slot)) 
         {
             var slot:Slot = cast(child, Slot);
-            index = Lambda.indexOf(_slotList, slot);
+            var index:Int = Lambda.indexOf(_slotList, slot);
             if (index >= 0) 
             {
                 _slotList.splice(index, 1);
@@ -330,7 +281,8 @@ class Bone extends DBObject
         _global.x = this._origin.x + _tween.x + this._offset.x;
         _global.y = this._origin.y + _tween.y + this._offset.y;
     }
-    
+
+    public
     function update(needUpdate:Bool = false):Void
     {
         _needUpdate--;
@@ -432,7 +384,8 @@ class Bone extends DBObject
             _timelineCached.addFrame(this._global, this._globalTransformMatrix, _frameCachedPosition, _frameCachedDuration);
         }
     }
-    
+
+    public
     function updateColor(
             aOffset:Float,
             rOffset:Float,
@@ -454,30 +407,26 @@ class Bone extends DBObject
         
         _isColorChanged = colorChanged;
     }
-    
+
+    public
     function hideSlots():Void
     {
-        for (slot in _slotList)
-        {
-            slot.changeDisplay(-1);
-        }
+        for (slot in _slotList) slot.changeDisplay(-1);
     }
     
     /** When bone timeline enter a key frame, call this func*/
+	public
     function arriveAtFrame(frame:Frame, timelineState:TimelineState, animationState:AnimationState, isCross:Bool):Void
     {
-        var displayControl:Bool = 
-        animationState.displayControl &&
-        (!displayController || displayController == animationState.name) &&
-        animationState.getMixingTransform(name) == 0;
+        var displayControl:Bool = animationState.displayControl
+			&& (displayController == null || displayController == animationState.name)
+			&& !animationState.getMixingTransform(name);
         
-        if (displayControl) 
-        {
+        if (displayControl) {
             var slot:Slot;
             var tansformFrame:TransformFrame = cast(frame, TransformFrame);
             var displayIndex:Int = tansformFrame.displayIndex;
-            for (slot in _slotList)
-            {
+            for (slot in _slotList) {
                 slot.changeDisplay(displayIndex);
                 slot.updateDisplayVisible(tansformFrame.visible);
                 if (displayIndex >= 0) 
@@ -508,7 +457,7 @@ class Bone extends DBObject
                 _soundManager.dispatchEvent(soundEvent);
             }  //后续会扩展更多的action，目前只有gotoAndPlay的含义    //[TODO]currently there is only gotoAndPlay belongs to frame action. In future, there will be more.  
             
-            if (frame.action) 
+            if (frame.action != null) 
             {
                 for (slot in _slotList)
                 {
@@ -522,18 +471,20 @@ class Bone extends DBObject
         }
     }
     
+	public
     function addState(timelineState:TimelineState):Void
     {
-        if (Lambda.indexOf(_timelineStateList, timelineState) < 0) 
+        if (!Lambda.has(_timelineStateList, timelineState)) 
         {
-            _timelineStateList.push(timelineState);
+            _timelineStateList[_timelineStateList.length] = timelineState;
             _timelineStateList.sort(sortState);
         }
     }
-    
+
+    public
     function removeState(timelineState:TimelineState):Void
     {
-		_timelineStateList.remove(_timelineStateList);
+		_timelineStateList.remove(timelineState);
     }
     
     function blendingTimeline():Void
