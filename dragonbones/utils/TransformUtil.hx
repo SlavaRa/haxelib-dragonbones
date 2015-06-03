@@ -100,6 +100,7 @@ class TransformUtil
     }
 
 	static function toFixed(v:Float, decimalPlaces:Int):Float {
+		decimalPlaces *= 10;
 		return Std.int(v * decimalPlaces) / decimalPlaces;
 	}
 }
