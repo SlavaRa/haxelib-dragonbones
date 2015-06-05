@@ -73,6 +73,8 @@ class TimelineState {
 	
 	public
     var _blendEnabled:Bool;
+	
+	public
     var _isComplete:Bool;
 	
 	public
@@ -185,51 +187,29 @@ class TimelineState {
         progress /= _timeline.scale;
         progress += _timeline.offset;
         
-        var currentTime:Int = _totalTime * progress;
+        var currentTime:Int = Std.int(_totalTime * progress);
         var playTimes:Int = _animationState.playTimes;
-        if (playTimes == 0) 
-        {
+        if (playTimes == 0) {
             _isComplete = false;
-            currentPlayTimes = Math.ceil(Math.abs(currentTime) / _totalTime) || 1;
+            currentPlayTimes = Math.ceil(Math.abs(currentTime) / _totalTime);
+			if(currentPlayTimes == 0) currentPlayTimes = 1;
             currentTime -= Math.floor(currentTime / _totalTime) * _totalTime;
-            
-            if (currentTime < 0) 
-            {
-                currentTime += _totalTime;
-            }
-        }
-        else 
-        {
+            if (currentTime < 0) currentTime += _totalTime;
+        } else {
             var totalTimes:Int = playTimes * _totalTime;
-            if (currentTime >= totalTimes) 
-            {
+            if (currentTime >= totalTimes) {
                 currentTime = totalTimes;
                 _isComplete = true;
-            }
-            else if (currentTime <= -totalTimes) 
-            {
+            } else if (currentTime <= -totalTimes) {
                 currentTime = -totalTimes;
                 _isComplete = true;
             }
-            else 
-            {
-                _isComplete = false;
-            }
-            
-            if (currentTime < 0) 
-            {
-                currentTime += totalTimes;
-            }
-            
-            currentPlayTimes = Math.ceil(currentTime / _totalTime) || 1;
-            if (_isComplete) 
-            {
-                currentTime = _totalTime;
-            }
-            else 
-            {
-                currentTime -= Math.floor(currentTime / _totalTime) * _totalTime;
-            }
+            else _isComplete = false;
+            if (currentTime < 0) currentTime += totalTimes;
+            currentPlayTimes = Math.ceil(currentTime / _totalTime);
+			if(currentPlayTimes == 0) currentPlayTimes = 1;
+            if (_isComplete) currentTime = _totalTime;
+            else currentTime -= Math.floor(currentTime / _totalTime) * _totalTime;
         }
         
         if (_currentTime != currentTime) 
@@ -255,21 +235,11 @@ class TimelineState {
                             _currentFrameIndex--;
                             break;
                         }
-                        else 
-                        {
-                            _currentFrameIndex = 0;
-                        }
+                        else _currentFrameIndex = 0;
                     }
-                }
-                else 
-                {
-                    break;
-                }
+                } else break;
                 currentFrame = cast(frameList[_currentFrameIndex], TransformFrame);
-                if (prevFrame != null) 
-                {
-                    _bone.arriveAtFrame(prevFrame, this, _animationState, true);
-                }
+                if (prevFrame != null) _bone.arriveAtFrame(prevFrame, this, _animationState, true);
                 _currentFrameDuration = currentFrame.duration;
                 _currentFramePosition = currentFrame.position;
                 prevFrame = currentFrame;
@@ -280,10 +250,7 @@ class TimelineState {
                 _bone.arriveAtFrame(currentFrame, this, _animationState, false);
                 
                 _blendEnabled = currentFrame.displayIndex >= 0;
-                if (_blendEnabled) 
-                {
-                    updateToNextFrame(currentPlayTimes);
-                }
+                if (_blendEnabled) updateToNextFrame(currentPlayTimes);
                 else 
                 {
                     _tweenEasing = Math.NaN;
@@ -292,11 +259,7 @@ class TimelineState {
                     _tweenColor = false;
                 }
             }
-            
-            if (_blendEnabled) 
-            {
-                updateTween();
-            }
+            if (_blendEnabled) updateTween();
         }
     }
     
@@ -622,20 +585,17 @@ class TimelineState {
     
     function updateTimelineCached(isNoTweenFrame:Bool):Bool
     {
-        var slot:Slot;
         var isCachedFrame:Bool = false;
         if (
-            _armature.cacheFrameRate > 0 &&
-            _animation._animationStateCount < 2 &&
-            !_animation._isFading) 
+            _armature.cacheFrameRate > 0
+			&& _animation._animationStateCount < 2
+			&& !_animation._isFading) 
         {
-            var timelineCached:TimelineCached = _timeline.timelineCached;
-            if (_bone._timelineCached == null) 
-            {
+            var timelineCached = _timeline.timelineCached;
+            if (_bone._timelineCached == null) {
                 _bone._timelineCached = timelineCached;
-                for (slot in _bone.getSlots(false))
-                {
-                    slot._timelineCached = _timeline.getSlotTimelineCached(slot.name);
+                for (it in _bone.getSlots(false)) {
+                    it._timelineCached = _timeline.getSlotTimelineCached(it.name);
                 }
             }  //Math.floor  
             
@@ -654,10 +614,7 @@ class TimelineState {
         else if (_bone._timelineCached != null) 
         {
             _bone._timelineCached = null;
-            for (Lambda.has(_bone.getSlots(false), slot))
-            {
-                slot._timelineCached = null;
-            }
+            for (it in _bone.getSlots(false)) it._timelineCached = null;
             _bone._frameCachedPosition = -1;
             _bone._frameCachedDuration = -1;
         }

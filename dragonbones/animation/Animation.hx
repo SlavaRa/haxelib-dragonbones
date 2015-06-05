@@ -222,13 +222,14 @@ class Animation
             animationName:String,
             fadeInTime:Float = -1,
             duration:Float = -1,
-            playTimes:Float = Math.NaN,
+            playTimes:Null<Float> = null,
             layer:Int = 0,
             group:String = null,
             fadeOutMode:String = SAME_LAYER_AND_GROUP,
             pauseFadeOut:Bool = true,
             pauseFadeIn:Bool = true):AnimationState
     {
+		if(playTimes == null) playTimes = Math.NaN;
         if (_animationDataList == null) return null;
         var i:Int = _animationDataList.length;
         var animationData:AnimationData;

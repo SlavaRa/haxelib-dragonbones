@@ -9,8 +9,7 @@ import openfl.errors.ArgumentError;
 
     public var name:String;
     
-    public function new()
-    {
+    public function new() {
         _slotDataList = new Array<SlotData>();
     }
     

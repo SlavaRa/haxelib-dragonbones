@@ -96,7 +96,7 @@ class NativeSlot extends Slot
     }
     
     
-    override function updateDisplayBlendMode(value:String):Void
+    override function updateDisplayBlendMode(value:BlendMode):Void
     {
         if (_nativeDisplay != null) 
         {

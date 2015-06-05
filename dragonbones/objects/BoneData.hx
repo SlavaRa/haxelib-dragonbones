@@ -3,12 +3,8 @@ import dragonbones.objects.DBTransform;
 import dragonbones.objects.IAreaData;
 import openfl.errors.ArgumentError;
 
-@:final class BoneData
-{
-    public var areaDataList(get, never):Array<IAreaData>;
-    var _areaDataList:Array<IAreaData>;
-    function get_areaDataList() return _areaDataList;
-
+@:final class BoneData {
+    public var areaDataList(default, null):Array<IAreaData>;
     public var name:String;
     public var parent:String;
     public var length:Float;
@@ -17,52 +13,34 @@ import openfl.errors.ArgumentError;
     public var inheritScale:Bool;
     public var inheritRotation:Bool;
     
-    public function new()
-    {
+    public function new() {
         length = 0;
         global = new DBTransform();
         transform = new DBTransform();
         inheritRotation = true;
         inheritScale = false;
-        
-        _areaDataList = new Array<IAreaData>();
+        areaDataList = new Array<IAreaData>();
     }
     
-    public function dispose():Void
-    {
+    public function dispose():Void {
+		for(areaData in areaDataList) areaData.dispose();
+		areaDataList = null;
         global = null;
         transform = null;
-		for (areaData in _areaDataList) areaData.dispose();
-		_areaDataList = null;
     }
     
-    public function getAreaData(areaName:String):IAreaData
-    {
-        if (areaName == null && _areaDataList.length > 0) 
-        {
-            return _areaDataList[0];
-        }
-        var i:Int = _areaDataList.length;
-        while (i-->0)
-        {
-            if (_areaDataList[i]["name"] == areaName) 
-            {
-                return _areaDataList[i];
-            }
+    public function getAreaData(areaName:String):IAreaData {
+        if(areaName == null && areaDataList.length > 0) return areaDataList[0];
+        for(it in areaDataList) {
+            if(Reflect.getProperty(it, "name") == areaName) return it;
         }
         return null;
     }
     
-    public function addAreaData(areaData:IAreaData):Void
-    {
-        if (areaData == null) 
-        {
-            throw new ArgumentError();
-        }
-        
-        if (Lambda.indexOf(_areaDataList, areaData) < 0) 
-        {
-            _areaDataList[_areaDataList.length] = areaData;
+    public function addAreaData(areaData:IAreaData):Void {
+        if (areaData == null) throw new ArgumentError();
+        if (!Lambda.has(areaDataList, areaData)) {
+            areaDataList[areaDataList.length] = areaData;
         }
     }
 }

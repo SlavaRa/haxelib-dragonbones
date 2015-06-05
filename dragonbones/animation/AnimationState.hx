@@ -75,12 +75,12 @@ import dragonbones.objects.Frame;
     }
     
     /**
-		 * If animation auto fade out after play complete.
-		 */
+	 * If animation auto fade out after play complete.
+	 */
     public var autoFadeOut:Bool;
     /**
-		 * Duration of fade out. By default, it equals to fade in time.
-		 */
+	 * Duration of fade out. By default, it equals to fade in time.
+	 */
     public var fadeOutTime:Float;
     public function setAutoFadeOut(value:Bool, fadeOutTime:Float = -1):AnimationState
     {
@@ -93,8 +93,8 @@ import dragonbones.objects.Frame;
     }
     
     /**
-		 * The weight of animation.
-		 */
+	 * The weight of animation.
+	 */
     public var weight:Float;
     public function setWeight(value:Float):AnimationState
     {
@@ -107,12 +107,12 @@ import dragonbones.objects.Frame;
     }
     
     /**
-		 * If auto genterate tween between keyframes.
-		 */
+	 * If auto genterate tween between keyframes.
+	 */
     public var autoTween:Bool;
     /**
-		 * If generate tween between the lastFrame to the first frame for loop animation.
-		 */
+	 * If generate tween between the lastFrame to the first frame for loop animation.
+	 */
     public var lastFrameAutoTween:Bool;
     public function setFrameTween(autoTween:Bool, lastFrameAutoTween:Bool):AnimationState
     {
@@ -124,13 +124,11 @@ import dragonbones.objects.Frame;
     var _armature:Armature;
     var _timelineStateList:Array<TimelineState>;
     var _mixingTransforms:Array<String>;
-    
     var _isPlaying:Bool;
     var _time:Float;
     var _currentFrameIndex:Int;
     var _currentFramePosition:Int;
     var _currentFrameDuration:Int;
-    
     var _pausePlayheadInFade:Bool;
     var _isFadeOut:Bool;
     var _fadeTotalWeight:Float;
@@ -139,14 +137,14 @@ import dragonbones.objects.Frame;
     
     var _name:String;
     /**
-		 * The name of the animation state.
-		 */
+	 * The name of the animation state.
+	 */
     function get_name():String
     {
         return _name;
     }
     
-    
+    public
     var _layer:Int;
     /**
 	 * The layer of the animation. When calculating the final blend weights, animations in higher layers will get their weights.
@@ -156,7 +154,7 @@ import dragonbones.objects.Frame;
         return _layer;
     }
     
-    
+    public
     var _group:String;
     /**
 		 * The group of the animation.
@@ -168,9 +166,9 @@ import dragonbones.objects.Frame;
     
     var _clip:AnimationData;
     /**
-		 * The clip that is being played by this animation state.
-		 * @see dragonBones.objects.AnimationData.
-		 */
+	 * The clip that is being played by this animation state.
+	 * @see dragonBones.objects.AnimationData.
+	 */
     function get_clip():AnimationData
     {
         return _clip;
@@ -178,15 +176,15 @@ import dragonbones.objects.Frame;
     
     var _isComplete:Bool;
     /**
-		 * Is animation complete.
-		 */
+	 * Is animation complete.
+	 */
     function get_isComplete():Bool
     {
         return _isComplete;
     }
     /**
-		 * Is animation playing.
-		 */
+	 * Is animation playing.
+	 */
     function get_isPlaying():Bool
     {
         return (_isPlaying && !_isComplete);
@@ -194,8 +192,8 @@ import dragonbones.objects.Frame;
     
     var _currentPlayTimes:Int;
     /**
-		 * Current animation played times
-		 */
+	 * Current animation played times
+	 */
     function get_currentPlayTimes():Int
     {
         return _currentPlayTimes < (0) ? 0:_currentPlayTimes;
@@ -203,8 +201,8 @@ import dragonbones.objects.Frame;
     
     var _totalTime:Int;
     /**
-		 * The length of the animation clip in seconds.
-		 */
+	 * The length of the animation clip in seconds.
+	 */
     function get_totalTime():Float
     {
         return _totalTime * 0.001;
@@ -220,12 +218,9 @@ import dragonbones.objects.Frame;
     }
     public function setCurrentTime(value:Float):AnimationState
     {
-        if (value < 0 || Math.isNaN(value)) 
-        {
-            value = 0;
-        }
+        if (value < 0 || Math.isNaN(value)) value = 0;
         _time = value;
-        _currentTime = _time * 1000;
+        _currentTime = Std.int(_time * 1000);
         return this;
     }
     
@@ -311,7 +306,7 @@ import dragonbones.objects.Frame;
         autoTween = _clip.autoTween;
         
         setTimeScale(timeScale);
-        setPlayTimes(playTimes);
+        setPlayTimes(Std.int(playTimes));
         
         //reset
         _isComplete = false;
@@ -501,12 +496,12 @@ import dragonbones.objects.Frame;
     
     public function removeAllMixingTransform():AnimationState
     {
-        _mixingTransforms.length = 0;
+        _mixingTransforms = [];
         updateTimelineStates();
         return this;
     }
     
-    
+	public
     function advanceTime(passedTime:Float):Bool
     {
         passedTime *= _timeScale;
@@ -704,52 +699,33 @@ import dragonbones.objects.Frame;
             _time += passedTime;
         }
         
-        var startFlg:Bool = false;
-        var completeFlg:Bool = false;
-        var loopCompleteFlg:Bool = false;
-        var isThisComplete:Bool = false;
+        var startFlg = false;
+        var completeFlg = false;
+        var loopCompleteFlg = false;
+        var isThisComplete = false;
         var currentPlayTimes:Int = 0;
-        var currentTime:Int = _time * 1000;
-        if (_playTimes == 0) 
-        {
+        var currentTime:Int = Std.int(_time * 1000);
+        if (_playTimes == 0) {
             isThisComplete = false;
-            currentPlayTimes = Math.ceil(Math.abs(currentTime) / _totalTime) || 1;
-            //currentTime -= Math.floor(currentTime / _totalTime) * _totalTime;
-            currentTime -= as3hx.Compat.parseInt(currentTime / _totalTime) * _totalTime;
-            
-            if (currentTime < 0) 
-            {
-                currentTime += _totalTime;
-            }
-        }
-        else 
-        {
+            currentPlayTimes = Math.ceil(Math.abs(currentTime) / _totalTime);
+			if(currentPlayTimes == 0) currentPlayTimes = 1;
+            currentTime -= Math.floor(currentTime / _totalTime) * _totalTime;
+            if (currentTime < 0) currentTime += _totalTime;
+        } else {
             var totalTimes:Int = _playTimes * _totalTime;
-            if (currentTime >= totalTimes) 
-            {
+            if (currentTime >= totalTimes) {
                 currentTime = totalTimes;
                 isThisComplete = true;
-            }
-            else if (currentTime <= -totalTimes) 
-            {
+            } else if (currentTime <= -totalTimes) {
                 currentTime = -totalTimes;
                 isThisComplete = true;
-            }
-            else 
-            {
-                isThisComplete = false;
-            }
-            
-            if (currentTime < 0) 
-            {
-                currentTime += totalTimes;
-            }
-            
-            currentPlayTimes = Math.ceil(currentTime / _totalTime) || 1;
+            } else isThisComplete = false;
+            if (currentTime < 0) currentTime += totalTimes;
+            currentPlayTimes = Math.ceil(currentTime / _totalTime);
+			if(currentPlayTimes == 0) currentPlayTimes = 1;
             currentTime -= Math.floor(currentTime / _totalTime) * _totalTime;
-            
             if (isThisComplete) currentTime = _totalTime;
-        }  //update timeline  
+        }
         
         _isComplete = isThisComplete;
         var progress:Float = _time * 1000 / _totalTime;
@@ -758,9 +734,6 @@ import dragonbones.objects.Frame;
             timeline.update(progress);
             _isComplete = timeline._isComplete && _isComplete;
         }  //update main timeline  
-        
-        
-        
         if (_currentTime != currentTime) 
         {
             if (_currentPlayTimes != currentPlayTimes)   //check loop complete  
@@ -819,8 +792,7 @@ import dragonbones.objects.Frame;
         }
         else if (loopCompleteFlg) 
         {
-            if (_armature.hasEventListener(AnimationEvent.LOOP_COMPLETE)) 
-            {
+            if (_armature.hasEventListener(AnimationEvent.LOOP_COMPLETE)) {
                 event = new AnimationEvent(AnimationEvent.LOOP_COMPLETE);
                 event.animationState = this;
                 _armature._eventList.push(event);

@@ -103,6 +103,8 @@ class Armature extends EventDispatcher implements IAnimatable {
     
     var _delayDispose:Bool;
     var _lockDispose:Bool;
+	
+	public
     var _armatureData:ArmatureData;
 	
     /**

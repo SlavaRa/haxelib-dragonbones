@@ -17,7 +17,6 @@ import openfl.display.MovieClip;
 import openfl.display.Sprite;
 import openfl.errors.ArgumentError;
 import openfl.errors.Error;
-import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
 import openfl.geom.Matrix;
@@ -30,22 +29,20 @@ import openfl.utils.Dictionary;
 /** Dispatched after a sucessful call to parseData(). */
 @:meta(Event(name = "complete", type = "openfl.events.Event"))
 
-class BaseFactory extends EventDispatcher
-{
+class BaseFactory extends EventDispatcher {
     
     static var _helpMatrix:Matrix = new Matrix();
     static var _loaderContext:LoaderContext = new LoaderContext(false, ApplicationDomain.currentDomain);
     
-    var _dataDic:Dynamic;
+    var _dataDic:Map<String, SkeletonData>;
     var _textureAtlasDic:Dynamic;
     var _currentDataName:String;
     var _currentTextureAtlasName:String;
     
-    function new()
-    {
+    function new() {
         super(this);
         _loaderContext.allowCodeImport = true;
-        _dataDic = { };
+        _dataDic = new Map();
         _textureAtlasDic = { };
         _currentDataName = null;
         _currentTextureAtlasName = null;
@@ -56,9 +53,8 @@ class BaseFactory extends EventDispatcher
 	 * @param The name of an existing SkeletonData instance.
 	 * @return A SkeletonData instance with given name (if exist).
 	 */
-    public function getSkeletonData(name:String):SkeletonData
-    {
-        return Reflect.field(_dataDic, name);
+    public function getSkeletonData(name:String):SkeletonData {
+        return _dataDic.get(name);
     }
     
     /**
@@ -66,20 +62,18 @@ class BaseFactory extends EventDispatcher
 	 * @param A SkeletonData instance.
 	 * @param (optional) A name for this SkeletonData instance.
 	 */
-    public function addSkeletonData(data:SkeletonData, name:String = null):Void
-    {
+    public function addSkeletonData(data:SkeletonData, name:String = null):Void {
 		name = data.name;
         if(name == null) throw new ArgumentError("Unnamed data!");
-        if(Reflect.field(_dataDic, name)) throw new ArgumentError();
-        Reflect.setField(_dataDic, name, data);
+        if(_dataDic.exists(name)) throw new ArgumentError();
+        _dataDic.set(name, data);
     }
     
     /**
 	 * Remove a SkeletonData instance from this BaseFactory instance.
 	 * @param The name for the SkeletonData instance to remove.
 	 */
-    public function removeSkeletonData(name:String):Void
-    {
+    public function removeSkeletonData(name:String):Void {
 		//TODO slavara: check this
     }
     
@@ -98,24 +92,11 @@ class BaseFactory extends EventDispatcher
 	 * @param A textureAtlas to add to this BaseFactory instance.
 	 * @param (optional) A name for this TextureAtlas.
 	 */
-    public function addTextureAtlas(textureAtlas:Dynamic, name:String = null):Void
-    {
-        if (textureAtlas == null) 
-        {
-            throw new ArgumentError();
-        }
-        if (name == null && Std.is(textureAtlas, ITextureAtlas)) 
-        {
-            name = textureAtlas.name;
-        }
-        if (name == null) 
-        {
-            throw new ArgumentError("Unnamed data!");
-        }
-        if (Reflect.field(_textureAtlasDic, name)) 
-        {
-            throw new ArgumentError();
-        }
+    public function addTextureAtlas(textureAtlas:Dynamic, name:String = null):Void {
+        if (textureAtlas == null) throw new ArgumentError();
+        if (name == null && Std.is(textureAtlas, ITextureAtlas)) name = textureAtlas.name;
+        if (name == null) throw new ArgumentError("Unnamed data!");
+        if (Reflect.field(_textureAtlasDic, name)) throw new ArgumentError();
         Reflect.setField(_textureAtlasDic, name, textureAtlas);
     }
     
@@ -123,8 +104,7 @@ class BaseFactory extends EventDispatcher
 	 * Remove a textureAtlas from this baseFactory instance.
 	 * @param The name of the TextureAtlas to remove.
 	 */
-    public function removeTextureAtlas(name:String):Void
-    {
+    public function removeTextureAtlas(name:String):Void {
 		//TODO slavara: check this
     }
     
@@ -132,21 +112,14 @@ class BaseFactory extends EventDispatcher
 	 * Cleans up resources used by this BaseFactory instance.
 	 * @param (optional) Destroy all internal references.
 	 */
-    public function dispose(disposeData:Bool = true):Void
-    {
-        if (disposeData) 
-        {
-            for (skeletonName in Reflect.fields(_dataDic))
-            {
-                (try cast(Reflect.field(_dataDic, skeletonName), SkeletonData) catch(e:Dynamic) null).dispose();
-            }
-            
+    public function dispose(disposeData:Bool = true):Void {
+        if (disposeData) {
+            for (it in _dataDic) it.dispose();
             for (textureAtlasName in Reflect.fields(_textureAtlasDic))
             {
                 (try cast(Reflect.field(_textureAtlasDic, textureAtlasName), ITextureAtlas) catch(e:Dynamic) null).dispose();
             }
         }
-        
         _dataDic = null;
         _textureAtlasDic = null;
         _currentDataName = null;
@@ -166,7 +139,7 @@ class BaseFactory extends EventDispatcher
 	 * @param The name of this skin.
 	 * @return A Armature instance.
 	 */
-    public function buildArmature(armatureName:String, animationName:String = null, skeletonName:String = null, textureAtlasName:String = null, skinName:String = null):Armature
+    public function buildArmature(armatureName:String, animationName:String = null, skeletonName:String = null, texAtlasName:String = null, skinName:String = null):Armature
     {
         var data:SkeletonData;
         var armatureData:ArmatureData;
@@ -174,34 +147,24 @@ class BaseFactory extends EventDispatcher
         var skinData:SkinData;
         var skinDataCopy:SkinData;
         
-        if (skeletonName != null) 
-        {
-            data = Reflect.field(_dataDic, skeletonName);
-            if (data != null) 
-            {
+        if (skeletonName != null) {
+            data = _dataDic.get(skeletonName);
+            if (data != null) armatureData = data.getArmatureData(armatureName);
+        } else {
+            for (it in _dataDic.keys()) {
+                data = _dataDic.get(it);
                 armatureData = data.getArmatureData(armatureName);
-            }
-        }
-        else 
-        {
-            for (skeletonName in Reflect.fields(_dataDic))
-            {
-                data = Reflect.field(_dataDic, skeletonName);
-                armatureData = data.getArmatureData(armatureName);
-                if (armatureData != null) 
-                {
-                    break;
-                }
+                if (armatureData != null) {
+					skeletonName = it;
+					break;
+				}
             }
         }
         
-        if (armatureData == null) 
-        {
-            return null;
-        }
+        if (armatureData == null) return null;
         
         _currentDataName = skeletonName;
-        _currentTextureAtlasName = textureAtlasName || skeletonName;
+        _currentTextureAtlasName = texAtlasName != null ? texAtlasName : skeletonName;
         
         if (animationName != null && animationName != armatureName) 
         {
@@ -212,17 +175,13 @@ class BaseFactory extends EventDispatcher
                 {
                     data = Reflect.field(_dataDic, skeletonName);
                     animationArmatureData = data.getArmatureData(animationName);
-                    if (animationArmatureData != null) 
-                    {
+                    if (animationArmatureData != null) {
                         break;
                     }
                 }
             }
             
-            if (animationArmatureData != null) 
-            {
-                skinDataCopy = animationArmatureData.getSkinData("");
-            }
+            if (animationArmatureData != null) skinDataCopy = animationArmatureData.getSkinData("");
         }
         
         skinData = armatureData.getSkinData(skinName);
@@ -235,23 +194,9 @@ class BaseFactory extends EventDispatcher
         {
             armature.animation.animationDataList = animationArmatureData.animationDataList;
         }
-        else 
-        {
-            armature.animation.animationDataList = armatureData.animationDataList;
-        }  //  
-        
-        
-        
+        else armature.animation.animationDataList = armatureData.animationDataList;
         buildBones(armature, armatureData);
-        
-        //
-        if (skinData != null) 
-        {
-            buildSlots(armature, armatureData, skinData, skinDataCopy);
-        }  // update armature pose  
-        
-        
-        
+        if (skinData != null) buildSlots(armature, armatureData, skinData, skinDataCopy);
         armature.advanceTime(0);
         return armature;
     }
@@ -274,76 +219,61 @@ class BaseFactory extends EventDispatcher
 	 * @param The registration pivotY position.
 	 * @return An Object.
 	 */
-    public function getTextureDisplay(textureName:String, textureAtlasName:String = null, pivotX:Float = Math.NaN, pivotY:Float = Math.NaN):Dynamic
+    public function getTextureDisplay(textureName:String, textureAtlasName:String = null, pivotX:Null<Float> = null, pivotY:Null<Float> = null):Dynamic
     {
+		if(pivotX == null) pivotX = Math.NaN;
+		if(pivotY == null) pivotY = Math.NaN;
         var textureAtlas:Dynamic;
-        if (textureAtlasName != null) 
-        {
+        if (textureAtlasName != null) {
             textureAtlas = Reflect.field(_textureAtlasDic, textureAtlasName);
         }
         
-        if (textureAtlas == null && textureAtlasName == null) 
-        {
-            for (textureAtlasName in Reflect.fields(_textureAtlasDic))
-            {
+        if (textureAtlas == null && textureAtlasName == null) {
+            for (textureAtlasName in Reflect.fields(_textureAtlasDic)) {
                 textureAtlas = Reflect.field(_textureAtlasDic, textureAtlasName);
-                if (textureAtlas.getRegion(textureName)) 
-                {
-                    break;
-                }
+                if (textureAtlas.getRegion(textureName)) break;
                 textureAtlas = null;
             }
         }
         
-        if (textureAtlas != null) 
-        {
-            if (Math.isNaN(pivotX) || Math.isNaN(pivotY)) 
-            {
+        if (textureAtlas != null) {
+            if (Math.isNaN(pivotX) || Math.isNaN(pivotY)) {
                 var data:SkeletonData = Reflect.field(_dataDic, textureAtlasName);
-                if (data != null) 
-                {
+                if (data != null) {
                     var pivot:Point = data.getSubTexturePivot(textureName);
-                    if (pivot != null) 
-                    {
+                    if (pivot != null) {
                         pivotX = pivot.x;
                         pivotY = pivot.y;
                     }
                 }
             }
-            
             return generateDisplay(textureAtlas, textureName, pivotX, pivotY);
         }
         return null;
     }
     
     
-    function buildBones(armature:Armature, armatureData:ArmatureData):Void
-    {
+    function buildBones(armature:Armature, armatureData:ArmatureData):Void {
         //按照从属关系的顺序建立
-        for (i in 0...armatureData.boneDataList.length){
+        for (i in 0...armatureData.boneDataList.length) {
             var boneData:BoneData = armatureData.boneDataList[i];
             var bone:Bone = new Bone();
             bone.name = boneData.name;
             bone.inheritRotation = boneData.inheritRotation;
             bone.inheritScale = boneData.inheritScale;
             bone.origin.copy(boneData.transform);
-            if (armatureData.getBoneData(boneData.parent)) 
+            if (armatureData.getBoneData(boneData.parent) != null) 
             {
                 armature.addBone(bone, boneData.parent);
             }
-            else 
-            {
-                armature.addBone(bone);
-            }
+            else armature.addBone(bone);
         }
     }
     
     
     function buildSlots(armature:Armature, armatureData:ArmatureData, skinData:SkinData, skinDataCopy:SkinData):Void
     {
-        var helpArray:Array<Dynamic> = [];
-        for (slotData in skinData.slotDataList)
-        {
+        for (slotData in skinData.slotDataList) {
             var bone:Bone = armature.getBone(slotData.parent);
             if (bone == null) continue;
             var slot:Slot = generateSlot();
@@ -351,7 +281,7 @@ class BaseFactory extends EventDispatcher
             slot.blendMode = slotData.blendMode;
             slot._originZOrder = slotData.zOrder;
             slot._displayDataList = slotData.displayDataList;
-            helpArray.length = 0;
+            var helpArray = [];
             var i:Int = slotData.displayDataList.length;
             while (i-->0)
             {
@@ -382,62 +312,36 @@ class BaseFactory extends EventDispatcher
                 }
             }  //如果显示对象有name属性并且name属性可以设置的话，将name设置为与slot同名，dragonBones并不依赖这些属性，只是方便开发者    //==================================================  
             
-            for (displayObject in helpArray)
-            {
-                if (Std.is(displayObject, Armature)) 
-                {
-                    cast(displayObject, Armature).display["name"] = slot.name;
+            for (displayObject in helpArray) {
+                if (Std.is(displayObject, Armature)) {
+                    Reflect.setField(cast(displayObject, Armature).display, "name", slot.name);
+                } else if (displayObject != null && Reflect.hasField(displayObject, "name")) {
+                    Reflect.setField(displayObject, "name", slot.name);
                 }
-                else 
-                {
-                    if (displayObject != null && Lambda.has(displayObject, "name")) 
-                    {
-                        try
-                        {
-                            Reflect.setField(displayObject, "name", slot.name);
-                        }                        catch (err:Error)
-                        {
-                            
-                        }
-                    }
-                }
-            }  //==================================================  
-            
-            
+            }
             bone.addChild(slot);
             slot.displayList = helpArray;
             slot.changeDisplay(0);
         }
     }
     
-    
-    function generateTextureAtlas(content:Dynamic, textureAtlasRawData:Dynamic):ITextureAtlas
-    {
+    function generateTextureAtlas(content:Dynamic, textureAtlasRawData:Dynamic):ITextureAtlas {
         return null;
     }
     
     /**
-	 * @private
 	 * Generates an Armature instance.
 	 * @return Armature An Armature instance.
 	 */
-    function generateArmature():Armature
-    {
-        return null;
-    }
+    function generateArmature():Armature return null;
     
     /**
-	 * @private
 	 * Generates an Slot instance.
 	 * @return Slot An Slot instance.
 	 */
-    function generateSlot():Slot
-    {
-        return null;
-    }
+    function generateSlot():Slot return null;
     
     /**
-	 * @private
 	 * Generates a DisplayObject
 	 * @param textureAtlas The TextureAtlas.
 	 * @param fullName A qualified name.
@@ -445,8 +349,7 @@ class BaseFactory extends EventDispatcher
 	 * @param pivotY A pivot y based value.
 	 * @return
 	 */
-    function generateDisplay(textureAtlas:Dynamic, fullName:String, pivotX:Float, pivotY:Float):Dynamic
-    {
+    function generateDisplay(textureAtlas:Dynamic, fullName:String, pivotX:Float, pivotY:Float):Dynamic {
         return null;
     }
     
@@ -476,28 +379,21 @@ class BaseFactory extends EventDispatcher
 	 */
     public function parseData(bytes:ByteArray, dataName:String = null, ifSkipAnimationData:Bool = false, outputAnimationDictionary:Dictionary = null):SkeletonData
     {
-        if (bytes == null) 
-        {
-            throw new ArgumentError();
-        }
+        if (bytes == null) throw new ArgumentError();
         var decompressedData:DecompressedData = DataParser.decompressData(bytes);
-        
         var data:SkeletonData = DataParser.parseData(decompressedData.dragonBonesData, ifSkipAnimationData, outputAnimationDictionary);
-        
-        dataName = dataName || data.name;
+        dataName = dataName != null ? dataName : data.name;
         addSkeletonData(data, dataName);
-        var loader:Loader = new Loader();
+        var loader = new Loader();
         loader.name = dataName;
         Reflect.setField(_textureAtlasLoadingDic, dataName, decompressedData.textureAtlasData);
         loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loaderCompleteHandler);
-        loader.loadBytes(decompressedData.textureBytes, _loaderContext);
+        loader.loadBytes(decompressedData.textureBytes);
         decompressedData.dispose();
         return data;
     }
     
-    
-    function loaderCompleteHandler(e:Event):Void
-    {
+    function loaderCompleteHandler(e:Event):Void {
         e.target.removeEventListener(Event.COMPLETE, loaderCompleteHandler);
         var loader:Loader = e.target.loader;
         var content:Dynamic = e.target.content;
@@ -507,32 +403,24 @@ class BaseFactory extends EventDispatcher
         var textureAtlasRawData:Dynamic = Reflect.field(_textureAtlasLoadingDic, name);
         if (name != null && textureAtlasRawData != null) 
         {
-            if (Std.is(content, Bitmap)) 
-            {
-                content = (try cast(content, Bitmap) catch(e:Dynamic) null).bitmapData;
-            }
+            if (Std.is(content, Bitmap)) content = cast(content, Bitmap).bitmapData;
             else if (Std.is(content, Sprite)) 
             {
                 content = try cast((try cast(content, Sprite) catch(e:Dynamic) null).getChildAt(0), MovieClip) catch(e:Dynamic) null;
             }
-            else 
-            {
-                //
-                
-            }
+            else {}
             
             var textureAtlas:Dynamic = generateTextureAtlas(content, textureAtlasRawData);
             addTextureAtlas(textureAtlas, name);
             
             name = null;
-            for (name in Reflect.fields(_textureAtlasLoadingDic))
-            {
+            for (it in Reflect.fields(_textureAtlasLoadingDic)) {
+				name = it;
                 break;
-            }  //  
+            }
             
-            if (name == null && this.hasEventListener(Event.COMPLETE)) 
-            {
-                this.dispatchEvent(new Event(Event.COMPLETE));
+            if (name == null && hasEventListener(Event.COMPLETE))  {
+                dispatchEvent(new Event(Event.COMPLETE));
             }
         }
     }

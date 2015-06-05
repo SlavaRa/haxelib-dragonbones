@@ -7,15 +7,13 @@ import dragonbones.display.NativeSlot;
 import dragonbones.Slot;
 import dragonbones.textures.ITextureAtlas;
 import dragonbones.textures.NativeTextureAtlas;
-import openfl.errors.Error;
-import openfl.display.MovieClip;
+import openfl.display.DisplayObject;
 import openfl.display.Shape;
 import openfl.display.Sprite;
+import openfl.errors.Error;
 import openfl.geom.Matrix;
-import openfl.geom.Rectangle;
 
-class NativeFactory extends BaseFactory
-{
+class NativeFactory extends BaseFactory {
 	static var _helpMatrix = new Matrix();
 	
     /**
@@ -30,75 +28,49 @@ class NativeFactory extends BaseFactory
     
     public function new() super();
     
-    override function generateTextureAtlas(content:Dynamic, textureAtlasRawData:Dynamic):ITextureAtlas
-    {
+    override function generateTextureAtlas(content:Dynamic, textureAtlasRawData:Dynamic):ITextureAtlas {
         var textureAtlas:NativeTextureAtlas = new NativeTextureAtlas(content, textureAtlasRawData, 1, false);
         return textureAtlas;
     }
     
+    override function generateArmature():Armature return new Armature(new Sprite());
     
-    override function generateArmature():Armature
-    {
-        var display:Sprite = new Sprite();
-        var armature:Armature = new Armature(display);
-        return armature;
-    }
+    override function generateSlot():Slot return new NativeSlot();
     
-    
-    override function generateSlot():Slot
-    {
-        var slot:Slot = new NativeSlot();
-        return slot;
-    }
-    
-    
-    override function generateDisplay(textureAtlas:Dynamic, fullName:String, pivotX:Float, pivotY:Float):Dynamic
-    {
+    override function generateDisplay(textureAtlas:Dynamic, fullName:String, pivotX:Float, pivotY:Float):Dynamic {
         var nativeTextureAtlas:NativeTextureAtlas;
-        if (Std.is(textureAtlas, NativeTextureAtlas)) 
-        {
-            nativeTextureAtlas = try cast(textureAtlas, NativeTextureAtlas) catch(e:Dynamic) null;
+        if (Std.is(textureAtlas, NativeTextureAtlas)) {
+            nativeTextureAtlas = cast(textureAtlas, NativeTextureAtlas);
         }
         
-        if (nativeTextureAtlas != null) 
-        {
-            var movieClip:MovieClip = nativeTextureAtlas.movieClip;
-            if (useBitmapDataTexture && movieClip != null) 
-            {
+        if (nativeTextureAtlas != null) {
+            var movieClip = nativeTextureAtlas.movieClip;
+            if (useBitmapDataTexture && movieClip != null) {
                 nativeTextureAtlas.movieClipToBitmapData();
             }
             
-            if (!useBitmapDataTexture && movieClip != null && movieClip.totalFrames >= 3) 
-            {
+            if (!useBitmapDataTexture && movieClip != null && movieClip.totalFrames >= 3) {
                 movieClip.gotoAndStop(movieClip.totalFrames);
                 movieClip.gotoAndStop(fullName);
-                if (movieClip.numChildren > 0) 
-                {
-                    try
-                    {
-                        var displaySWF:Dynamic = movieClip.getChildAt(0);
+                if (movieClip.numChildren > 0) {
+                    try {
+                        var displaySWF:DisplayObject = movieClip.getChildAt(0);
                         displaySWF.x = 0;
                         displaySWF.y = 0;
                         return displaySWF;
-                    }                    catch (e:Error)
-                    {
+                    } catch (e:Error) {
                         throw new Error("Can not get the movie clip, please make sure the version of the resource compatible with app version!");
                     }
                 }
-            }
-            else if (nativeTextureAtlas.bitmapData) 
-            {
-                var subTextureRegion:Rectangle = nativeTextureAtlas.getRegion(fullName);
-                if (subTextureRegion != null) 
-                {
-                    var subTextureFrame:Rectangle = nativeTextureAtlas.getFrame(fullName);
-                    if (subTextureFrame != null) 
-                    {
+            } else if (nativeTextureAtlas.bitmapData != null) {
+                var subTextureRegion = nativeTextureAtlas.getRegion(fullName);
+                if (subTextureRegion != null) {
+                    var subTextureFrame = nativeTextureAtlas.getFrame(fullName);
+                    if (subTextureFrame != null) {
                         pivotX += subTextureFrame.x;
                         pivotY += subTextureFrame.y;
                     }
-                    
-                    var displayShape:Shape = new Shape();
+                    var result = new Shape();
                     _helpMatrix.a = 1;
                     _helpMatrix.b = 0;
                     _helpMatrix.c = 0;
@@ -106,17 +78,12 @@ class NativeFactory extends BaseFactory
                     _helpMatrix.scale(1 / nativeTextureAtlas.scale, 1 / nativeTextureAtlas.scale);
                     _helpMatrix.tx = -pivotX - subTextureRegion.x;
                     _helpMatrix.ty = -pivotY - subTextureRegion.y;
-                    
-                    displayShape.graphics.beginBitmapFill(nativeTextureAtlas.bitmapData, _helpMatrix, false, fillBitmapSmooth);
-                    displayShape.graphics.drawRect(-pivotX, -pivotY, subTextureRegion.width, subTextureRegion.height);
-                    
-                    return displayShape;
+                    result.graphics.beginBitmapFill(nativeTextureAtlas.bitmapData, _helpMatrix, false, fillBitmapSmooth);
+                    result.graphics.drawRect(-pivotX, -pivotY, subTextureRegion.width, subTextureRegion.height);
+                    return result;
                 }
             }
-            else 
-            {
-                throw new Error();
-            }
+            else throw new Error();
         }
         return null;
     }

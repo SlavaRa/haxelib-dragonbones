@@ -1,4 +1,5 @@
 package dragonbones.objects;
+import openfl.display.BlendMode;
 import openfl.errors.ArgumentError;
 
 @:final class SlotData
@@ -10,43 +11,28 @@ import openfl.errors.ArgumentError;
     public var name:String;
     public var parent:String;
     public var zOrder:Float;
-    public var blendMode:String;
+    public var blendMode:BlendMode;
     
-    
-    public function new()
-    {
-        _displayDataList = new Array<DisplayData>();
+    public function new() {
+        _displayDataList = [];
         zOrder = 0;
     }
     
-    public function dispose():Void
-    {
+    public function dispose():Void {
         var i:Int = _displayDataList.length;
-        while (i-->0)
-        {
-            _displayDataList[i].dispose();
-        }
+        while (i-->0) _displayDataList[i].dispose();
         _displayDataList = null;
     }
     
-    public function addDisplayData(displayData:DisplayData):Void
-    {
-        if (displayData == null) 
-        {
-            throw new ArgumentError();
-        }
-        if (Lambda.indexOf(_displayDataList, displayData) < 0) 
-        {
+    public function addDisplayData(displayData:DisplayData):Void {
+        if (displayData == null) throw new ArgumentError();
+        if (!Lambda.has(_displayDataList, displayData)) {
             _displayDataList[_displayDataList.length] = displayData;
         }
-        else 
-        {
-            throw new ArgumentError();
-        }
+        else throw new ArgumentError();
     }
     
-    public function getDisplayData(displayName:String):DisplayData
-    {
+    public function getDisplayData(displayName:String):DisplayData {
         var i:Int = _displayDataList.length;
         while (i-->0)
         {
@@ -55,7 +41,6 @@ import openfl.errors.ArgumentError;
                 return _displayDataList[i];
             }
         }
-        
         return null;
     }
 }

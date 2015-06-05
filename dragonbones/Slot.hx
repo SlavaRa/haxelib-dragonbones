@@ -111,7 +111,10 @@ class Slot extends DBObject
     }
 
     /** Need to keep the reference of DisplayData. When slot switch displayObject, it need to restore the display obect's origional pivot. */
+	public
     var _displayDataList:Array<DisplayData>;
+	
+	public
     var _originZOrder:Float;
 	
 	public

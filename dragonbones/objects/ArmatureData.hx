@@ -4,157 +4,89 @@ import dragonbones.objects.IAreaData;
 import dragonbones.objects.SkinData;
 import openfl.errors.ArgumentError;
 
-@:final class ArmatureData
-{
-    public var boneDataList(get, never):Array<BoneData>;
-	var _boneDataList:Array<BoneData>;
-    function get_boneDataList() return _boneDataList;
-	
-    public var skinDataList(get, never):Array<SkinData>;
-    var _skinDataList:Array<SkinData>;
-    function get_skinDataList() return _skinDataList;
-	
-    public var animationDataList(get, never):Array<AnimationData>;
-    var _animationDataList:Array<AnimationData>;
-    function get_animationDataList() return _animationDataList;
-	
-    public var areaDataList(get, never):Array<IAreaData>;
-    var _areaDataList:Array<IAreaData>;
-    function get_areaDataList() return _areaDataList;
-
+@:final class ArmatureData {
+    public var boneDataList(default, null):Array<BoneData>;
+    public var skinDataList(default, null):Array<SkinData>;
+    public var animationDataList(default, null):Array<AnimationData>;
+    public var areaDataList(default, null):Array<IAreaData>;
     public var name:String;
 	
-    public function new()
-    {
-        _boneDataList = new Array<BoneData>();
-        _skinDataList = new Array<SkinData>();
-        _animationDataList = new Array<AnimationData>();
-        _areaDataList = new Array<IAreaData>();
+    public function new() {
+        boneDataList = [];
+        skinDataList = [];
+        animationDataList = [];
+        areaDataList = [];
     }
     
-    public function dispose():Void
-    {
-        var i:Int = _boneDataList.length;
-        while (i-->0)
-        {
-            _boneDataList[i].dispose();
-        }
-        i = _skinDataList.length;
-        while (i-->0)
-        {
-            _skinDataList[i].dispose();
-        }
-        i = _animationDataList.length;
-        while (i-->0)
-        {
-            _animationDataList[i].dispose();
-        }
-        
-        //_animationsCached。clear();
-        _boneDataList = null;
-        _skinDataList = null;
-        _animationDataList = null;
+    public function dispose():Void {
+        for(it in boneDataList) it.dispose();
+        for(it in skinDataList) it.dispose();
+        for(it in animationDataList) it.dispose();
+        boneDataList = null;
+        skinDataList = null;
+        animationDataList = null;
+		areaDataList = null;
     }
     
-    public function getBoneData(boneName:String):BoneData
-    {
-        var i:Int = _boneDataList.length;
-        while (i-->0)
-        {
-            if (_boneDataList[i].name == boneName) 
-            {
-                return _boneDataList[i];
+    public function getBoneData(boneName:String):BoneData {
+        var i:Int = boneDataList.length;
+        while (i-->0) {
+            if (boneDataList[i].name == boneName) {
+                return boneDataList[i];
             }
         }
         return null;
     }
     
-    public function getSkinData(skinName:String):SkinData
-    {
-        if (skinName == null && _skinDataList.length > 0) 
-        {
-            return _skinDataList[0];
+    public function getSkinData(skinName:String):SkinData {
+        if (skinName == null && skinDataList.length > 0) {
+            return skinDataList[0];
         }
-        var i:Int = _skinDataList.length;
-        while (i-->0)
-        {
-            if (_skinDataList[i].name == skinName) 
-            {
-                return _skinDataList[i];
-            }
-        }
-        
-        return null;
-    }
-    
-    public function getAnimationData(animationName:String):AnimationData
-    {
-        var i:Int = _animationDataList.length;
-        while (i-->0)
-        {
-            if (_animationDataList[i].name == animationName) 
-            {
-                return _animationDataList[i];
+        var i:Int = skinDataList.length;
+        while (i-->0) {
+            if (skinDataList[i].name == skinName) {
+                return skinDataList[i];
             }
         }
         return null;
     }
     
-    public function addBoneData(boneData:BoneData):Void
-    {
-        if (boneData == null) 
-        {
-            throw new ArgumentError();
+    public function getAnimationData(animationName:String):AnimationData {
+        var i:Int = animationDataList.length;
+        while (i-->0) {
+            if (animationDataList[i].name == animationName) {
+                return animationDataList[i];
+            }
         }
-        
-        if (Lambda.indexOf(_boneDataList, boneData) < 0) 
-        {
-            _boneDataList[_boneDataList.length] = boneData;
-        }
-        else 
-        {
-            throw new ArgumentError();
-        }
+        return null;
     }
     
-    public function addSkinData(skinData:SkinData):Void
-    {
-        if (skinData == null) 
-        {
-            throw new ArgumentError();
-        }
-        
-        if (Lambda.indexOf(_skinDataList, skinData) < 0) 
-        {
-            _skinDataList[_skinDataList.length] = skinData;
-        }
-        else 
-        {
-            throw new ArgumentError();
-        }
+    public function addBoneData(boneData:BoneData):Void {
+        if (boneData == null) throw new ArgumentError();
+        if (Lambda.has(boneDataList, boneData)) throw new ArgumentError();
+        boneDataList[boneDataList.length] = boneData;
     }
     
-    public function addAnimationData(animationData:AnimationData):Void
-    {
-        if (animationData == null) 
-        {
-            throw new ArgumentError();
-        }
-        
-        if (Lambda.indexOf(_animationDataList, animationData) < 0) 
-        {
-            _animationDataList[_animationDataList.length] = animationData;
-        }
+    public function addSkinData(skinData:SkinData):Void {
+        if (skinData == null) throw new ArgumentError();
+        if (Lambda.has(skinDataList, skinData)) throw new ArgumentError();
+        skinDataList[skinDataList.length] = skinData;
+    }
+    
+    public function addAnimationData(animationData:AnimationData):Void {
+        if (animationData == null) throw new ArgumentError();
+        if (Lambda.has(animationDataList, animationData)) return;
+        animationDataList[animationDataList.length] = animationData;
     }
     
     public function sortBoneDataList():Void
     {
-        var i:Int = _boneDataList.length;
+        var i:Int = boneDataList.length;
         if (i == 0) return;
         var helpArray:Array<Dynamic> = [];
         while (i-->0)
         {
-            var boneData:BoneData = _boneDataList[i];
+            var boneData:BoneData = boneDataList[i];
             var level:Int = 0;
             var parentData:BoneData = boneData;
             while (parentData != null)
@@ -170,37 +102,23 @@ import openfl.errors.ArgumentError;
         i = helpArray.length;
         while (i-->0)
         {
-            _boneDataList[i] = helpArray[i][1];
+            boneDataList[i] = helpArray[i][1];
         }
     }
     
-    public function getAreaData(areaName:String):IAreaData
-    {
-        if (areaName == null && _areaDataList.length > 0) 
-        {
-            return _areaDataList[0];
-        }
-        var i:Int = _areaDataList.length;
-        while (i-->0)
-        {
-            if (_areaDataList[i]["name"] == areaName) 
-            {
-                return _areaDataList[i];
+    public function getAreaData(areaName:String):IAreaData {
+        if (areaName == null && areaDataList.length > 0) return areaDataList[0];
+		for(it in areaDataList) {
+            if (Reflect.getProperty(it, "name") == areaName) {
+                return it;
             }
         }
         return null;
     }
     
-    public function addAreaData(areaData:IAreaData):Void
-    {
-        if (areaData == null) 
-        {
-            throw new ArgumentError();
-        }
-        
-        if (Lambda.indexOf(_areaDataList, areaData) < 0) 
-        {
-            _areaDataList[_areaDataList.length] = areaData;
-        }
+    public function addAreaData(areaData:IAreaData):Void {
+        if (areaData == null) throw new ArgumentError();
+        if (Lambda.has(areaDataList, areaData)) return;
+        areaDataList[areaDataList.length] = areaData;
     }
 }
